@@ -1,8 +1,9 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@educariera/ui";
 
 export const metadata = {
-  title: "Recomandări - Portal Părinți",
+  title: "RecomandÄƒri - Portal PÄƒrinÈ›i",
 };
 
 export default async function ParentRecommendationsPage() {
@@ -27,7 +28,7 @@ export default async function ParentRecommendationsPage() {
         {
           id: "mock-1",
           status: "RECOMMENDED",
-          reason: "Matei are o pasiune clară pentru științele exacte. Acest program de explorare STEM îl va ajuta să înțeleagă mai bine carierele posibile în inginerie și programare, prin activități practice și mentorat direcționat.",
+          reason: "Matei are o pasiune clarÄƒ pentru È™tiinÈ›ele exacte. Acest program de explorare STEM Ã®l va ajuta sÄƒ Ã®nÈ›eleagÄƒ mai bine carierele posibile Ã®n inginerie È™i programare, prin activitÄƒÈ›i practice È™i mentorat direcÈ›ionat.",
           createdAt: new Date().toISOString(),
           productVersion: {
             marketingName: "Pachet Explorator STEM",
@@ -38,7 +39,7 @@ export default async function ParentRecommendationsPage() {
         {
           id: "mock-2",
           status: "ACCEPTED",
-          reason: "Evaluarea inițială sugerează o nevoie de sprijin în managementul timpului. Acest modul scurt va debloca potențialul real al lui Matei pentru examenele viitoare.",
+          reason: "Evaluarea iniÈ›ialÄƒ sugereazÄƒ o nevoie de sprijin Ã®n managementul timpului. Acest modul scurt va debloca potenÈ›ialul real al lui Matei pentru examenele viitoare.",
           createdAt: new Date(Date.now() - 864000000).toISOString(),
           productVersion: {
             marketingName: "Modul Managementul Timpului",
@@ -57,7 +58,7 @@ export default async function ParentRecommendationsPage() {
         <div className="flex items-start justify-between border-b border-border pb-6">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold text-primary-ink">
-              Recomandările Specialistului
+              RecomandÄƒrile Specialistului
             </h1>
             <p className="text-sm text-primary-text">
               Programele recomandate personalizat pentru a continua parcursul de dezvoltare.
@@ -84,7 +85,7 @@ export default async function ParentRecommendationsPage() {
                     <div className="p-6 md:w-2/3 border-b md:border-b-0 md:border-r border-border">
                       <h3 className="text-xl font-medium text-primary-ink mb-4">{rec.productVersion.marketingName}</h3>
                       <div className="bg-ivory-background p-4 rounded-md border border-border">
-                        <h4 className="text-xs font-bold text-muted-text uppercase mb-2">De ce recomandăm asta:</h4>
+                        <h4 className="text-xs font-bold text-muted-text uppercase mb-2">De ce recomandÄƒm asta:</h4>
                         <p className="text-sm text-primary-text leading-relaxed">
                           "{rec.reason}"
                         </p>
@@ -95,7 +96,7 @@ export default async function ParentRecommendationsPage() {
                         <ul className="text-sm text-primary-text space-y-1 list-disc list-inside">
                           {/* If features were typed, we could map them. Hardcoding fallback */}
                           <li>Sesiuni de consiliere 1-la-1</li>
-                          <li>Acces la evaluări avansate</li>
+                          <li>Acces la evaluÄƒri avansate</li>
                           <li>Suport asincron prin chat</li>
                         </ul>
                       </div>
@@ -103,7 +104,7 @@ export default async function ParentRecommendationsPage() {
 
                     {/* Right: Price & CTA */}
                     <div className="p-6 md:w-1/3 bg-ivory-background/50 flex flex-col justify-center items-center text-center">
-                      <p className="text-sm text-muted-text mb-1">Preț Pachet</p>
+                      <p className="text-sm text-muted-text mb-1">PreÈ› Pachet</p>
                       <p className="text-3xl font-bold text-primary-ink mb-6">
                         {rec.productVersion.prices[0]?.amount.toString() || 0} <span className="text-lg">{rec.productVersion.prices[0]?.currency || "RON"}</span>
                       </p>
@@ -114,11 +115,11 @@ export default async function ParentRecommendationsPage() {
                         </div>
                       ) : (
                         <Button className="w-full bg-forest-accent text-warm-surface hover:bg-forest-hover shadow-sm py-6">
-                          Continuă la Plată
+                          ContinuÄƒ la PlatÄƒ
                         </Button>
                       )}
                       
-                      <p className="text-xs text-muted-text mt-4">Plată sigură prin procesator autorizat. Factura va fi generată automat.</p>
+                      <p className="text-xs text-muted-text mt-4">PlatÄƒ sigurÄƒ prin procesator autorizat. Factura va fi generatÄƒ automat.</p>
                     </div>
                   </div>
                 </CardContent>
@@ -129,7 +130,7 @@ export default async function ParentRecommendationsPage() {
           <Card className="bg-warm-surface border-border">
             <CardContent className="p-12 text-center text-muted-text space-y-4">
               <svg className="w-12 h-12 mx-auto text-muted-border" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-              <p>Momentan nu ai nicio recomandare nouă de la specialistul tău.</p>
+              <p>Momentan nu ai nicio recomandare nouÄƒ de la specialistul tÄƒu.</p>
             </CardContent>
           </Card>
         )}
@@ -137,3 +138,4 @@ export default async function ParentRecommendationsPage() {
     </div>
   );
 }
+

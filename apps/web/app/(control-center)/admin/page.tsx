@@ -4,20 +4,21 @@ import Link from "next/link";
 
 const prisma = new PrismaClient();
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Admin Dashboard - EduCarieră",
 };
 
 export default async function AdminDashboardPage() {
-  // Aggregate real DB metrics
-  const totalOrders = await prisma.order.count({ where: { status: "PAID" } });
-  const paidOrders = await prisma.order.findMany({ where: { status: "PAID" } });
+  const totalOrders = await prisma.order.count({ where: { status: "PAID" } }).catch(() => 0);
+  const paidOrders = await prisma.order.findMany({ where: { status: "PAID" } }).catch(() => []);
   const totalRevenue = paidOrders.reduce((sum, o) => sum + Number(o.totalAmount), 0);
 
-  const activeCasesCount = await prisma.careerCase.count({ where: { status: { not: "COMPLETED" } } });
-  const completedSessionsCount = await prisma.counselingSession.count({ where: { status: "COMPLETED" } });
-  const totalRecommendations = await prisma.productRecommendation.count();
-  const acceptedRecommendations = await prisma.productRecommendation.count({ where: { status: "ACCEPTED" } });
+  const activeCasesCount = await prisma.careerCase.count({ where: { status: { not: "COMPLETED" } } }).catch(() => 0);
+  const completedSessionsCount = await prisma.counselingSession.count({ where: { status: "COMPLETED" } }).catch(() => 0);
+  const totalRecommendations = await prisma.productRecommendation.count().catch(() => 0);
+  const acceptedRecommendations = await prisma.productRecommendation.count({ where: { status: "ACCEPTED" } }).catch(() => 0);
 
   const conversionRate = totalRecommendations > 0 
     ? Math.round((acceptedRecommendations / totalRecommendations) * 100) 
@@ -32,7 +33,6 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Top Row: Real Business KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="bg-white border-[#E2E8F0] shadow-sm">
           <CardContent className="p-6">
@@ -78,12 +78,9 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* Module Configuration Shortcuts */}
         <section className="space-y-4">
           <h2 className="text-lg font-bold text-[#0B2239]">Module de Configurare (Super Admin)</h2>
           <div className="grid grid-cols-2 gap-4">
-            
             <Link href="/catalog" className="block">
               <Card className="bg-white border-[#E2E8F0] shadow-sm hover:border-[#0F766E] transition-colors h-full">
                 <CardContent className="p-5 flex flex-col items-center text-center gap-3">
@@ -127,11 +124,9 @@ export default async function AdminDashboardPage() {
                 </CardContent>
               </Card>
             </Link>
-
           </div>
         </section>
 
-        {/* Audit Log Quick View */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-[#0B2239]">Jurnal de Audit Recente</h2>
@@ -153,7 +148,6 @@ export default async function AdminDashboardPage() {
             </CardContent>
           </Card>
         </section>
-
       </div>
     </div>
   );

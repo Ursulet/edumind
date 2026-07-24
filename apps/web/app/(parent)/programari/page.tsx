@@ -1,9 +1,10 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@educariera/ui";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Programări - Portal Părinți",
+  title: "ProgramÄƒri - Portal PÄƒrinÈ›i",
 };
 
 export default async function ParentAppointmentsPage() {
@@ -27,23 +28,23 @@ export default async function ParentAppointmentsPage() {
         <div className="flex items-start justify-between border-b border-border pb-6">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold text-primary-ink">
-              Programările Mele
+              ProgramÄƒrile Mele
             </h1>
             <p className="text-sm text-primary-text">
-              Gestionează ședințele de consiliere cu specialiștii noștri.
+              GestioneazÄƒ È™edinÈ›ele de consiliere cu specialiÈ™tii noÈ™tri.
             </p>
           </div>
           <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover">
-            Programează Ședință Nouă
+            ProgrameazÄƒ È˜edinÈ›Äƒ NouÄƒ
           </Button>
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-primary-ink">Următoarele Ședințe</h2>
+          <h2 className="text-xl font-semibold text-primary-ink">UrmÄƒtoarele È˜edinÈ›e</h2>
           {upcomingAppointments.length === 0 ? (
             <Card className="bg-warm-surface border-border border-dashed">
               <CardContent className="p-8 text-center text-muted-text">
-                Nu ai nicio ședință viitoare programată.
+                Nu ai nicio È™edinÈ›Äƒ viitoare programatÄƒ.
               </CardContent>
             </Card>
           ) : (
@@ -76,12 +77,12 @@ export default async function ParentAppointmentsPage() {
                       {apt.videoMeeting && (
                         <Button asChild className="flex-1 bg-forest-accent hover:bg-forest-hover text-warm-surface">
                           <Link href={apt.videoMeeting.joinUrl} target="_blank">
-                            Intră în Conferință
+                            IntrÄƒ Ã®n ConferinÈ›Äƒ
                           </Link>
                         </Button>
                       )}
                       <Button variant="outline" className="flex-1 text-danger border-danger/30 hover:bg-danger/5 hover:text-danger">
-                        Anulează
+                        AnuleazÄƒ
                       </Button>
                     </div>
                   </CardContent>
@@ -92,9 +93,9 @@ export default async function ParentAppointmentsPage() {
         </div>
 
         <div className="space-y-4 pt-8">
-          <h2 className="text-lg font-semibold text-primary-ink">Istoric Ședințe</h2>
+          <h2 className="text-lg font-semibold text-primary-ink">Istoric È˜edinÈ›e</h2>
           {pastAppointments.length === 0 ? (
-            <p className="text-sm text-muted-text">Nu există istoric.</p>
+            <p className="text-sm text-muted-text">Nu existÄƒ istoric.</p>
           ) : (
             <div className="space-y-3">
               {pastAppointments.map(apt => (
@@ -103,7 +104,7 @@ export default async function ParentAppointmentsPage() {
                     <div>
                       <p className="font-medium text-sm">{apt.type.title}</p>
                       <p className="text-xs text-muted-text">
-                        {new Date(apt.startTime).toLocaleDateString('ro-RO')} • Specialist: {apt.staff.user.firstName}
+                        {new Date(apt.startTime).toLocaleDateString('ro-RO')} â€¢ Specialist: {apt.staff.user.firstName}
                       </p>
                     </div>
                     <span className="text-xs uppercase tracking-wider font-semibold text-muted-text">
@@ -119,3 +120,4 @@ export default async function ParentAppointmentsPage() {
     </div>
   );
 }
+

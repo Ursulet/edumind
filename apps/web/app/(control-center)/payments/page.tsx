@@ -1,8 +1,9 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent } from "@educariera/ui";
 
 export const metadata = {
-  title: "Încasări și Plăți - Control Center",
+  title: "ÃŽncasÄƒri È™i PlÄƒÈ›i - Control Center",
 };
 
 export default async function AdminPaymentsPage() {
@@ -18,11 +19,11 @@ export default async function AdminPaymentsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-primary-ink">Încasări și Plăți</h1>
-          <p className="text-sm text-muted-text">Jurnalul tuturor tranzacțiilor financiare din platformă.</p>
+          <h1 className="text-2xl font-semibold text-primary-ink">ÃŽncasÄƒri È™i PlÄƒÈ›i</h1>
+          <p className="text-sm text-muted-text">Jurnalul tuturor tranzacÈ›iilor financiare din platformÄƒ.</p>
         </div>
         <Button variant="outline">
-          Înregistrează Plată Manuală
+          ÃŽnregistreazÄƒ PlatÄƒ ManualÄƒ
         </Button>
       </div>
 
@@ -30,7 +31,7 @@ export default async function AdminPaymentsPage() {
         {orders.length === 0 ? (
           <Card className="bg-warm-surface border-border">
             <CardContent className="p-8 text-center text-muted-text">
-              Nu există comenzi înregistrate.
+              Nu existÄƒ comenzi Ã®nregistrate.
             </CardContent>
           </Card>
         ) : (
@@ -58,13 +59,13 @@ export default async function AdminPaymentsPage() {
                       {order.totalAmount.toString()} {order.currency}
                     </h3>
                     <p className="text-sm text-primary-text">
-                      Familie: <strong>{parent?.relationship || "Părinte"} (ID: {order.family?.publicId})</strong>
+                      Familie: <strong>{parent?.relationship || "PÄƒrinte"} (ID: {order.family?.publicId})</strong>
                     </p>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     {order.status === "PENDING" && (
-                      <Button variant="outline" className="w-full sm:w-auto">Aprobă Bancar</Button>
+                      <Button variant="outline" className="w-full sm:w-auto">AprobÄƒ Bancar</Button>
                     )}
                     {order.status === "PAID" && (
                       <Button variant="outline" className="text-danger hover:bg-danger/10 hover:text-danger w-full sm:w-auto border-danger/30">
@@ -81,3 +82,4 @@ export default async function AdminPaymentsPage() {
     </div>
   );
 }
+

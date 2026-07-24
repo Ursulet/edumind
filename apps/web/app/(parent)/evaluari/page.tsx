@@ -1,9 +1,10 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent } from "@educariera/ui";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Teste și Evaluări - Portal Părinți",
+  title: "Teste È™i EvaluÄƒri - Portal PÄƒrinÈ›i",
 };
 
 export default async function ParentAssessmentsPage() {
@@ -22,7 +23,7 @@ export default async function ParentAssessmentsPage() {
         <div className="flex items-start justify-between border-b border-border pb-6">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold text-primary-ink">
-              Teste și Evaluări Vocaționale
+              Teste È™i EvaluÄƒri VocaÈ›ionale
             </h1>
             <p className="text-sm text-primary-text">
               Chestionare externe necesare pentru profilarea candidatului.
@@ -34,7 +35,7 @@ export default async function ParentAssessmentsPage() {
           {assessments.length === 0 ? (
             <Card className="bg-warm-surface border-border">
               <CardContent className="p-8 text-center text-muted-text">
-                Nu există teste de evaluare alocate momentan.
+                Nu existÄƒ teste de evaluare alocate momentan.
               </CardContent>
             </Card>
           ) : (
@@ -51,11 +52,11 @@ export default async function ParentAssessmentsPage() {
                           </span>
                         ) : assessment.status === "DECLARED_COMPLETED" ? (
                           <span className="bg-info/10 text-info px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider">
-                            În curs de validare
+                            ÃŽn curs de validare
                           </span>
                         ) : (
                           <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider">
-                            Necesită Acțiune
+                            NecesitÄƒ AcÈ›iune
                           </span>
                         )}
                         <span className="text-xs text-muted-text">
@@ -64,17 +65,17 @@ export default async function ParentAssessmentsPage() {
                       </div>
                       
                       <h3 className="text-lg font-semibold text-primary-ink">
-                        {assessment.template?.testName || "Evaluare Necunoscută"}
+                        {assessment.template?.testName || "Evaluare NecunoscutÄƒ"}
                       </h3>
                       
                       <p className="text-sm text-primary-text bg-muted-surface p-3 rounded-md border border-border">
-                        {assessment.template?.instructions || "Urmează instrucțiunile specifice testului pe platforma parteneră."}
+                        {assessment.template?.instructions || "UrmeazÄƒ instrucÈ›iunile specifice testului pe platforma partenerÄƒ."}
                       </p>
 
                       <div className="flex gap-4 text-xs text-muted-text">
                         <span>Elev: <strong>{child?.firstName}</strong></span>
                         {assessment.template?.expectedDuration && (
-                          <span>Durată est.: {assessment.template.expectedDuration} min</span>
+                          <span>DuratÄƒ est.: {assessment.template.expectedDuration} min</span>
                         )}
                       </div>
                     </div>
@@ -84,7 +85,7 @@ export default async function ParentAssessmentsPage() {
                         <div className="space-y-2 w-full">
                           <Button asChild className="w-full bg-forest-accent hover:bg-forest-hover text-warm-surface">
                             <Link href={assessment.template?.url || "#"} target="_blank">
-                              1. Începe Testul
+                              1. ÃŽncepe Testul
                             </Link>
                           </Button>
                           <Button variant="outline" className="w-full text-xs border-dashed">
@@ -93,7 +94,7 @@ export default async function ParentAssessmentsPage() {
                         </div>
                       ) : assessment.status === "DECLARED_COMPLETED" ? (
                         <div className="text-sm text-center text-muted-text border border-border p-3 rounded bg-muted-surface w-full">
-                          Așteptăm rezultatele de la platforma parteneră.
+                          AÈ™teptÄƒm rezultatele de la platforma partenerÄƒ.
                         </div>
                       ) : (
                         <div className="text-sm text-center text-success border border-success/20 p-3 rounded bg-success/5 w-full">
@@ -111,3 +112,4 @@ export default async function ParentAssessmentsPage() {
     </div>
   );
 }
+

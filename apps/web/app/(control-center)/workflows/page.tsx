@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { Button, Card, CardContent } from "@educariera/ui";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Journey Workflows - Control Center",
 };
@@ -15,7 +17,8 @@ export default async function WorkflowsPage() {
       }
     },
     orderBy: { createdAt: "desc" }
-  });
+  }).catch(() => []);
+
 
   return (
     <div className="space-y-6">

@@ -2,11 +2,14 @@ import { prisma } from "@/lib/db";
 import { Button } from "@educariera/ui";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function CmsPageList() {
   const pages = await prisma.cmsPage.findMany({
     orderBy: { updatedAt: 'desc' },
     include: { seo: true },
-  });
+  }).catch(() => []);
+
 
   return (
     <div className="space-y-6">

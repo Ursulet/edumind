@@ -1,14 +1,17 @@
-﻿import { SectionRenderer } from "@/components/cms/SectionRenderer";
+import { SectionRenderer } from "@/components/cms/SectionRenderer";
 import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
 import { Button } from "@educariera/ui";
 
 const prisma = new PrismaClient();
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "EduCarieră | Ghidăm viitorul copilului tău",
   description: "Platformă instituțională pentru consiliere educațională și orientare în carieră.",
 };
+
 
 export default async function LandingPage() {
   // Fetch published CMS homepage from database

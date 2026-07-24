@@ -1,8 +1,9 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@educariera/ui";
 
 export const metadata = {
-  title: "Plăți și Facturi - Portal Părinți",
+  title: "PlÄƒÈ›i È™i Facturi - Portal PÄƒrinÈ›i",
 };
 
 export default async function ParentPaymentsPage() {
@@ -22,10 +23,10 @@ export default async function ParentPaymentsPage() {
         <div className="flex items-start justify-between border-b border-border pb-6">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold text-primary-ink">
-              Plăți și Facturi
+              PlÄƒÈ›i È™i Facturi
             </h1>
             <p className="text-sm text-primary-text">
-              Istoricul comenzilor și tranzacțiilor pentru familia ta.
+              Istoricul comenzilor È™i tranzacÈ›iilor pentru familia ta.
             </p>
           </div>
         </div>
@@ -34,7 +35,7 @@ export default async function ParentPaymentsPage() {
           {orders.length === 0 ? (
             <Card className="bg-warm-surface border-border">
               <CardContent className="p-8 text-center text-muted-text">
-                Nu există tranzacții înregistrate.
+                Nu existÄƒ tranzacÈ›ii Ã®nregistrate.
               </CardContent>
             </Card>
           ) : (
@@ -47,11 +48,11 @@ export default async function ParentPaymentsPage() {
                       <div className="flex items-center gap-3">
                         {order.status === "PAID" ? (
                           <span className="bg-success/10 text-success px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider">
-                            Plătit
+                            PlÄƒtit
                           </span>
                         ) : order.status === "PENDING" ? (
                           <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider">
-                            În Așteptare
+                            ÃŽn AÈ™teptare
                           </span>
                         ) : (
                           <span className="bg-muted-surface text-muted-text px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider">
@@ -85,12 +86,12 @@ export default async function ParentPaymentsPage() {
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto mt-4 md:mt-0">
                       {order.status === "PENDING" && (
                         <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover w-full sm:w-auto">
-                          Plătește Acum
+                          PlÄƒteÈ™te Acum
                         </Button>
                       )}
                       {order.status === "PAID" && (
                         <Button variant="outline" className="w-full sm:w-auto">
-                          Descarcă Factură
+                          DescarcÄƒ FacturÄƒ
                         </Button>
                       )}
                     </div>
@@ -104,3 +105,4 @@ export default async function ParentPaymentsPage() {
     </div>
   );
 }
+

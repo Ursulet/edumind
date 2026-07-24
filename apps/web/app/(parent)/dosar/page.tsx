@@ -1,8 +1,9 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent } from "@educariera/ui";
 
 export const metadata = {
-  title: "Dosarul Cazului - Portal Părinți",
+  title: "Dosarul Cazului - Portal PÄƒrinÈ›i",
 };
 
 export default async function ParentDossierPage() {
@@ -37,19 +38,19 @@ export default async function ParentDossierPage() {
       counselingSessions: [
         {
           id: "sess-1",
-          type: { title: "Ședință Consiliere Vocațională #2" },
+          type: { title: "È˜edinÈ›Äƒ Consiliere VocaÈ›ionalÄƒ #2" },
           createdAt: new Date().toISOString(),
           content: {
-            parentSummary: "Matei a fost foarte deschis azi. Am discutat despre rezultatele testului de interese și am observat o înclinație puternică spre lucrul în echipă și rezolvarea de probleme tehnice.",
-            homework: "Să discute cu un membru al familiei despre o problemă tehnică pe care a rezolvat-o recent și să noteze cum s-a simțit."
+            parentSummary: "Matei a fost foarte deschis azi. Am discutat despre rezultatele testului de interese È™i am observat o Ã®nclinaÈ›ie puternicÄƒ spre lucrul Ã®n echipÄƒ È™i rezolvarea de probleme tehnice.",
+            homework: "SÄƒ discute cu un membru al familiei despre o problemÄƒ tehnicÄƒ pe care a rezolvat-o recent È™i sÄƒ noteze cum s-a simÈ›it."
           }
         },
         {
           id: "sess-2",
-          type: { title: "Ședință de Cunoaștere" },
+          type: { title: "È˜edinÈ›Äƒ de CunoaÈ™tere" },
           createdAt: new Date(Date.now() - 864000000).toISOString(),
           content: {
-            parentSummary: "O primă întâlnire excelentă. Am stabilit obiectivele pentru următoarele luni de consiliere.",
+            parentSummary: "O primÄƒ Ã®ntÃ¢lnire excelentÄƒ. Am stabilit obiectivele pentru urmÄƒtoarele luni de consiliere.",
             homework: null
           }
         }
@@ -59,7 +60,7 @@ export default async function ParentDossierPage() {
           id: "rep-1",
           title: "Raport Interese Holland (RIASEC)",
           createdAt: new Date().toISOString(),
-          templateVersion: { template: { name: "Șablon Standard Holland" } }
+          templateVersion: { template: { name: "È˜ablon Standard Holland" } }
         }
       ],
       careerPlans: [
@@ -68,10 +69,10 @@ export default async function ParentDossierPage() {
           status: "PUBLISHED",
           version: 1,
           sections: {
-            strengths: "Capacitate analitică ridicată, atenție la detalii. Matei învață extrem de repede concepte noi de matematică și fizică.",
-            interests: "Tehnologie, inginerie, robotică.",
-            short_term: "Participare la clubul de robotică local, cursuri introductive de Python.",
-            long_term: "Facultatea de Automatică și Calculatoare (Politehnică) sau un program echivalent în străinătate."
+            strengths: "Capacitate analiticÄƒ ridicatÄƒ, atenÈ›ie la detalii. Matei Ã®nvaÈ›Äƒ extrem de repede concepte noi de matematicÄƒ È™i fizicÄƒ.",
+            interests: "Tehnologie, inginerie, roboticÄƒ.",
+            short_term: "Participare la clubul de roboticÄƒ local, cursuri introductive de Python.",
+            long_term: "Facultatea de AutomaticÄƒ È™i Calculatoare (PolitehnicÄƒ) sau un program echivalent Ã®n strÄƒinÄƒtate."
           }
         }
       ],
@@ -96,7 +97,7 @@ export default async function ParentDossierPage() {
               Dosarul de Consiliere
             </h1>
             <p className="text-sm text-primary-text">
-              Tot parcursul vocațional al copilului tău ({careerCase?.child.firstName || "Elev"}), într-un singur loc.
+              Tot parcursul vocaÈ›ional al copilului tÄƒu ({careerCase?.child.firstName || "Elev"}), Ã®ntr-un singur loc.
             </p>
           </div>
         </div>
@@ -104,16 +105,16 @@ export default async function ParentDossierPage() {
         {careerCase ? (
           <Tabs defaultValue="sessions" className="w-full">
             <TabsList className="bg-warm-surface border border-border w-full justify-start overflow-x-auto">
-              <TabsTrigger value="sessions">Istoric Ședințe</TabsTrigger>
+              <TabsTrigger value="sessions">Istoric È˜edinÈ›e</TabsTrigger>
               <TabsTrigger value="reports">Rapoarte Finale</TabsTrigger>
-              <TabsTrigger value="plan">Plan Carieră</TabsTrigger>
+              <TabsTrigger value="plan">Plan CarierÄƒ</TabsTrigger>
             </TabsList>
             
             <TabsContent value="sessions" className="mt-6 space-y-6">
               {careerCase.counselingSessions.length === 0 ? (
                 <Card className="bg-warm-surface border-border border-dashed">
                   <CardContent className="p-8 text-center text-muted-text">
-                    Nu s-a finalizat încă nicio ședință.
+                    Nu s-a finalizat Ã®ncÄƒ nicio È™edinÈ›Äƒ.
                   </CardContent>
                 </Card>
               ) : (
@@ -141,12 +142,12 @@ export default async function ParentDossierPage() {
                               </p>
                             </div>
                           ) : (
-                            <p className="text-sm text-muted-text italic">Specialistul nu a publicat încă concluziile.</p>
+                            <p className="text-sm text-muted-text italic">Specialistul nu a publicat Ã®ncÄƒ concluziile.</p>
                           )}
 
                           {session.content?.homework && (
                             <div className="bg-sage-surface/30 p-4 rounded-md border border-forest-accent/20">
-                              <h4 className="text-xs font-semibold uppercase tracking-wider text-forest-accent mb-2">De Făcut (Homework)</h4>
+                              <h4 className="text-xs font-semibold uppercase tracking-wider text-forest-accent mb-2">De FÄƒcut (Homework)</h4>
                               <p className="text-sm text-primary-text whitespace-pre-wrap">
                                 {session.content.homework}
                               </p>
@@ -182,7 +183,7 @@ export default async function ParentDossierPage() {
                            </div>
                         </div>
                         <p className="text-sm text-primary-text line-clamp-2">
-                          Raport generat din șablonul {report.templateVersion.template.name}.
+                          Raport generat din È™ablonul {report.templateVersion.template.name}.
                         </p>
                       </CardContent>
                     </Card>
@@ -195,7 +196,7 @@ export default async function ParentDossierPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <div className="md:col-span-2 space-y-6">
-              <h2 className="text-xl font-medium text-primary-ink border-b border-border pb-2">Planul de Carieră (Livrabil)</h2>
+              <h2 className="text-xl font-medium text-primary-ink border-b border-border pb-2">Planul de CarierÄƒ (Livrabil)</h2>
               
               {careerCase.careerPlans && careerCase.careerPlans.length > 0 ? (
                 <div className="space-y-6">
@@ -216,7 +217,7 @@ export default async function ParentDossierPage() {
                           <p className="text-sm text-primary-text">{sections.short_term || "-"}</p>
                         </div>
                         <div className="bg-white p-6 rounded-md shadow-sm border border-border">
-                          <h3 className="font-semibold text-primary-ink mb-2">Direcția pe Termen Lung</h3>
+                          <h3 className="font-semibold text-primary-ink mb-2">DirecÈ›ia pe Termen Lung</h3>
                           <p className="text-sm text-primary-text">{sections.long_term || "-"}</p>
                         </div>
                       </>
@@ -224,12 +225,12 @@ export default async function ParentDossierPage() {
                   })()}
                 </div>
               ) : (
-                <p className="text-sm text-muted-text">Planul de carieră nu a fost încă finalizat și publicat de către specialist.</p>
+                <p className="text-sm text-muted-text">Planul de carierÄƒ nu a fost Ã®ncÄƒ finalizat È™i publicat de cÄƒtre specialist.</p>
               )}
             </div>
 
             <div>
-              <h2 className="text-xl font-medium text-primary-ink border-b border-border pb-2 mb-6">Documente Atașate</h2>
+              <h2 className="text-xl font-medium text-primary-ink border-b border-border pb-2 mb-6">Documente AtaÈ™ate</h2>
               {careerCase.documents && careerCase.documents.length > 0 ? (
                 <div className="space-y-3">
                   {careerCase.documents.map((doc: any) => (
@@ -238,14 +239,14 @@ export default async function ParentDossierPage() {
                         <svg className="w-8 h-8 text-forest-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         <div>
                           <p className="text-sm font-medium text-primary-ink">{doc.displayName}</p>
-                          <p className="text-xs text-muted-text">Descărcare sigură (S3)</p>
+                          <p className="text-xs text-muted-text">DescÄƒrcare sigurÄƒ (S3)</p>
                         </div>
                       </div>
                     </a>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-text">Niciun document nu a fost atașat încă.</p>
+                <p className="text-sm text-muted-text">Niciun document nu a fost ataÈ™at Ã®ncÄƒ.</p>
               )}
             </div>
             
@@ -263,3 +264,4 @@ export default async function ParentDossierPage() {
     </div>
   );
 }
+

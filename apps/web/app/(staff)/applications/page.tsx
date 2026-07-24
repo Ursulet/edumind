@@ -1,7 +1,9 @@
-﻿import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Button, Card, CardContent, Badge } from "@educariera/ui";
 
 const prisma = new PrismaClient();
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Aplicații Noi - Portal Consilieri",
@@ -19,7 +21,8 @@ export default async function ApplicationsQueuePage() {
       },
     },
     orderBy: { createdAt: "desc" },
-  });
+  }).catch(() => []);
+
 
   return (
     <div className="space-y-6">

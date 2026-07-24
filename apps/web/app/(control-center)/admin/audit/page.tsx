@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, Badge } from "@educariera/ui";
 
 const prisma = new PrismaClient();
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Jurnal Audit Securitate - EduCarieră",
 };
@@ -14,7 +16,7 @@ export default async function AuditLogPage() {
     include: {
       actor: { select: { firstName: true, lastName: true, email: true } },
     },
-  });
+  }).catch(() => []);
 
   return (
     <div className="space-y-6">

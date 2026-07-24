@@ -1,3 +1,4 @@
+﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@educariera/ui";
 import Link from "next/link";
@@ -50,11 +51,11 @@ export default async function SpecialistDashboardPage() {
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-primary-ink">Control Center Specialist</h1>
-          <p className="text-sm text-muted-text">Ce necesită atenția ta profesională astăzi?</p>
+          <p className="text-sm text-muted-text">Ce necesitÄƒ atenÈ›ia ta profesionalÄƒ astÄƒzi?</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="border-forest-accent text-forest-accent">
-            Sincronizează Google Calendar
+            SincronizeazÄƒ Google Calendar
           </Button>
         </div>
       </div>
@@ -66,7 +67,7 @@ export default async function SpecialistDashboardPage() {
           
           <section className="space-y-4">
             <h2 className="text-lg font-medium text-primary-ink flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-red-500"></span> Acțiuni Necesare
+              <span className="w-2 h-2 rounded-full bg-red-500"></span> AcÈ›iuni Necesare
             </h2>
             
             <Card className="bg-red-50/50 border-red-100 shadow-sm">
@@ -75,12 +76,12 @@ export default async function SpecialistDashboardPage() {
                   
                   <div className="p-4 flex items-center justify-between hover:bg-red-50 transition-colors">
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-red-900">Notițe Necompletate (Ședința #2)</p>
+                      <p className="text-sm font-semibold text-red-900">NotiÈ›e Necompletate (È˜edinÈ›a #2)</p>
                       <p className="text-xs text-red-700">Pentru cazul Matei Popescu. Au trecut 24h de la sesiune.</p>
                     </div>
                     <Link href="/cases/case-1">
                       <Button variant="outline" size="sm" className="border-red-200 text-red-800 hover:bg-red-100">
-                        Completează
+                        CompleteazÄƒ
                       </Button>
                     </Link>
                   </div>
@@ -92,7 +93,7 @@ export default async function SpecialistDashboardPage() {
 
           {/* Operational Metrics */}
           <section className="space-y-4">
-            <h2 className="text-lg font-medium text-primary-ink">Sumar Operațional (Luna Curentă)</h2>
+            <h2 className="text-lg font-medium text-primary-ink">Sumar OperaÈ›ional (Luna CurentÄƒ)</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-white border-border shadow-sm">
                 <CardContent className="p-4 text-center">
@@ -102,7 +103,7 @@ export default async function SpecialistDashboardPage() {
               </Card>
               <Card className="bg-white border-border shadow-sm">
                 <CardContent className="p-4 text-center">
-                  <p className="text-xs font-medium text-muted-text uppercase tracking-wider">Timp Mediu Așteptare</p>
+                  <p className="text-xs font-medium text-muted-text uppercase tracking-wider">Timp Mediu AÈ™teptare</p>
                   <p className="text-2xl font-bold text-primary-ink mt-1">3.2 zile</p>
                 </CardContent>
               </Card>
@@ -133,9 +134,9 @@ export default async function SpecialistDashboardPage() {
                   <thead className="bg-muted-surface/50 text-muted-text border-b border-border">
                     <tr>
                       <th className="px-4 py-3 font-medium">Copil</th>
-                      <th className="px-4 py-3 font-medium">Etapă</th>
-                      <th className="px-4 py-3 font-medium">Următoarea Sesiune</th>
-                      <th className="px-4 py-3 text-right font-medium">Acțiune</th>
+                      <th className="px-4 py-3 font-medium">EtapÄƒ</th>
+                      <th className="px-4 py-3 font-medium">UrmÄƒtoarea Sesiune</th>
+                      <th className="px-4 py-3 text-right font-medium">AcÈ›iune</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -176,17 +177,17 @@ export default async function SpecialistDashboardPage() {
               <div className="relative pl-6 border-l-2 border-forest-accent">
                 <div className="absolute w-3 h-3 bg-forest-accent rounded-full -left-[7px] top-1"></div>
                 <p className="text-xs font-bold text-forest-accent mb-1">10:00 - 10:50</p>
-                <p className="text-sm font-medium text-primary-ink">Ședință Consiliere #2</p>
+                <p className="text-sm font-medium text-primary-ink">È˜edinÈ›Äƒ Consiliere #2</p>
                 <p className="text-xs text-muted-text">Matei Popescu (Online)</p>
                 <Button className="w-full mt-3 bg-forest-accent text-warm-surface hover:bg-forest-hover h-8 text-xs">
-                  Intră în Apel Video
+                  IntrÄƒ Ã®n Apel Video
                 </Button>
               </div>
 
               <div className="relative pl-6 border-l-2 border-muted-border">
                 <div className="absolute w-3 h-3 bg-muted-border rounded-full -left-[7px] top-1"></div>
                 <p className="text-xs font-bold text-muted-text mb-1">14:00 - 14:30</p>
-                <p className="text-sm font-medium text-primary-ink">Sesiune de Cunoaștere</p>
+                <p className="text-sm font-medium text-primary-ink">Sesiune de CunoaÈ™tere</p>
                 <p className="text-xs text-muted-text">Ana Ionescu (Online)</p>
               </div>
 
@@ -198,3 +199,4 @@ export default async function SpecialistDashboardPage() {
     </div>
   );
 }
+
