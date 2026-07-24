@@ -1,8 +1,8 @@
-﻿FROM node:20-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json tsconfig.json ./
 COPY packages ./packages
-COPY apps/worker ./apps/worker
+COPY apps ./apps
 RUN npm install
 RUN npm run build --workspace=@educariera/worker
 

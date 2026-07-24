@@ -1,11 +1,10 @@
-﻿# ---- Build Stage ----
+# ---- Build Stage ----
 FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json tsconfig.json ./
 COPY packages ./packages
-COPY apps/web ./apps/web
-COPY apps/api/prisma ./apps/api/prisma
+COPY apps ./apps
 
 RUN npm install
 RUN cd apps/api && npx prisma generate
