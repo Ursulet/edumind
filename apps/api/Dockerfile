@@ -1,4 +1,4 @@
-﻿FROM node:20-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json tsconfig.json ./
 COPY packages ./packages
@@ -15,5 +15,5 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/api ./apps/api
 
-EXPOSE 4000
-CMD ["sh", "-c", "cd apps/api && npx prisma migrate deploy && npx prisma db seed && npm run start"]
+CMD ["sh", "-c", "cd apps/api && npx prisma generate && (npx prisma migrate deploy || true) && (npx prisma db seed || true) && npm run start"]
+
