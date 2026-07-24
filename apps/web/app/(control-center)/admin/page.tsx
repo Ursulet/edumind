@@ -1,0 +1,160 @@
+﻿import { PrismaClient } from "@prisma/client";
+import { Card, CardContent, Button } from "@educariera/ui";
+import Link from "next/link";
+
+const prisma = new PrismaClient();
+
+export const metadata = {
+  title: "Admin Dashboard - EduCarieră",
+};
+
+export default async function AdminDashboardPage() {
+  // Aggregate real DB metrics
+  const totalOrders = await prisma.order.count({ where: { status: "PAID" } });
+  const paidOrders = await prisma.order.findMany({ where: { status: "PAID" } });
+  const totalRevenue = paidOrders.reduce((sum, o) => sum + Number(o.totalAmount), 0);
+
+  const activeCasesCount = await prisma.careerCase.count({ where: { status: { not: "COMPLETED" } } });
+  const completedSessionsCount = await prisma.counselingSession.count({ where: { status: "COMPLETED" } });
+  const totalRecommendations = await prisma.productRecommendation.count();
+  const acceptedRecommendations = await prisma.productRecommendation.count({ where: { status: "ACCEPTED" } });
+
+  const conversionRate = totalRecommendations > 0 
+    ? Math.round((acceptedRecommendations / totalRecommendations) * 100) 
+    : 0;
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-4">
+        <div>
+          <h1 className="text-2xl font-bold text-[#0B2239]">Executive Control Center</h1>
+          <p className="text-sm text-[#64748B]">Metrice live extrase din baza de date operațională.</p>
+        </div>
+      </div>
+
+      {/* Top Row: Real Business KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="bg-white border-[#E2E8F0] shadow-sm">
+          <CardContent className="p-6">
+            <p className="text-sm font-medium text-[#64748B]">Venituri Încasate (PAID)</p>
+            <h3 className="text-3xl font-extrabold text-[#0B2239] mt-2">
+              {totalRevenue.toLocaleString('ro-RO')} RON
+            </h3>
+            <p className="text-xs text-[#15803D] mt-1 flex items-center gap-1 font-semibold">
+              Din {totalOrders} comenzi procesate
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white border-[#E2E8F0] shadow-sm">
+          <CardContent className="p-6">
+            <p className="text-sm font-medium text-[#64748B]">Cazuri Active</p>
+            <h3 className="text-3xl font-extrabold text-[#0B2239] mt-2">{activeCasesCount}</h3>
+            <p className="text-xs text-[#0F766E] mt-1 font-semibold">
+              În desfășurare
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white border-[#E2E8F0] shadow-sm">
+          <CardContent className="p-6">
+            <p className="text-sm font-medium text-[#64748B]">Conversie Recomandări</p>
+            <h3 className="text-3xl font-extrabold text-[#0B2239] mt-2">{conversionRate}%</h3>
+            <p className="text-xs text-[#64748B] mt-1">
+              {acceptedRecommendations} din {totalRecommendations} acceptate
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white border-[#E2E8F0] shadow-sm">
+          <CardContent className="p-6">
+            <p className="text-sm font-medium text-[#64748B]">Sesiuni Finalizate</p>
+            <h3 className="text-3xl font-extrabold text-[#0B2239] mt-2">{completedSessionsCount}</h3>
+            <p className="text-xs text-[#2563EB] mt-1 font-semibold">
+              Ședințe de consiliere
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        {/* Module Configuration Shortcuts */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-bold text-[#0B2239]">Module de Configurare (Super Admin)</h2>
+          <div className="grid grid-cols-2 gap-4">
+            
+            <Link href="/catalog" className="block">
+              <Card className="bg-white border-[#E2E8F0] shadow-sm hover:border-[#0F766E] transition-colors h-full">
+                <CardContent className="p-5 flex flex-col items-center text-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#CCFBF1] flex items-center justify-center text-[#0F766E]">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  </div>
+                  <span className="text-sm font-semibold text-[#0B2239]">Catalog Produse</span>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/cms" className="block">
+              <Card className="bg-white border-[#E2E8F0] shadow-sm hover:border-[#0F766E] transition-colors h-full">
+                <CardContent className="p-5 flex flex-col items-center text-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#CCFBF1] flex items-center justify-center text-[#0F766E]">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                  </div>
+                  <span className="text-sm font-semibold text-[#0B2239]">Conținut CMS</span>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/reports" className="block">
+              <Card className="bg-white border-[#E2E8F0] shadow-sm hover:border-[#0F766E] transition-colors h-full">
+                <CardContent className="p-5 flex flex-col items-center text-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#CCFBF1] flex items-center justify-center text-[#0F766E]">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  </div>
+                  <span className="text-sm font-semibold text-[#0B2239]">Template Rapoarte</span>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link href="/workflows" className="block">
+              <Card className="bg-white border-[#E2E8F0] shadow-sm hover:border-[#0F766E] transition-colors h-full">
+                <CardContent className="p-5 flex flex-col items-center text-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#CCFBF1] flex items-center justify-center text-[#0F766E]">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                  </div>
+                  <span className="text-sm font-semibold text-[#0B2239]">Journey Engine</span>
+                </CardContent>
+              </Card>
+            </Link>
+
+          </div>
+        </section>
+
+        {/* Audit Log Quick View */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#0B2239]">Jurnal de Audit Recente</h2>
+            <Link href="/admin/audit" className="text-xs text-[#0F766E] font-semibold hover:underline">
+              Vezi tot jurnalul
+            </Link>
+          </div>
+          <Card className="bg-white border-[#E2E8F0] shadow-sm">
+            <CardContent className="p-6">
+              <p className="text-sm text-[#64748B]">
+                Sistemul înregistrează imutabil toate acțiunile critice de securitate, autentificare și tranzacții.
+              </p>
+              <div className="mt-4 pt-4 border-t border-[#E2E8F0] flex justify-between items-center">
+                <span className="text-xs font-mono text-[#64748B]">Status Imutabilitate: ACTIV</span>
+                <Link href="/admin/audit">
+                  <Button variant="outline" className="border-[#E2E8F0] text-xs">Deschide Audit Log</Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+      </div>
+    </div>
+  );
+}

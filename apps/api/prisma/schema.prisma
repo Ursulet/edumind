@@ -1,0 +1,1534 @@
+// EduCarieră Database Schema - PostgreSQL 18
+// Master Blueprint Section 6-9 & Prompt 01
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  DISABLED
+}
+
+model Organization {
+  id            String             @id @default(uuid())
+  publicId      String             @unique @default(dbgenerated("'org_' || gen_random_uuid()"))
+  name          String
+  slug          String             @unique
+  defaultLocale String             @default("ro-RO")
+  timezone      String             @default("Europe/Bucharest")
+  status        OrganizationStatus @default(ACTIVE)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  userRoles   UserRole[]
+  auditEvents AuditEvent[]
+  cmsPages    CmsPage[]
+  contentKeys ContentKey[]
+  families    Family[]
+  departments Department[]
+  products    Product[]
+  sessionTypes SessionType[]
+  journeyTemplates JourneyTemplate[]
+  assessmentTemplates ExternalAssessmentTemplate[]
+  reportTemplates ReportTemplate[]
+  blackoutPeriods BlackoutPeriod[]
+  appointmentTypes AppointmentType[]
+  planTemplates  CareerPlanTemplate[]
+  notificationTemplates NotificationTemplate[]
+  systemEvents SystemEvent[]
+  dataRetentionPolicy DataRetentionPolicy?
+
+  @@map("organizations")
+}
+
+model User {
+  id              String     @id @default(uuid())
+  publicId        String     @unique @default(dbgenerated("'usr_' || gen_random_uuid()"))
+  email           String     @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  phone           String?
+  status          UserStatus @default(PENDING_VERIFICATION)
+  emailVerifiedAt DateTime?
+  lastLoginAt     DateTime?
+  mfaEnabled      Boolean    @default(false)
+  mfaSecret       String?
+  gdprConsent     Boolean    @default(true)
+  anonymizedAt    DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  userRoles   UserRole[]
+  auditEvents AuditEvent[] @relation("AuditActor")
+  
+  parentProfile ParentProfile?
+  staffProfile  StaffProfile?
+  statusChanges ApplicationStatusHistory[]
+  activities    CaseActivityEvent[]
+  journeyEvents JourneyEvent[]
+  assignedAssessments CaseAssessment[]
+  authoredReports Report[]
+  appointmentStatusChanges AppointmentStatusHistory[]
+  uploadedDocuments CaseDocument[]
+  notifications Notification[]
+  notificationPreferences NotificationPreference[]
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique // PLATFORM_OWNER, SUPER_ADMIN, DEPARTMENT_ADMIN, SPECIALIST, PARENT
+  description String?
+  isSystem    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  action      String   @unique // e.g. case.read.assigned, user.manage
+  namespace   String   // organization, user, role, case, assessment, etc.
+  description String?
+  createdAt   DateTime @default(now())
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  id             String   @id @default(uuid())
+  userId         String
+  roleId         String
+  organizationId String
+  departmentId   String?
+  createdAt      DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role         Role         @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId, organizationId])
+  @@map("user_roles")
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid())
+  actorUserId    String?
+  organizationId String?
+  action         String
+  entityType     String
+  entityId       String?
+  requestId      String?
+  ipAddress      String?
+  sessionId      String?
+  before         Json?
+  after          Json?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  actor        User?         @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId])
+  @@index([organizationId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@map("audit_events")
+}
+
+// ----------------------------------------------------------------------
+// CMS & Public Website Models
+// ----------------------------------------------------------------------
+
+enum PageStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+model CmsPage {
+  id             String       @id @default(uuid())
+  slug           String       @unique // e.g., "/", "/program", "/despre"
+  title          String       // Internal title
+  status         PageStatus   @default(DRAFT)
+  organizationId String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  seo            CmsSeo?
+  versions       CmsPageVersion[]
+  sections       CmsSection[]
+
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@map("cms_pages")
+}
+
+model CmsSeo {
+  id          String   @id @default(uuid())
+  pageId      String   @unique
+  title       String?  // Meta title
+  description String?  // Meta description
+  canonical   String?
+  noIndex     Boolean  @default(false)
+  openGraph   Json?
+  
+  page        CmsPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@map("cms_seo")
+}
+
+model CmsPageVersion {
+  id        String   @id @default(uuid())
+  pageId    String
+  version   Int
+  data      Json     // Full snapshot of sections and SEO
+  createdAt DateTime @default(now())
+  createdBy String?  // User ID
+
+  page      CmsPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, version])
+  @@map("cms_page_versions")
+}
+
+model CmsSection {
+  id        String   @id @default(uuid())
+  pageId    String
+  type      String   // HERO, TRUST_BAR, FAQ, etc.
+  order     Int      @default(0)
+  data      Json     // The actual content validated via Zod
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  page      CmsPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@map("cms_sections")
+}
+
+model ContentKey {
+  id             String   @id @default(uuid())
+  key            String   // e.g., "parent.dashboard.welcome"
+  locale         String   @default("ro-RO")
+  value          String   @db.Text
+  organizationId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  // A key is unique per locale and organization. 
+  // Wait, if organizationId is nullable, this unique constraint needs special handling in Postgres.
+  // We'll leave it simple for now, assuming organizationId is present for tenant overrides, or null for global.
+  @@unique([key, locale])
+  @@map("content_keys")
+}
+
+// ----------------------------------------------------------------------
+// Core Client Domain Models
+// ----------------------------------------------------------------------
+
+model Family {
+  id             String          @id @default(uuid())
+  publicId       String          @unique @default(dbgenerated("'fam_' || gen_random_uuid()"))
+  organizationId String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  parents        ParentProfile[]
+  children       ChildProfile[]
+  applications   Application[]
+  sessionCredits SessionCredit[]
+  orders         Order[]
+
+  @@map("families")
+}
+
+model ParentProfile {
+  id             String          @id @default(uuid())
+  userId         String          @unique
+  familyId       String
+  relationship   String?         // e.g., "MAMĂ", "TATĂ", "TUTORE"
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  family         Family          @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  consents       ConsentRecord[]
+
+  @@map("parent_profiles")
+}
+
+model ChildProfile {
+  id             String          @id @default(uuid())
+  publicId       String          @unique @default(dbgenerated("'chi_' || gen_random_uuid()"))
+  familyId       String
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime?
+  age            Int?
+  grade          String?
+  city           String?
+  county         String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  family         Family          @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  applications   Application[]
+  cases          CareerCase[]
+  consents       ConsentRecord[]
+  sessionCredits SessionCredit[]
+  orders         Order[]
+
+  @@map("child_profiles")
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  MORE_INFO_REQUIRED
+  APPROVED
+  REJECTED
+  CONVERTED_TO_CASE
+}
+
+model Application {
+  id             String          @id @default(uuid())
+  publicId       String          @unique @default(dbgenerated("'app_' || gen_random_uuid()"))
+  familyId       String
+  childId        String?
+  status         ApplicationStatus @default(DRAFT)
+  declaredNeed   String?
+  data           Json?           // Additional raw data from registration
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  family         Family          @relation(fields: [familyId], references: [id])
+  child          ChildProfile?   @relation(fields: [childId], references: [id])
+  history        ApplicationStatusHistory[]
+
+  @@map("applications")
+}
+
+model ApplicationStatusHistory {
+  id             String          @id @default(uuid())
+  applicationId  String
+  status         ApplicationStatus
+  notes          String?
+  changedById    String?
+  createdAt      DateTime        @default(now())
+
+  application    Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  changedBy      User?           @relation(fields: [changedById], references: [id])
+
+  @@map("application_status_history")
+}
+
+model Department {
+  id             String          @id @default(uuid())
+  organizationId String
+  name           String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  staff          StaffProfile[]
+  cases          CareerCase[]
+
+  @@map("departments")
+}
+
+model StaffProfile {
+  id             String       @id @default(uuid())
+  userId         String       @unique
+  departmentId   String?
+  specialization String?      // e.g. "Career Counselor", "Psychologist"
+  bio            String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department     Department?  @relation(fields: [departmentId], references: [id])
+  assignments    CaseAssignment[]
+  availabilityRules StaffAvailabilityRule[]
+  availabilityExceptions StaffAvailabilityException[]
+  bookingHolds   BookingHold[]
+  appointments   Appointment[]
+  counselingSessions CounselingSession[]
+  recommendations ProductRecommendation[]
+  authoredPlans  CareerPlan[]
+
+  @@map("staff_profiles")
+}
+
+enum CaseStatus {
+  ONBOARDING
+  ASSESSMENT
+  COUNSELING
+  PLAN_REVIEW
+  COMPLETED
+  ON_HOLD
+}
+
+model CareerCase {
+  id             String          @id @default(uuid())
+  publicId       String          @unique // e.g. EC-2026-XXXXXX
+  childId        String
+  departmentId   String?
+  status         CaseStatus      @default(ONBOARDING)
+  activeWorkflow String?
+  createdAt      DateTime        @default(now())
+  completedAt    DateTime?
+  updatedAt      DateTime        @updatedAt
+
+  child          ChildProfile    @relation(fields: [childId], references: [id])
+  department     Department?     @relation(fields: [departmentId], references: [id])
+  assignments    CaseAssignment[]
+  activities     CaseActivityEvent[]
+  journeyInstance JourneyInstance?
+  assessments    CaseAssessment[]
+  reports        Report[]
+  appointments   Appointment[]
+  counselingSessions CounselingSession[]
+  recommendations ProductRecommendation[]
+  programs       ServiceProgramInstance[]
+  documents      CaseDocument[]
+  careerPlans    CareerPlan[]
+
+  @@map("career_cases")
+}
+
+model CaseAssignment {
+  id             String          @id @default(uuid())
+  caseId         String
+  staffId        String
+  role           String          // e.g., "PRIMARY_COUNSELOR"
+  assignedAt     DateTime        @default(now())
+  unassignedAt   DateTime?
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  staff          StaffProfile    @relation(fields: [staffId], references: [id])
+
+  @@map("case_assignments")
+}
+
+model CaseActivityEvent {
+  id             String          @id @default(uuid())
+  caseId         String
+  type           String          // canonical business activity
+  isPublic       Boolean         @default(false) // safe for parent visibility
+  data           Json?
+  actorId        String?
+  createdAt      DateTime        @default(now())
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  actor          User?           @relation(fields: [actorId], references: [id])
+
+  @@map("case_activity_events")
+}
+
+model ConsentRecord {
+  id             String          @id @default(uuid())
+  type           String          // e.g., "PERSONAL_DATA", "TERMS"
+  textVersion    String          // e.g., "v1.0.0"
+  parentId       String?
+  childId        String?
+  withdrawnAt    DateTime?
+  source         String?
+  createdAt      DateTime        @default(now())
+
+  parent         ParentProfile?  @relation(fields: [parentId], references: [id])
+  child          ChildProfile?   @relation(fields: [childId], references: [id])
+
+  @@map("consent_records")
+}
+
+
+// ----------------------------------------------------------------------
+// Commerce Catalog & Entitlements
+// ----------------------------------------------------------------------
+
+enum ProductCategory {
+  ASSESSMENT
+  CONSULTATION
+  SESSION_BUNDLE
+  PROGRAM
+  REPORT
+  FOLLOW_UP
+  CUSTOM_SERVICE
+}
+
+enum ProductVersionStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Product {
+  id             String          @id @default(uuid())
+  organizationId String
+  category       ProductCategory
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  versions       ProductVersion[]
+
+  @@map("products")
+}
+
+model ProductVersion {
+  id             String          @id @default(uuid())
+  productId      String
+  version        Int
+  status         ProductVersionStatus @default(DRAFT)
+  marketingName  String
+  internalName   String
+  description    String?
+  benefits       Json?           // Array of strings
+  purchasingRules Json?          
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  product        Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  prices         Price[]
+  offers         Offer[]
+  entitlements   ProductEntitlement[]
+  orderItems     OrderItem[]
+  recommendations ProductRecommendation[]
+  programs       ServiceProgramInstance[]
+
+  @@map("product_versions")
+}
+
+model Price {
+  id             String          @id @default(uuid())
+  productVersionId String
+  amount         Decimal         @db.Decimal(10, 2)
+  currency       String          @default("RON")
+  taxMetadata    Json?
+  activeFrom     DateTime?
+  activeTo       DateTime?
+  createdAt      DateTime        @default(now())
+
+  productVersion ProductVersion  @relation(fields: [productVersionId], references: [id], onDelete: Cascade)
+
+  @@map("prices")
+}
+
+enum OfferPlacement {
+  PUBLIC
+  PARENT_PORTAL
+  RECOMMENDATION_ONLY
+}
+
+model Offer {
+  id             String          @id @default(uuid())
+  productVersionId String
+  placement      OfferPlacement  @default(PUBLIC)
+  createdAt      DateTime        @default(now())
+
+  productVersion ProductVersion  @relation(fields: [productVersionId], references: [id], onDelete: Cascade)
+
+  @@map("offers")
+}
+
+enum EntitlementType {
+  SESSION_CREDIT
+  ASSESSMENT_ACCESS
+  REPORT_ACCESS
+  CAREER_PLAN_ACCESS
+  BOOKING_ACCESS
+  DOCUMENT_ACCESS
+}
+
+model EntitlementDefinition {
+  id             String          @id @default(uuid())
+  type           EntitlementType
+  name           String
+  description    String?
+  metadata       Json?           // e.g., allowed session types, duration
+  createdAt      DateTime        @default(now())
+
+  productGrants  ProductEntitlement[]
+
+  @@map("entitlement_definitions")
+}
+
+model ProductEntitlement {
+  id             String          @id @default(uuid())
+  productVersionId String
+  entitlementId  String
+  quantity       Int             @default(1)
+  
+  productVersion ProductVersion  @relation(fields: [productVersionId], references: [id], onDelete: Cascade)
+  entitlement    EntitlementDefinition @relation(fields: [entitlementId], references: [id])
+
+  @@map("product_entitlements")
+}
+
+model SessionType {
+  id             String          @id @default(uuid())
+  organizationId String
+  name           String
+  defaultDuration Int            // minutes
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  credits        SessionCredit[]
+
+  @@map("session_types")
+}
+
+enum CreditStatus {
+  AVAILABLE
+  RESERVED
+  CONSUMED
+  EXPIRED
+}
+
+model SessionCredit {
+  id             String          @id @default(uuid())
+  familyId       String
+  childId        String?
+  sessionTypeId  String
+  duration       Int             // minutes
+  status         CreditStatus    @default(AVAILABLE)
+  sourceOrderId  String?         // Will link to Order in Task 06
+  expiresAt      DateTime?
+  consumedAt     DateTime?
+  createdAt      DateTime        @default(now())
+
+  family         Family          @relation(fields: [familyId], references: [id])
+  child          ChildProfile?   @relation(fields: [childId], references: [id])
+  sessionType    SessionType     @relation(fields: [sessionTypeId], references: [id])
+
+  @@map("session_credits")
+}
+
+// ----------------------------------------------------------------------
+// Orders & Payments
+// ----------------------------------------------------------------------
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id             String          @id @default(uuid())
+  publicId       String          @unique @default(dbgenerated("'ord_' || gen_random_uuid()"))
+  familyId       String
+  childId        String?
+  status         OrderStatus     @default(PENDING)
+  totalAmount    Decimal         @db.Decimal(10, 2)
+  currency       String          @default("RON")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  family         Family          @relation(fields: [familyId], references: [id])
+  child          ChildProfile?   @relation(fields: [childId], references: [id])
+  items          OrderItem[]
+  payments       Payment[]
+  programInstance ServiceProgramInstance?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String          @id @default(uuid())
+  orderId        String
+  productVersionId String?
+  
+  // Snapshot Data
+  snapshotName   String
+  snapshotDesc   String?
+  snapshotAmount Decimal         @db.Decimal(10, 2)
+  snapshotCurrency String        @default("RON")
+  snapshotEntitlements Json?
+  
+  createdAt      DateTime        @default(now())
+
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVersion ProductVersion? @relation(fields: [productVersionId], references: [id])
+
+  @@map("order_items")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id             String          @id @default(uuid())
+  orderId        String
+  amount         Decimal         @db.Decimal(10, 2)
+  currency       String          @default("RON")
+  status         PaymentStatus   @default(PENDING)
+  provider       String          // e.g., "STRIPE", "MANUAL_BANK_TRANSFER"
+  providerTxId   String?         @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  attempts       PaymentAttempt[]
+  refunds        Refund[]
+
+  @@map("payments")
+}
+
+model PaymentAttempt {
+  id             String          @id @default(uuid())
+  paymentId      String
+  providerId     String?         // Stripe checkout session ID
+  status         String
+  errorMessage   String?
+  createdAt      DateTime        @default(now())
+
+  payment        Payment         @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@map("payment_attempts")
+}
+
+model Refund {
+  id             String          @id @default(uuid())
+  paymentId      String
+  amount         Decimal         @db.Decimal(10, 2)
+  currency       String          @default("RON")
+  reason         String?
+  providerRefundId String?
+  createdAt      DateTime        @default(now())
+
+  payment        Payment         @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@map("refunds")
+}
+
+model PaymentWebhookEvent {
+  id             String          @id @default(uuid())
+  provider       String
+  eventId        String          @unique
+  type           String
+  payload        Json
+  processed      Boolean         @default(false)
+  processedAt    DateTime?
+  error          String?
+  createdAt      DateTime        @default(now())
+
+  @@map("payment_webhook_events")
+}
+
+// ----------------------------------------------------------------------
+// Workflow Engine (Journey)
+// ----------------------------------------------------------------------
+
+model JourneyTemplate {
+  id             String          @id @default(uuid())
+  organizationId String
+  name           String
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  versions       JourneyVersion[]
+
+  @@map("journey_templates")
+}
+
+enum JourneyVersionStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model JourneyVersion {
+  id             String          @id @default(uuid())
+  templateId     String
+  version        Int
+  status         JourneyVersionStatus @default(DRAFT)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  template       JourneyTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  steps          JourneyStep[]
+  transitions    JourneyTransition[]
+  instances      JourneyInstance[]
+
+  @@map("journey_versions")
+}
+
+enum JourneyStepType {
+  FORM
+  APPROVAL
+  PAYMENT
+  EXTERNAL_ASSESSMENT
+  REPORT
+  APPOINTMENT
+  SESSION
+  DOCUMENT
+  RECOMMENDATION
+  PACKAGE_SELECTION
+  MANUAL_REVIEW
+  WAIT
+  COMPLETE
+}
+
+model JourneyStep {
+  id             String          @id @default(uuid())
+  versionId      String
+  type           JourneyStepType
+  internalLabel  String
+  parentLabel    String?
+  description    String?
+  requiredEntitlement String?
+  responsibleRole String?        // "PARENT", "COUNSELOR", "DIRECTOR"
+  isInitial      Boolean         @default(false)
+  order          Int             @default(0)
+  createdAt      DateTime        @default(now())
+
+  version        JourneyVersion  @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  sourceTransitions JourneyTransition[] @relation("FromStep")
+  targetTransitions JourneyTransition[] @relation("ToStep")
+  stepInstances  JourneyStepInstance[]
+
+  @@map("journey_steps")
+}
+
+model JourneyTransition {
+  id             String          @id @default(uuid())
+  versionId      String
+  fromStepId     String
+  toStepId       String
+  conditionLogic Json?           // Logical rules (e.g. "if status == APPROVED")
+  createdAt      DateTime        @default(now())
+
+  version        JourneyVersion  @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  fromStep       JourneyStep     @relation("FromStep", fields: [fromStepId], references: [id])
+  toStep         JourneyStep     @relation("ToStep", fields: [toStepId], references: [id])
+
+  @@map("journey_transitions")
+}
+
+enum JourneyInstanceStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model JourneyInstance {
+  id             String          @id @default(uuid())
+  caseId         String          @unique
+  versionId      String
+  status         JourneyInstanceStatus @default(ACTIVE)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  version        JourneyVersion  @relation(fields: [versionId], references: [id])
+  stepInstances  JourneyStepInstance[]
+  events         JourneyEvent[]
+
+  @@map("journey_instances")
+}
+
+enum StepInstanceStatus {
+  PENDING
+  ACTIVE
+  BLOCKED
+  COMPLETED
+  SKIPPED
+}
+
+model JourneyStepInstance {
+  id             String          @id @default(uuid())
+  instanceId     String
+  stepId         String
+  status         StepInstanceStatus @default(PENDING)
+  blockedReason  String?
+  completedAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  instance       JourneyInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  step           JourneyStep     @relation(fields: [stepId], references: [id])
+
+  @@map("journey_step_instances")
+}
+
+model JourneyEvent {
+  id             String          @id @default(uuid())
+  instanceId     String
+  actionType     String          // e.g. "STEP_COMPLETED", "TRANSITION_EVALUATED"
+  payload        Json?
+  actorId        String?
+  createdAt      DateTime        @default(now())
+
+  instance       JourneyInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  actor          User?           @relation(fields: [actorId], references: [id])
+
+  @@map("journey_events")
+}
+
+// ----------------------------------------------------------------------
+// Assessments & Reports
+// ----------------------------------------------------------------------
+
+model ExternalAssessmentTemplate {
+  id             String          @id @default(uuid())
+  organizationId String
+  provider       String
+  testName       String
+  description    String?
+  instructions   String?
+  url            String?
+  expectedDuration Int?          // minutes
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  assessments    CaseAssessment[]
+
+  @@map("external_assessment_templates")
+}
+
+enum CaseAssessmentStatus {
+  ASSIGNED
+  OPENED
+  DECLARED_COMPLETED
+  RESULT_RECEIVED
+  VERIFIED
+  CANCELLED
+}
+
+model CaseAssessment {
+  id             String          @id @default(uuid())
+  caseId         String
+  templateId     String
+  status         CaseAssessmentStatus @default(ASSIGNED)
+  deadline       DateTime?
+  assignedById   String?
+  assignedAt     DateTime        @default(now())
+  openedAt       DateTime?
+  completedAt    DateTime?
+  verifiedAt     DateTime?
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  template       ExternalAssessmentTemplate @relation(fields: [templateId], references: [id])
+  assignedBy     User?           @relation(fields: [assignedById], references: [id])
+  result         AssessmentResult?
+
+  @@map("case_assessments")
+}
+
+model AssessmentResult {
+  id             String          @id @default(uuid())
+  assessmentId   String          @unique
+  profileSummary String?
+  interests      Json?
+  aptitudes      Json?
+  values         Json?
+  motivations    Json?
+  strengths      Json?
+  areasToExplore Json?
+  educationalDirections Json?
+  professionalDirections Json?
+  specialistObservations String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  assessment     CaseAssessment  @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@map("assessment_results")
+}
+
+model ReportTemplate {
+  id             String          @id @default(uuid())
+  organizationId String
+  name           String
+  description    String?
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  versions       ReportTemplateVersion[]
+
+  @@map("report_templates")
+}
+
+model ReportTemplateVersion {
+  id             String          @id @default(uuid())
+  templateId     String
+  version        Int
+  isPublished    Boolean         @default(false)
+  schema         Json            // Defines sections and layout
+  createdAt      DateTime        @default(now())
+
+  template       ReportTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  reports        Report[]
+
+  @@map("report_template_versions")
+}
+
+enum ReportStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+model Report {
+  id             String          @id @default(uuid())
+  caseId         String
+  templateVersionId String
+  title          String
+  status         ReportStatus    @default(DRAFT)
+  authorId       String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  publishedAt    DateTime?
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  templateVersion ReportTemplateVersion @relation(fields: [templateVersionId], references: [id])
+  author         User            @relation(fields: [authorId], references: [id])
+  sections       ReportSection[]
+
+  @@map("reports")
+}
+
+model ReportSection {
+  id             String          @id @default(uuid())
+  reportId       String
+  sectionKey     String
+  content        Json
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  report         Report          @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@map("report_sections")
+}
+
+// ----------------------------------------------------------------------
+// Scheduling, Availability & Video
+// ----------------------------------------------------------------------
+
+model StaffAvailabilityRule {
+  id             String          @id @default(uuid())
+  staffId        String
+  dayOfWeek      Int             // 1=Monday, 7=Sunday
+  startTime      String          // "09:00"
+  endTime        String          // "17:00"
+  timezone       String          @default("Europe/Bucharest")
+  createdAt      DateTime        @default(now())
+
+  staff          StaffProfile    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@map("staff_availability_rules")
+}
+
+model StaffAvailabilityException {
+  id             String          @id @default(uuid())
+  staffId        String
+  date           DateTime        @db.Date
+  isAvailable    Boolean         @default(false)
+  startTime      String?         // If available, "10:00"
+  endTime        String?
+  reason         String?         // "Vacation", "Sick leave"
+  createdAt      DateTime        @default(now())
+
+  staff          StaffProfile    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@map("staff_availability_exceptions")
+}
+
+model BlackoutPeriod {
+  id             String          @id @default(uuid())
+  organizationId String
+  startDate      DateTime        @db.Date
+  endDate        DateTime        @db.Date
+  reason         String          // "National Holiday"
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+
+  @@map("blackout_periods")
+}
+
+model AppointmentType {
+  id             String          @id @default(uuid())
+  organizationId String
+  title          String
+  durationMin    Int
+  preBufferMin   Int             @default(0)
+  postBufferMin  Int             @default(0)
+  requiresVideo  Boolean         @default(true)
+  cancellationPolicy String?
+  reschedulePolicy   String?
+  requiredEntitlement String?
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  appointments   Appointment[]
+  counselingSessions CounselingSession[]
+
+  @@map("appointment_types")
+}
+
+model BookingHold {
+  id             String          @id @default(uuid())
+  staffId        String
+  startTime      DateTime
+  endTime        DateTime
+  expiresAt      DateTime
+  createdAt      DateTime        @default(now())
+
+  staff          StaffProfile    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@map("booking_holds")
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Appointment {
+  id             String          @id @default(uuid())
+  typeId         String
+  staffId        String
+  caseId         String
+  startTime      DateTime
+  endTime        DateTime
+  status         AppointmentStatus @default(SCHEDULED)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  type           AppointmentType @relation(fields: [typeId], references: [id])
+  staff          StaffProfile    @relation(fields: [staffId], references: [id])
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  statusHistory  AppointmentStatusHistory[]
+  videoMeeting   VideoMeeting?
+  counselingSession CounselingSession?
+
+  @@map("appointments")
+}
+
+model AppointmentStatusHistory {
+  id             String          @id @default(uuid())
+  appointmentId  String
+  status         AppointmentStatus
+  reason         String?
+  changedById    String?
+  createdAt      DateTime        @default(now())
+
+  appointment    Appointment     @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  changedBy      User?           @relation(fields: [changedById], references: [id])
+
+  @@map("appointment_status_history")
+}
+
+model VideoMeeting {
+  id             String          @id @default(uuid())
+  appointmentId  String          @unique
+  provider       String          // "MOCK", "ZOOM", "MEET"
+  providerId     String?
+  joinUrl        String
+  hostUrl        String?
+  status         String          @default("CREATED") // "CREATED", "STARTED", "ENDED"
+  createdAt      DateTime        @default(now())
+
+  appointment    Appointment     @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@map("video_meetings")
+}
+
+// ----------------------------------------------------------------------
+// Counseling Sessions & Dossier
+// ----------------------------------------------------------------------
+
+enum CounselingSessionStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  RESCHEDULED
+}
+
+model CounselingSession {
+  id             String          @id @default(uuid())
+  caseId         String
+  appointmentId  String?         @unique
+  staffId        String
+  typeId         String
+  status         CounselingSessionStatus @default(SCHEDULED)
+  plannedDurationMin Int
+  actualStart    DateTime?
+  actualEnd      DateTime?
+  consumedCreditId String?       @unique
+  createdAt      DateTime        @default(now())
+  completedAt    DateTime?
+  updatedAt      DateTime        @updatedAt
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  appointment    Appointment?    @relation(fields: [appointmentId], references: [id])
+  staff          StaffProfile    @relation(fields: [staffId], references: [id])
+  type           AppointmentType @relation(fields: [typeId], references: [id])
+  content        SessionContent?
+
+  @@map("counseling_sessions")
+}
+
+model SessionContent {
+  id             String          @id @default(uuid())
+  sessionId      String          @unique
+  internalNotes  String?         // Never parent-visible
+  parentSummary  String?         // Explicitly parent-visible
+  homework       String?         // Visibility configurable
+  nextSteps      String?
+  documentsList  Json?           // File paths or IDs
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  session        CounselingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("session_contents")
+}
+
+// ----------------------------------------------------------------------
+// Recommendations & Program Instances
+// ----------------------------------------------------------------------
+
+enum RecommendationStatus {
+  DRAFT
+  RECOMMENDED
+  VIEWED
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+model ProductRecommendation {
+  id             String          @id @default(uuid())
+  caseId         String
+  staffId        String
+  productVersionId String
+  reason         String?         @db.Text
+  internalContext String?        @db.Text
+  status         RecommendationStatus @default(DRAFT)
+  recommendedAt  DateTime?
+  viewedAt       DateTime?
+  acceptedAt     DateTime?
+  declinedAt     DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  staff          StaffProfile    @relation(fields: [staffId], references: [id])
+  productVersion ProductVersion  @relation(fields: [productVersionId], references: [id])
+
+  @@map("product_recommendations")
+}
+
+enum ServiceProgramStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model ServiceProgramInstance {
+  id             String          @id @default(uuid())
+  caseId         String
+  orderId        String?         @unique
+  productVersionId String
+  status         ServiceProgramStatus @default(ACTIVE)
+  startDate      DateTime        @default(now())
+  expiresAt      DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  order          Order?          @relation(fields: [orderId], references: [id])
+  productVersion ProductVersion  @relation(fields: [productVersionId], references: [id])
+
+  @@map("service_program_instances")
+}
+
+// ----------------------------------------------------------------------
+// Career Plan & Documents
+// ----------------------------------------------------------------------
+
+enum DocumentVisibility {
+  INTERNAL_ONLY
+  STAFF_VISIBLE
+  PARENT_VISIBLE
+}
+
+model CaseDocument {
+  id             String          @id @default(uuid())
+  caseId         String
+  category       String          // e.g., "ASSESSMENT_RESULT", "DIPLOMA"
+  displayName    String
+  storageKey     String          @unique
+  mimeType       String
+  sizeBytes      Int
+  checksum       String?
+  visibility     DocumentVisibility @default(INTERNAL_ONLY)
+  uploadedById   String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  uploadedBy     User            @relation(fields: [uploadedById], references: [id])
+
+  @@map("case_documents")
+}
+
+model CareerPlanTemplate {
+  id             String          @id @default(uuid())
+  organizationId String
+  name           String
+  schema         Json            // Defines sections: [{ id: "strengths", title: "Puncte Tari", type: "text" }, ...]
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  plans          CareerPlan[]
+
+  @@map("career_plan_templates")
+}
+
+enum CareerPlanStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model CareerPlan {
+  id             String          @id @default(uuid())
+  caseId         String
+  templateId     String
+  status         CareerPlanStatus @default(DRAFT)
+  sections       Json            // { "strengths": "...", "short_term": "..." }
+  version        Int             @default(1)
+  publishedAt    DateTime?
+  authorId       String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  case           CareerCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  template       CareerPlanTemplate @relation(fields: [templateId], references: [id])
+  author         StaffProfile    @relation(fields: [authorId], references: [id])
+
+  @@map("career_plans")
+}
+
+
+// ==========================================
+// TASK 13: NOTIFICATIONS & BACKGROUND JOBS
+// ==========================================
+
+enum NotificationChannel {
+  EMAIL
+  IN_APP
+  SMS
+}
+
+enum NotificationEvent {
+  APPLICATION_SUBMITTED
+  MORE_INFO_REQUESTED
+  APPLICATION_APPROVED
+  PAYMENT_REQUIRED
+  PAYMENT_CONFIRMED
+  TEST_AVAILABLE
+  TEST_DEADLINE_REMINDER
+  RESULT_RECEIVED
+  APPOINTMENT_BOOKED
+  APPOINTMENT_REMINDER
+  APPOINTMENT_CHANGED
+  REPORT_PUBLISHED
+  PRODUCT_RECOMMENDED
+  PROGRAM_ACTIVATED
+}
+
+model NotificationTemplate {
+  id             String          @id @default(uuid())
+  organizationId String
+  event          NotificationEvent
+  name           String
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  versions       NotificationTemplateVersion[]
+
+  @@unique([organizationId, event])
+  @@map("notification_templates")
+}
+
+model NotificationTemplateVersion {
+  id             String          @id @default(uuid())
+  templateId     String
+  version        Int
+  subject        String          // Email subject or push title
+  bodyContent    String          // Email HTML or markdown body
+  variables      String[]        // Validated placeholders like ["parent.firstName", "appointment.date"]
+  isPublished    Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+
+  template       NotificationTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  deliveries     NotificationDelivery[]
+
+  @@unique([templateId, version])
+  @@map("notification_template_versions")
+}
+
+model NotificationPreference {
+  id             String          @id @default(uuid())
+  userId         String
+  channel        NotificationChannel
+  event          NotificationEvent
+  enabled        Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, channel, event])
+  @@map("notification_preferences")
+}
+
+model Notification {
+  id             String          @id @default(uuid())
+  userId         String
+  title          String
+  message        String
+  category       NotificationEvent
+  actionTarget   String?         // URL or route to action
+  readAt         DateTime?
+  createdAt      DateTime        @default(now())
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model NotificationDelivery {
+  id             String              @id @default(uuid())
+  versionId      String
+  recipientEmail String
+  channel        NotificationChannel
+  status         DeliveryStatus      @default(PENDING)
+  errorLog       String?
+  sentAt         DateTime?
+  createdAt      DateTime            @default(now())
+
+  version        NotificationTemplateVersion @relation(fields: [versionId], references: [id])
+
+  @@index([versionId])
+  @@map("notification_deliveries")
+}
+
+// ==========================================
+// TASK 15: ANALYTICS & SYSTEM EVENTS
+// ==========================================
+
+enum SystemEventType {
+  APPLICATION_STARTED
+  APPLICATION_SUBMITTED
+  APPLICATION_APPROVED
+  PAYMENT_REQUESTED
+  PAYMENT_COMPLETED
+  ASSESSMENT_ASSIGNED
+  ASSESSMENT_COMPLETED
+  ASSESSMENT_VERIFIED
+  REPORT_PUBLISHED
+  SESSION_BOOKED
+  SESSION_COMPLETED
+  RECOMMENDATION_CREATED
+  RECOMMENDATION_VIEWED
+  RECOMMENDATION_ACCEPTED
+  PACKAGE_PURCHASED
+  PROGRAM_ACTIVATED
+  PROGRAM_COMPLETED
+}
+
+model SystemEvent {
+  id             String          @id @default(uuid())
+  organizationId String
+  eventType      SystemEventType
+  caseId         String?         // Optional, to link to a specific funnel
+  metadata       Json?           // Non-PII business metrics (e.g., duration, value)
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, eventType])
+  @@index([createdAt])
+  @@map("system_events")
+}
+
+// ==========================================
+// TASK 16: SECURITY HARDENING
+// ==========================================
+
+model DataRetentionPolicy {
+  id             String          @id @default(uuid())
+  organizationId String          @unique
+  auditLogDays   Int             @default(365) // 1 year
+  systemEventDays Int            @default(90)  // 90 days
+  documentDays   Int             @default(1825) // 5 years
+  updatedAt      DateTime        @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("data_retention_policies")
+}

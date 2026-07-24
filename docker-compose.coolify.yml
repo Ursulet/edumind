@@ -1,0 +1,79 @@
+﻿version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: edumind_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres123}
+      POSTGRES_DB: ${POSTGRES_DB:-educariera}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: edumind_redis
+    restart: always
+    volumes:
+      - redis_data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: edumind_api
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-educariera}?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      JWT_SECRET: ${JWT_SECRET:-super-secret-jwt-key-replace-in-production}
+      PORT: 4000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: edumind_web
+    restart: always
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:4000/api/v1}
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-educariera}?schema=public"
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    container_name: edumind_worker
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-educariera}?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  postgres_data:
+  redis_data:

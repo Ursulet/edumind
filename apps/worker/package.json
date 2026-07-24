@@ -1,0 +1,19 @@
+{
+  "name": "@educariera/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@educariera/types": "*",
+    "@educariera/validation": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
