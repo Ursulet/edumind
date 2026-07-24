@@ -11,6 +11,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@educariera/types": "*",
+    "@educariera/validation": "*",
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^11.0.0",
@@ -18,15 +21,14 @@
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "^6.4.0",
-    "@educariera/types": "*",
-    "@educariera/validation": "*",
     "argon2": "^0.40.3",
+    "bullmq": "^5.81.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "zod": "^3.24.2",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
@@ -43,4 +45,3 @@
     "seed": "npx tsx prisma/seed.ts"
   }
 }
-

@@ -1,10 +1,16 @@
-﻿import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma/prisma.service";
 import { AuditService } from "../audit/audit.service";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
 
 @Injectable()
 export class NotificationsService {
-  constructor(private prisma: PrismaService, private audit: AuditService) {}
+  constructor(
+    private prisma: PrismaService, 
+    private audit: AuditService,
+    @InjectQueue('email-queue') private emailQueue: Queue
+  ) {}
 
   async getUserNotifications(userId: string) {
     return this.prisma.notification.findMany({
@@ -31,7 +37,7 @@ export class NotificationsService {
     category: any;
     actionTarget?: string;
   }) {
-    return this.prisma.notification.create({
+    const notification = await this.prisma.notification.create({
       data: {
         userId: data.userId,
         title: data.title,
@@ -40,5 +46,18 @@ export class NotificationsService {
         actionTarget: data.actionTarget,
       },
     });
+
+    const user = await this.prisma.user.findUnique({ where: { id: data.userId }});
+    if (user && user.email) {
+      await this.emailQueue.add('send-email', {
+        id: notification.id,
+        recipientEmail: user.email,
+        subject: data.title,
+        bodyContent: data.message,
+        variables: {}
+      });
+    }
+
+    return notification;
   }
 }

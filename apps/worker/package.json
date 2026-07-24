@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@educariera/types": "*",
-    "@educariera/validation": "*"
+    "@educariera/validation": "*",
+    "bullmq": "^5.81.1",
+    "ioredis": "^5.11.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

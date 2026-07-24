@@ -1,4 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
@@ -22,6 +25,15 @@ import { CorrelationIdMiddleware } from './common/middleware/correlation-id.midd
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 100, // 100 requests per minute per IP globally
+    }]),
+    BullModule.forRoot({
+      connection: {
+        url: process.env.REDIS_URL || 'redis://localhost:6379',
+      },
+    }),
     PrismaModule,
     AuditModule,
     PermissionsModule,
@@ -41,6 +53,12 @@ import { CorrelationIdMiddleware } from './common/middleware/correlation-id.midd
     RecommendationsModule,
     NotificationsModule,
     SearchModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {

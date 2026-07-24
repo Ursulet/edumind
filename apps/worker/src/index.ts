@@ -1,4 +1,7 @@
-﻿/**
+import { Worker, Job } from "bullmq";
+import IORedis from "ioredis";
+
+/**
  * EduMind Background Worker Engine
  * Handles email notifications via SMTP (nodemailer), appointment reminders, and asynchronous tasks.
  */
@@ -24,8 +27,8 @@ export async function processEmailJob(job: EmailJobPayload): Promise<{ success: 
   console.info(`[Worker] Processing email job ${job.id} for ${job.recipientEmail}`);
 
   try {
-    const renderedSubject = interpolateTemplate(job.subject, job.variables);
-    const renderedBody = interpolateTemplate(job.bodyContent, job.variables);
+    const renderedSubject = interpolateTemplate(job.subject, job.variables || {});
+    const renderedBody = interpolateTemplate(job.bodyContent, job.variables || {});
 
     const smtpHost = process.env.SMTP_HOST;
     if (!smtpHost) {
@@ -42,12 +45,54 @@ export async function processEmailJob(job: EmailJobPayload): Promise<{ success: 
 }
 
 async function startWorker() {
-  console.info('⚡ EduMind Background Worker active and listening for jobs...');
+  const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+  const connection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
+
+  console.info('⚡ EduMind Background Worker active and connecting to Redis at', redisUrl);
+
+  const emailWorker = new Worker(
+    'email-queue',
+    async (job: Job) => {
+      if (job.name === 'send-email') {
+        const payload = job.data as EmailJobPayload;
+        const result = await processEmailJob(payload);
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        return result;
+      }
+    },
+    { connection, concurrency: 5 }
+  );
+
+  emailWorker.on('completed', (job) => {
+    console.info(`[BullMQ] Job ${job.id} completed successfully`);
+  });
+
+  emailWorker.on('failed', (job, err) => {
+    console.error(`[BullMQ] Job ${job?.id} failed with error: ${err.message}`);
+  });
+
+  // Reminder Worker
+  const reminderWorker = new Worker(
+    'reminder-queue',
+    async (job: Job) => {
+      console.info(`[Worker] Processing reminder job ${job.id}`);
+      // In a real app we'd dispatch an email or push notification here
+      return { success: true };
+    },
+    { connection, concurrency: 2 }
+  );
+
+  process.on('SIGTERM', async () => {
+    console.info('Shutting down workers gracefully...');
+    await emailWorker.close();
+    await reminderWorker.close();
+    process.exit(0);
+  });
 }
 
-startWorker();
-
-process.on('SIGTERM', () => {
-  console.info('Shutting down worker gracefully...');
-  process.exit(0);
+startWorker().catch((err) => {
+  console.error("Worker failed to start", err);
+  process.exit(1);
 });
