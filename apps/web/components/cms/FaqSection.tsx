@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import { FaqSectionData } from "@educariera/validation";
+import { FaqSectionData } from "@EduMind/validation";
 
 export function FaqSection({ data }: { data: FaqSectionData }) {
   return (

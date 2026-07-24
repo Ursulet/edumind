@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import { TestimonialsSectionData } from "@educariera/validation";
+import { TestimonialsSectionData } from "@EduMind/validation";
 
 export function TestimonialsSection({ data }: { data: TestimonialsSectionData }) {
   return (

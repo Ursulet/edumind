@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
-import { Button, Card, CardContent, Badge } from "@educariera/ui";
+﻿import { PrismaClient } from "@prisma/client";
+import { Button, Card, CardContent, Badge } from "@EduMind/ui";
 
 const prisma = new PrismaClient();
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Aplicații Noi - Portal Consilieri",
+  title: "AplicaÈ›ii Noi - Portal Consilieri",
 };
 
 export default async function ApplicationsQueuePage() {
@@ -28,11 +28,11 @@ export default async function ApplicationsQueuePage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-[#0B2239]">Aplicații Noi în Așteptare</h1>
-          <p className="text-sm text-[#64748B]">Triage pentru cererile noi de orientare în carieră (Director / Staff Queue).</p>
+          <h1 className="text-2xl font-semibold text-[#0B2239]">AplicaÈ›ii Noi Ã®n AÈ™teptare</h1>
+          <p className="text-sm text-[#64748B]">Triage pentru cererile noi de orientare Ã®n carierÄƒ (Director / Staff Queue).</p>
         </div>
         <Badge variant="outline" className="bg-[#CCFBF1] text-[#0F766E] font-bold">
-          {applications.length} aplicații
+          {applications.length} aplicaÈ›ii
         </Badge>
       </div>
 
@@ -40,7 +40,7 @@ export default async function ApplicationsQueuePage() {
         {applications.length === 0 ? (
           <Card className="bg-white border-[#E2E8F0]">
             <CardContent className="p-8 text-center text-[#64748B]">
-              Nu există aplicații noi în așteptare în acest moment.
+              Nu existÄƒ aplicaÈ›ii noi Ã®n aÈ™teptare Ã®n acest moment.
             </CardContent>
           </Card>
         ) : (
@@ -65,9 +65,9 @@ export default async function ApplicationsQueuePage() {
                       Elev: {formData.childFirstName || child?.firstName || "Copil"} {formData.childLastName || child?.lastName || ""}
                     </h3>
                     <div className="text-sm text-[#102A43] space-y-1">
-                      <p><strong>Părinte:</strong> {parentUser ? `${parentUser.firstName} ${parentUser.lastName} (${parentUser.email})` : "Nespecificat"}</p>
-                      <p><strong>Clasă / Oraș:</strong> {formData.grade || "N/A"} - {formData.city || "N/A"}, {formData.county || ""}</p>
-                      <p><strong>Nevoie declarată:</strong> <span className="italic">{app.declaredNeed || formData.declaredNeed || "Nespecificat"}</span></p>
+                      <p><strong>PÄƒrinte:</strong> {parentUser ? `${parentUser.firstName} ${parentUser.lastName} (${parentUser.email})` : "Nespecificat"}</p>
+                      <p><strong>ClasÄƒ / OraÈ™:</strong> {formData.grade || "N/A"} - {formData.city || "N/A"}, {formData.county || ""}</p>
+                      <p><strong>Nevoie declaratÄƒ:</strong> <span className="italic">{app.declaredNeed || formData.declaredNeed || "Nespecificat"}</span></p>
                     </div>
                   </div>
 
@@ -76,7 +76,7 @@ export default async function ApplicationsQueuePage() {
                       Detalii
                     </Button>
                     <Button className="bg-[#0B2239] text-white hover:bg-[#123A5A]">
-                      Aprobă & Deschide Caz
+                      AprobÄƒ & Deschide Caz
                     </Button>
                   </div>
                 </CardContent>

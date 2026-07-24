@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "EduCarieră",
+  title: "EduMind",
   description: "Platforma integrată de orientare profesională",
 };
 

@@ -1,5 +1,5 @@
-import { ProgramCardsSectionData } from "@educariera/validation";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, Button } from "@educariera/ui";
+﻿import { ProgramCardsSectionData } from "@EduMind/validation";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, Button } from "@EduMind/ui";
 import Link from "next/link";
 
 export function ProgramCardsSection({ data }: { data: ProgramCardsSectionData }) {
@@ -32,7 +32,7 @@ export function ProgramCardsSection({ data }: { data: ProgramCardsSectionData })
                 <ul className="space-y-2 pt-4 border-t border-border">
                   {program.features.map((feature, fIdx) => (
                     <li key={fIdx} className="flex gap-2 text-sm text-muted-text">
-                      <span className="text-forest-accent shrink-0">✓</span>
+                      <span className="text-forest-accent shrink-0">âœ“</span>
                       {feature}
                     </li>
                   ))}

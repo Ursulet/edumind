@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@educariera/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@EduMind/ui";
 import { e2eJourneys } from "../../../../lib/e2e-mocks";
 
 export default function E2ESimulatorPage() {
@@ -37,7 +37,7 @@ export default function E2ESimulatorPage() {
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-primary-ink">Simulator E2E Acceptance</h1>
-          <p className="text-sm text-muted-text">Validarea automată a scenariilor critice de business (Fără DB)</p>
+          <p className="text-sm text-muted-text">Validarea automatÄƒ a scenariilor critice de business (FÄƒrÄƒ DB)</p>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export default function E2ESimulatorPage() {
                   disabled={running}
                   className="bg-forest-accent text-warm-surface hover:bg-forest-hover"
                 >
-                  {running && activeJourney === journey.id ? "Se rulează..." : "Rulează Test"}
+                  {running && activeJourney === journey.id ? "Se ruleazÄƒ..." : "RuleazÄƒ Test"}
                 </Button>
               </CardContent>
             </Card>
@@ -82,7 +82,7 @@ export default function E2ESimulatorPage() {
           </CardHeader>
           <CardContent className="p-4 flex-1 overflow-y-auto font-mono text-xs text-green-400 bg-gray-900 rounded-b-lg space-y-2">
             {logs.length === 0 && !running && (
-              <span className="text-gray-500">Așteptare comandă de rulare...</span>
+              <span className="text-gray-500">AÈ™teptare comandÄƒ de rulare...</span>
             )}
             {logs.map((log, idx) => (
               <div key={idx} className="flex gap-2">
@@ -93,7 +93,7 @@ export default function E2ESimulatorPage() {
             ))}
             {!running && progress === 100 && (
               <div className="mt-4 pt-4 border-t border-gray-800 text-blue-400 font-bold">
-                ✓ SCENARIU FINALIZAT CU SUCCES (0 ERRORS)
+                âœ“ SCENARIU FINALIZAT CU SUCCES (0 ERRORS)
               </div>
             )}
           </CardContent>

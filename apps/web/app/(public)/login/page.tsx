@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from "@educariera/ui";
+﻿import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from "@EduMind/ui";
 import Link from "next/link";
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default function LoginPage() {
             Bine ai revenit
           </CardTitle>
           <p className="text-center text-sm text-primary-text">
-            Introdu datele pentru a accesa contul tău
+            Introdu datele pentru a accesa contul tÄƒu
           </p>
         </CardHeader>
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
             
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label htmlFor="password">Parolă</Label>
+                <Label htmlFor="password">ParolÄƒ</Label>
                 <Link href="#" className="text-xs font-medium text-forest-accent hover:underline">
                   Ai uitat parola?
                 </Link>
@@ -47,7 +47,7 @@ export default function LoginPage() {
               <Input 
                 id="password" 
                 type="password" 
-                placeholder="••••••••" 
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
                 className="w-full bg-warm-surface"
               />
             </div>
@@ -57,7 +57,7 @@ export default function LoginPage() {
           <div className="pt-2 flex flex-col gap-3">
             <Link href="/dashboard" className="w-full">
               <Button className="w-full bg-forest-accent text-warm-surface hover:bg-forest-hover">
-                Autentificare (Părinte)
+                Autentificare (PÄƒrinte)
               </Button>
             </Link>
             
@@ -81,7 +81,7 @@ export default function LoginPage() {
           <p className="text-sm text-muted-text">
             Nu ai cont?{" "}
             <Link href="/inscriere" className="font-semibold text-forest-accent hover:underline">
-              Creează unul acum
+              CreeazÄƒ unul acum
             </Link>
           </p>
         </div>

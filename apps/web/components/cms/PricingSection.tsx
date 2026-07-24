@@ -1,6 +1,6 @@
 ﻿import React from "react";
-import { PricingSectionData } from "@educariera/validation";
-import { Button } from "@educariera/ui";
+import { PricingSectionData } from "@EduMind/validation";
+import { Button } from "@EduMind/ui";
 
 export function PricingSection({ data }: { data: PricingSectionData }) {
   return (

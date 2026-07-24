@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 export async function GET() {
@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json({
       status: "ok",
       timestamp: new Date().toISOString(),
-      service: "educariera-web",
+      service: "EduMind-web",
       database: "connected"
     }, { status: 200 });
     
@@ -19,7 +19,7 @@ export async function GET() {
     return NextResponse.json({
       status: "error",
       timestamp: new Date().toISOString(),
-      service: "educariera-web",
+      service: "EduMind-web",
       database: "disconnected",
       message: "Database connection failed"
     }, { status: 503 }); // 503 Service Unavailable is standard for failed health checks

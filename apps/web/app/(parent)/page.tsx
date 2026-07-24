@@ -1,7 +1,7 @@
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@educariera/ui";
+﻿import { Button, Card, CardContent, CardHeader, CardTitle } from "@EduMind/ui";
 
 export const metadata = {
-  title: "Dashboard - Portal Părinți",
+  title: "Dashboard - Portal PÄƒrinÈ›i",
 };
 
 export default function ParentDashboard() {
@@ -21,7 +21,7 @@ export default function ParentDashboard() {
           </div>
           <div>
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-sage-surface text-forest-accent border border-border">
-              Stadiu: Evaluare Inițială
+              Stadiu: Evaluare IniÈ›ialÄƒ
             </span>
           </div>
         </div>
@@ -35,17 +35,17 @@ export default function ParentDashboard() {
               <CardContent className="p-6 sm:p-8 space-y-4">
                 <div className="flex items-center gap-3 text-forest-accent mb-2">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                  <span className="text-sm font-bold uppercase tracking-wider">Acțiune Necesară</span>
+                  <span className="text-sm font-bold uppercase tracking-wider">AcÈ›iune NecesarÄƒ</span>
                 </div>
                 <h2 className="text-2xl font-bold text-primary-ink">
-                  Completează Chestionarul Inițial
+                  CompleteazÄƒ Chestionarul IniÈ›ial
                 </h2>
                 <p className="text-primary-text leading-relaxed">
-                  Pentru a putea aloca un specialist potrivit, te rugăm să completezi chestionarul de interese și aptitudini al copilului tău. Acesta durează aproximativ 15 minute.
+                  Pentru a putea aloca un specialist potrivit, te rugÄƒm sÄƒ completezi chestionarul de interese È™i aptitudini al copilului tÄƒu. Acesta dureazÄƒ aproximativ 15 minute.
                 </p>
                 <div className="pt-4">
                   <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover" size="lg">
-                    Începe Evaluarea
+                    ÃŽncepe Evaluarea
                   </Button>
                 </div>
               </CardContent>
@@ -53,7 +53,7 @@ export default function ParentDashboard() {
 
             {/* Journey Stepper */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-primary-ink">Parcurs Educațional</h3>
+              <h3 className="text-lg font-semibold text-primary-ink">Parcurs EducaÈ›ional</h3>
               <div className="bg-warm-surface border border-border rounded-xl p-6">
                 <div className="flex justify-between relative">
                   <div className="absolute top-4 left-4 right-4 h-0.5 bg-border -z-10" />
@@ -63,7 +63,7 @@ export default function ParentDashboard() {
                     <div className="w-8 h-8 rounded-full bg-forest-accent text-warm-surface flex items-center justify-center">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                     </div>
-                    <span className="text-xs font-medium text-primary-ink">Înscriere</span>
+                    <span className="text-xs font-medium text-primary-ink">ÃŽnscriere</span>
                   </div>
 
                   {/* Step 2: Active */}
@@ -101,11 +101,11 @@ export default function ParentDashboard() {
             {/* Upcoming Session */}
             <Card className="bg-warm-surface border-border">
               <CardHeader className="pb-3 border-b border-border">
-                <CardTitle className="text-sm font-semibold">Următoarea Ședință</CardTitle>
+                <CardTitle className="text-sm font-semibold">UrmÄƒtoarea È˜edinÈ›Äƒ</CardTitle>
               </CardHeader>
               <CardContent className="pt-4 text-center">
-                <p className="text-sm text-muted-text mb-4">Nicio ședință programată momentan.</p>
-                <Button variant="outline" className="w-full text-xs">Solicită Programare</Button>
+                <p className="text-sm text-muted-text mb-4">Nicio È™edinÈ›Äƒ programatÄƒ momentan.</p>
+                <Button variant="outline" className="w-full text-xs">SolicitÄƒ Programare</Button>
               </CardContent>
             </Card>
 

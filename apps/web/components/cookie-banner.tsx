@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@educariera/ui";
+import { Button } from "@EduMind/ui";
 import Link from "next/link";
 
 export function CookieBanner() {
@@ -9,14 +9,14 @@ export function CookieBanner() {
 
   useEffect(() => {
     // Check if user has already accepted/declined cookies
-    const consent = localStorage.getItem("educariera_cookie_consent");
+    const consent = localStorage.getItem("EduMind_cookie_consent");
     if (!consent) {
       setIsVisible(true);
     }
   }, []);
 
   const handleConsent = (value: "accepted" | "declined") => {
-    localStorage.setItem("educariera_cookie_consent", value);
+    localStorage.setItem("EduMind_cookie_consent", value);
     setIsVisible(false);
   };
 
@@ -26,11 +26,11 @@ export function CookieBanner() {
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-10 fade-in duration-300">
       <div className="max-w-4xl mx-auto bg-primary-ink text-warm-surface p-6 rounded-2xl shadow-[0_16px_40px_rgba(31,38,34,0.3)] flex flex-col md:flex-row gap-6 items-start md:items-center border border-border/20">
         <div className="flex-1 space-y-2">
-          <h3 className="font-semibold text-lg text-warm-surface tracking-tight">Confidențialitatea ta este importantă</h3>
+          <h3 className="font-semibold text-lg text-warm-surface tracking-tight">ConfidenÈ›ialitatea ta este importantÄƒ</h3>
           <p className="text-sm text-sage-surface/80 leading-relaxed">
-            Folosim cookie-uri tehnice pentru a asigura funcționarea platformei și module analitice pentru a-ți oferi cea mai bună experiență. Datele tale sunt protejate conform standardelor instituționale. 
+            Folosim cookie-uri tehnice pentru a asigura funcÈ›ionarea platformei È™i module analitice pentru a-È›i oferi cea mai bunÄƒ experienÈ›Äƒ. Datele tale sunt protejate conform standardelor instituÈ›ionale. 
             <Link href="/confidentialitate" className="underline underline-offset-4 ml-1 text-warm-surface hover:text-white">
-              Află mai multe
+              AflÄƒ mai multe
             </Link>.
           </p>
         </div>
@@ -40,13 +40,13 @@ export function CookieBanner() {
             onClick={() => handleConsent("declined")}
             className="border-border/30 text-warm-surface hover:bg-white/10"
           >
-            Refuză Opționale
+            RefuzÄƒ OpÈ›ionale
           </Button>
           <Button 
             onClick={() => handleConsent("accepted")}
             className="bg-forest-accent text-warm-surface hover:bg-forest-hover border-none"
           >
-            Acceptă Toate
+            AcceptÄƒ Toate
           </Button>
         </div>
       </div>

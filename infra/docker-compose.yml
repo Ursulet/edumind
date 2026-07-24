@@ -1,27 +1,27 @@
-version: '3.8'
+﻿version: '3.8'
 
 services:
   postgres:
     image: postgres:18-alpine
-    container_name: educariera-postgres
+    container_name: EduMind-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: educariera
-      POSTGRES_PASSWORD: educariera_secret
-      POSTGRES_DB: educariera_db
+      POSTGRES_USER: EduMind
+      POSTGRES_PASSWORD: EduMind_secret
+      POSTGRES_DB: EduMind_db
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U educariera -d educariera_db"]
+      test: ["CMD-SHELL", "pg_isready -U EduMind -d EduMind_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: educariera-redis
+    container_name: EduMind-redis
     restart: unless-stopped
     ports:
       - "6379:6379"

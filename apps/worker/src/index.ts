@@ -1,5 +1,5 @@
 ﻿/**
- * EduCarieră Background Worker Engine
+ * EduMind Background Worker Engine
  * Handles email notifications via SMTP (nodemailer), appointment reminders, and asynchronous tasks.
  */
 
@@ -42,7 +42,7 @@ export async function processEmailJob(job: EmailJobPayload): Promise<{ success: 
 }
 
 async function startWorker() {
-  console.info('⚡ EduCarieră Background Worker active and listening for jobs...');
+  console.info('⚡ EduMind Background Worker active and listening for jobs...');
 }
 
 startWorker();

@@ -1,6 +1,6 @@
 ﻿export const dynamic = "force-dynamic";
 import { PrismaClient } from "@prisma/client";
-import { Card, CardContent, Badge, Button } from "@educariera/ui";
+import { Card, CardContent, Badge, Button } from "@EduMind/ui";
 import Link from "next/link";
 
 const prisma = new PrismaClient();

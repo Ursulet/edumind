@@ -1,5 +1,5 @@
 ﻿import { PrismaClient } from "@prisma/client";
-import { Card, CardContent, Button } from "@educariera/ui";
+import { Card, CardContent, Button } from "@EduMind/ui";
 import Link from "next/link";
 
 const prisma = new PrismaClient();
@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Admin Dashboard - EduCarieră",
+  title: "Admin Dashboard - EduMind",
 };
 
 export default async function AdminDashboardPage() {

@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import { Badge } from "@educariera/ui";
+import { Badge } from "@EduMind/ui";
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,8 +18,8 @@ export function NotificationBell() {
     },
     {
       id: "n-2",
-      title: "Plată Confirmată",
-      message: "Plata pentru pachetul 'Consiliere Premium' a fost procesată cu succes.",
+      title: "PlatÄƒ ConfirmatÄƒ",
+      message: "Plata pentru pachetul 'Consiliere Premium' a fost procesatÄƒ cu succes.",
       category: "PAYMENT_CONFIRMED",
       readAt: new Date().toISOString(),
       createdAt: "Ieri",
@@ -47,8 +47,8 @@ export function NotificationBell() {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 rounded-lg shadow-lg bg-white border border-border overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-border bg-ivory-background flex items-center justify-between">
-            <h3 className="font-semibold text-primary-ink text-sm">Notificări</h3>
-            <button className="text-xs text-forest-accent hover:underline">Marchează toate citite</button>
+            <h3 className="font-semibold text-primary-ink text-sm">NotificÄƒri</h3>
+            <button className="text-xs text-forest-accent hover:underline">MarcheazÄƒ toate citite</button>
           </div>
           <div className="max-h-96 overflow-y-auto divide-y divide-border">
             {notifications.map((n) => (

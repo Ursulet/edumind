@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Card, CardContent } from "@educariera/ui";
+import { Button, Input, Label, Card, CardContent } from "@EduMind/ui";
 
 export function RegistrationWizard() {
   const [step, setStep] = useState(1);
@@ -68,7 +68,7 @@ export function RegistrationWizard() {
           </div>
           <h2 className="text-2xl font-bold text-[#0B2239]">Aplicația a fost înregistrată!</h2>
           <p className="text-[#64748B] max-w-md mx-auto">
-            Vă mulțumim pentru încredere. Un specialist EduCarieră va analiza aplicația dumneavoastră și vă va contacta în cel mai scurt timp.
+            Vă mulțumim pentru încredere. Un specialist EduMind va analiza aplicația dumneavoastră și vă va contacta în cel mai scurt timp.
           </p>
           <div className="pt-4">
             <a href="/login">
@@ -262,7 +262,7 @@ export function RegistrationWizard() {
                   className="mt-1 h-4 w-4 rounded border-[#E2E8F0] accent-[#0F766E]"
                 />
                 <span className="text-sm text-[#102A43]">
-                  Accept termenii și condițiile de utilizare a platformei EduCarieră.
+                  Accept termenii și condițiile de utilizare a platformei EduMind.
                 </span>
               </label>
             </div>

@@ -1,6 +1,6 @@
 ﻿export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@educariera/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@EduMind/ui";
 
 export const metadata = {
   title: "PlÄƒÈ›i È™i Facturi - Portal PÄƒrinÈ›i",

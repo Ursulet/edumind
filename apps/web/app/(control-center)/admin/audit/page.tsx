@@ -1,12 +1,12 @@
 ﻿import { PrismaClient } from "@prisma/client";
-import { Card, CardContent, CardHeader, Badge } from "@educariera/ui";
+import { Card, CardContent, CardHeader, Badge } from "@EduMind/ui";
 
 const prisma = new PrismaClient();
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Jurnal Audit Securitate - EduCarieră",
+  title: "Jurnal Audit Securitate - EduMind",
 };
 
 export default async function AuditLogPage() {

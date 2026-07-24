@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+﻿import { PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
@@ -56,21 +56,21 @@ const PERMISSIONS = [
 ];
 
 async function main() {
-  console.info('🌱 Seeding EduCarieră database...');
+  console.info('ðŸŒ± Seeding EduCarierÄƒ database...');
 
   // 1. Create Organization (FNPE)
   const fnpeOrg = await prisma.organization.upsert({
     where: { slug: 'fnpe' },
     update: {},
     create: {
-      name: 'Fundația Națională pentru Planificarea Educației (FNPE)',
+      name: 'FundaÈ›ia NaÈ›ionalÄƒ pentru Planificarea EducaÈ›iei (FNPE)',
       slug: 'fnpe',
       defaultLocale: 'ro-RO',
       timezone: 'Europe/Bucharest',
       status: 'ACTIVE',
     },
   });
-  console.info(`✅ Created Organization: ${fnpeOrg.name}`);
+  console.info(`âœ… Created Organization: ${fnpeOrg.name}`);
 
   // 2. Create Permissions
   for (const perm of PERMISSIONS) {
@@ -80,7 +80,7 @@ async function main() {
       create: perm,
     });
   }
-  console.info(`✅ Seeded ${PERMISSIONS.length} granular permissions.`);
+  console.info(`âœ… Seeded ${PERMISSIONS.length} granular permissions.`);
 
   // 3. Create Roles
   const roles = [
@@ -98,7 +98,7 @@ async function main() {
       create: roleData,
     });
   }
-  console.info('✅ Created conceptual roles.');
+  console.info('âœ… Created conceptual roles.');
 
   // 4. Assign permissions to Roles
   const allPermissions = await prisma.permission.findMany();
@@ -123,10 +123,10 @@ async function main() {
   // 5. Create Default Super Admin Account
   const defaultPasswordHash = await argon2.hash('AdminPassword123!');
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@educariera.ro' },
+    where: { email: 'admin@EduMind.ro' },
     update: {},
     create: {
-      email: 'admin@educariera.ro',
+      email: 'admin@EduMind.ro',
       passwordHash: defaultPasswordHash,
       firstName: 'Super',
       lastName: 'Admin',
@@ -153,12 +153,12 @@ async function main() {
     });
   }
 
-  console.info('✅ Database seeding finished successfully.');
+  console.info('âœ… Database seeding finished successfully.');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seeding failed:', e);
+    console.error('âŒ Seeding failed:', e);
     process.exit(1);
   })
   .finally(async () => {
