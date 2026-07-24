@@ -1,6 +1,6 @@
 import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { Button, Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent, Textarea } from "@EduMind/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent, Textarea } from "@educariera/ui";
 import Link from "next/link";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";

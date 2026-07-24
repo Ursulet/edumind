@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@educariera/ui";
-import { Button } from "@educariera/ui";
+import { Dialog, DialogFooter, Button } from "@educariera/ui";
 
 export function NewAppointmentDialog({ caseId, staffId, staffName }: { caseId: string, staffId: string, staffName: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,16 +64,17 @@ export function NewAppointmentDialog({ caseId, staffId, staffName }: { caseId: s
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-[#2F6B57] text-white hover:bg-[#275B4A]">
-          Programează Ședință Nouă
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#FFFDF8] border-[#E3DED3]">
-        <DialogHeader>
-          <DialogTitle className="text-[#1F2622]">Programează o nouă ședință</DialogTitle>
-        </DialogHeader>
+    <>
+      <Button className="bg-[#2F6B57] text-white hover:bg-[#275B4A]" onClick={() => setIsOpen(true)}>
+        Programează Ședință Nouă
+      </Button>
+
+      <Dialog 
+        open={isOpen} 
+        onClose={() => setIsOpen(false)} 
+        title="Programează o nouă ședință"
+        className="bg-[#FFFDF8] border-[#E3DED3]"
+      >
         <div className="grid gap-6 py-4">
           <p className="text-sm text-[#6B746F]">
             Specialist alocat: <span className="font-semibold text-[#1F2622]">{staffName}</span>
@@ -119,7 +119,7 @@ export function NewAppointmentDialog({ caseId, staffId, staffName }: { caseId: s
           ) : null}
         </div>
         
-        <div className="flex justify-end gap-3 pt-4 border-t border-[#E3DED3]">
+        <DialogFooter>
           <Button variant="outline" className="border-[#E3DED3] text-[#1F2622]" onClick={() => setIsOpen(false)}>
             Renunță
           </Button>
@@ -130,9 +130,8 @@ export function NewAppointmentDialog({ caseId, staffId, staffName }: { caseId: s
           >
             {booking ? "Se procesează..." : "Confirmă Programarea"}
           </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogFooter>
+      </Dialog>
+    </>
   );
 }
-
