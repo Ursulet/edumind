@@ -4,6 +4,9 @@ import { Button } from "@edumind/ui";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";
 
+import { PublicHeader } from "@/components/layout/PublicHeader";
+import { PublicFooter } from "@/components/layout/PublicFooter";
+
 export const dynamic = "force-dynamic";
 
 export const metadata = {
@@ -27,47 +30,7 @@ export default async function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F5F0]">
-      {/* Header / Navigation — Warm Institutional */}
-      <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 backdrop-blur-sm border-b border-[#E3DED3]">
-        <div className="container mx-auto px-4 max-w-[1280px] h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#1F2622] flex items-center justify-center text-white font-bold text-base tracking-tight">
-              EM
-            </div>
-            <span className="font-semibold text-xl text-[#1F2622] tracking-tight">
-              EduMind
-            </span>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#6B746F]">
-            <Link href="/cum-functioneaza" className="hover:text-[#1F2622] transition-colors duration-150">
-              Cum funcționează
-            </Link>
-            <Link href="/servicii" className="hover:text-[#1F2622] transition-colors duration-150">
-              Programe
-            </Link>
-            <Link href="/intrebari-frecvente" className="hover:text-[#1F2622] transition-colors duration-150">
-              Întrebări frecvente
-            </Link>
-            <Link href="/contact" className="hover:text-[#1F2622] transition-colors duration-150">
-              Contact
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="outline" className="border-[#E3DED3] text-[#1F2622] hover:bg-[#F1EEE7]">
-                Intră în cont
-              </Button>
-            </Link>
-            <Link href="/inscriere">
-              <Button className="bg-[#2F6B57] text-white hover:bg-[#275B4A]">
-                Înscriere Familii
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Render sections from CMS if available */}
       {page && page.sections && page.sections.length > 0 ? (
@@ -160,42 +123,7 @@ export default async function LandingPage() {
         </main>
       )}
 
-      {/* Footer — Deep Graphite */}
-      <footer className="bg-[#1F2622] text-white pt-16 pb-8 mt-auto">
-        <div className="container mx-auto px-4 max-w-[1280px]">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 border-b border-[#2A332E] pb-12">
-            <div className="space-y-4">
-              <span className="font-semibold text-xl tracking-tight text-white">EduMind</span>
-              <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Sistem integrat de consiliere vocațională și orientare în carieră.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-white text-sm tracking-wide">Navigare</h4>
-              <ul className="space-y-2 text-sm text-[#94A3B8]">
-                <li><Link href="/servicii" className="hover:text-[#DCE8E1] transition-colors">Programe</Link></li>
-                <li><Link href="/cum-functioneaza" className="hover:text-[#DCE8E1] transition-colors">Metodologie</Link></li>
-                <li><Link href="/login" className="hover:text-[#DCE8E1] transition-colors">Portal Autentificare</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-white text-sm tracking-wide">Legal</h4>
-              <ul className="space-y-2 text-sm text-[#94A3B8]">
-                <li><Link href="/termeni" className="hover:text-[#DCE8E1] transition-colors">Termeni și Condiții</Link></li>
-                <li><Link href="/confidentialitate" className="hover:text-[#DCE8E1] transition-colors">Politica de Confidențialitate</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-white text-sm tracking-wide">Contact</h4>
-              <p className="text-sm text-[#94A3B8]">contact@edumind.ro</p>
-              <p className="text-sm text-[#94A3B8] mt-1">București, România</p>
-            </div>
-          </div>
-          <div className="text-center text-xs text-[#6B746F]">
-            © {new Date().getFullYear()} EduMind. Toate drepturile rezervate.
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
