@@ -1,4 +1,4 @@
-﻿import { TrustStripSectionData } from "@EduMind/validation";
+import { TrustStripSectionData } from "@educariera/validation";
 
 export function TrustStripSection({ data }: { data: TrustStripSectionData }) {
   return (
@@ -19,3 +19,4 @@ export function TrustStripSection({ data }: { data: TrustStripSectionData }) {
     </section>
   );
 }
+

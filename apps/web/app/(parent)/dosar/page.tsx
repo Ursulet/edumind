@@ -1,154 +1,103 @@
-﻿export const dynamic = "force-dynamic";
-import { prisma } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent } from "@EduMind/ui";
+import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent } from "@educariera/ui";
+
+const API = process.env.INTERNAL_API_URL || "http://api:4000";
+
+async function fetchWithAuth(path: string, headers: Record<string, string>) {
+  try {
+    const res = await fetch(`${API}${path}`, {
+      headers: { ...headers, "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
 
 export const metadata = {
-  title: "Dosarul Cazului - Portal PÄƒrinÈ›i",
+  title: "Dosarul Cazului - Portal Părinți | EduMind",
 };
 
 export default async function ParentDossierPage() {
+  const user = await getUserFromToken();
+  if (!user) redirect("/login");
+
+  const authHeaders = await getAuthHeaders();
+
+  // 1. Get user's cases to find the active one
+  const casesData = await fetchWithAuth(`/api/v1/cases/mine`, authHeaders);
+  const activeCaseMeta = Array.isArray(casesData) ? casesData[0] : null;
+
+  // 2. Fetch full case details
   let careerCase: any = null;
-  try {
-    careerCase = await prisma.careerCase.findFirst({
-      include: {
-        child: true,
-        counselingSessions: {
-          include: { type: true, content: true },
-          where: { status: "COMPLETED" },
-          orderBy: { createdAt: "desc" }
-        },
-        reports: {
-          where: { status: "PUBLISHED" },
-          include: { templateVersion: { include: { template: true } } }
-        },
-        careerPlans: {
-          where: { status: "PUBLISHED" },
-          orderBy: { version: "desc" },
-          take: 1
-        },
-        documents: {
-          where: { visibility: "PARENT_VISIBLE" }
-        }
-      }
-    });
-  } catch (e) {
-    console.log("DB Offline - Using Mock Data for Dossier");
-    careerCase = {
-      child: { firstName: "Matei", lastName: "Popescu" },
-      counselingSessions: [
-        {
-          id: "sess-1",
-          type: { title: "È˜edinÈ›Äƒ Consiliere VocaÈ›ionalÄƒ #2" },
-          createdAt: new Date().toISOString(),
-          content: {
-            parentSummary: "Matei a fost foarte deschis azi. Am discutat despre rezultatele testului de interese È™i am observat o Ã®nclinaÈ›ie puternicÄƒ spre lucrul Ã®n echipÄƒ È™i rezolvarea de probleme tehnice.",
-            homework: "SÄƒ discute cu un membru al familiei despre o problemÄƒ tehnicÄƒ pe care a rezolvat-o recent È™i sÄƒ noteze cum s-a simÈ›it."
-          }
-        },
-        {
-          id: "sess-2",
-          type: { title: "È˜edinÈ›Äƒ de CunoaÈ™tere" },
-          createdAt: new Date(Date.now() - 864000000).toISOString(),
-          content: {
-            parentSummary: "O primÄƒ Ã®ntÃ¢lnire excelentÄƒ. Am stabilit obiectivele pentru urmÄƒtoarele luni de consiliere.",
-            homework: null
-          }
-        }
-      ],
-      reports: [
-        {
-          id: "rep-1",
-          title: "Raport Interese Holland (RIASEC)",
-          createdAt: new Date().toISOString(),
-          templateVersion: { template: { name: "È˜ablon Standard Holland" } }
-        }
-      ],
-      careerPlans: [
-        {
-          id: "plan-1",
-          status: "PUBLISHED",
-          version: 1,
-          sections: {
-            strengths: "Capacitate analiticÄƒ ridicatÄƒ, atenÈ›ie la detalii. Matei Ã®nvaÈ›Äƒ extrem de repede concepte noi de matematicÄƒ È™i fizicÄƒ.",
-            interests: "Tehnologie, inginerie, roboticÄƒ.",
-            short_term: "Participare la clubul de roboticÄƒ local, cursuri introductive de Python.",
-            long_term: "Facultatea de AutomaticÄƒ È™i Calculatoare (PolitehnicÄƒ) sau un program echivalent Ã®n strÄƒinÄƒtate."
-          }
-        }
-      ],
-      documents: [
-        {
-          id: "doc-1",
-          displayName: "Plan_Cariera_Matei_Final.pdf",
-          visibility: "PARENT_VISIBLE",
-          createdAt: new Date().toISOString()
-        }
-      ]
-    };
+  if (activeCaseMeta) {
+    careerCase = await fetchWithAuth(`/api/v1/cases/${activeCaseMeta.id}`, authHeaders);
   }
 
   return (
-    <div className="flex-1 w-full bg-ivory-background py-8">
-      <div className="container mx-auto px-4 max-w-5xl space-y-8">
+    <div className="flex-1 w-full py-4 md:py-6">
+      <div className="max-w-5xl mx-auto space-y-6">
         
-        <div className="flex items-start justify-between border-b border-border pb-6">
+        <div className="flex items-start justify-between border-b border-[#E3DED3] pb-6">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold text-primary-ink">
+            <h1 className="text-2xl font-semibold text-[#1F2622] tracking-[-0.025em]">
               Dosarul de Consiliere
             </h1>
-            <p className="text-sm text-primary-text">
-              Tot parcursul vocaÈ›ional al copilului tÄƒu ({careerCase?.child.firstName || "Elev"}), Ã®ntr-un singur loc.
+            <p className="text-sm text-[#6B746F]">
+              Tot parcursul vocațional al copilului tău ({careerCase?.child?.firstName || "Elev"}), într-un singur loc.
             </p>
           </div>
         </div>
 
         {careerCase ? (
           <Tabs defaultValue="sessions" className="w-full">
-            <TabsList className="bg-warm-surface border border-border w-full justify-start overflow-x-auto">
-              <TabsTrigger value="sessions">Istoric È˜edinÈ›e</TabsTrigger>
-              <TabsTrigger value="reports">Rapoarte Finale</TabsTrigger>
-              <TabsTrigger value="plan">Plan CarierÄƒ</TabsTrigger>
+            <TabsList className="bg-[#FFFDF8] border border-[#E3DED3] w-full justify-start overflow-x-auto rounded-lg p-1">
+              <TabsTrigger value="sessions" className="data-[state=active]:bg-[#EDF4F0] data-[state=active]:text-[#2F6B57]">Istoric Ședințe</TabsTrigger>
+              <TabsTrigger value="reports" className="data-[state=active]:bg-[#EDF4F0] data-[state=active]:text-[#2F6B57]">Rapoarte Finale</TabsTrigger>
+              <TabsTrigger value="plan" className="data-[state=active]:bg-[#EDF4F0] data-[state=active]:text-[#2F6B57]">Plan Carieră</TabsTrigger>
             </TabsList>
             
             <TabsContent value="sessions" className="mt-6 space-y-6">
-              {careerCase.counselingSessions.length === 0 ? (
-                <Card className="bg-warm-surface border-border border-dashed">
-                  <CardContent className="p-8 text-center text-muted-text">
-                    Nu s-a finalizat Ã®ncÄƒ nicio È™edinÈ›Äƒ.
+              {!careerCase.counselingSessions || careerCase.counselingSessions.length === 0 ? (
+                <Card className="bg-[#FFFDF8] border-[#E3DED3] border-dashed">
+                  <CardContent className="p-8 text-center text-[#6B746F]">
+                    Nu s-a finalizat încă nicio ședință.
                   </CardContent>
                 </Card>
               ) : (
-                <div className="relative border-l-2 border-border ml-4 space-y-8 pb-4">
+                <div className="relative border-l-2 border-[#E3DED3] ml-4 space-y-8 pb-4">
                   {careerCase.counselingSessions.map((session: any) => (
-                  <div key={session.id} className="relative pl-6 border-l-2 border-forest-accent">
-                      <div className="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-forest-accent border-4 border-ivory-background" />
+                  <div key={session.id} className="relative pl-6 border-l-2 border-[#2F6B57]">
+                      <div className="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-[#2F6B57] border-4 border-[#F7F5F0]" />
                       
-                      <Card className="bg-warm-surface border-border shadow-sm">
+                      <Card className="bg-[#FFFDF8] border-[#E3DED3] shadow-[0_1px_2px_rgba(31,38,34,0.05)]">
                         <CardHeader className="pb-2">
                           <div className="flex justify-between items-start">
-                            <CardTitle className="text-lg text-primary-ink">{session.type.title}</CardTitle>
-                            <span className="text-xs text-muted-text font-medium">
+                            <CardTitle className="text-lg text-[#1F2622]">{session.appointment?.type?.title || "Ședință Consiliere"}</CardTitle>
+                            <span className="text-xs text-[#6B746F] font-medium">
                               {new Date(session.createdAt).toLocaleDateString('ro-RO')}
                             </span>
                           </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          {/* We strictly ONLY render parentSummary and homework. internalNotes are excluded from the DB query theoretically, but definitely excluded from UI */}
                           {session.content?.parentSummary ? (
-                            <div className="bg-ivory-background p-4 rounded-md border border-border">
-                              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-text mb-2">Concluziile Specialistului</h4>
-                              <p className="text-sm text-primary-text whitespace-pre-wrap">
+                            <div className="bg-[#F7F5F0] p-4 rounded-md border border-[#E3DED3]">
+                              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#6B746F] mb-2">Concluziile Specialistului</h4>
+                              <p className="text-sm text-[#1F2622] whitespace-pre-wrap">
                                 {session.content.parentSummary}
                               </p>
                             </div>
                           ) : (
-                            <p className="text-sm text-muted-text italic">Specialistul nu a publicat Ã®ncÄƒ concluziile.</p>
+                            <p className="text-sm text-[#6B746F] italic">Specialistul nu a publicat încă concluziile.</p>
                           )}
 
                           {session.content?.homework && (
-                            <div className="bg-sage-surface/30 p-4 rounded-md border border-forest-accent/20">
-                              <h4 className="text-xs font-semibold uppercase tracking-wider text-forest-accent mb-2">De FÄƒcut (Homework)</h4>
-                              <p className="text-sm text-primary-text whitespace-pre-wrap">
+                            <div className="bg-[#EDF4F0] p-4 rounded-md border border-[#2F6B57]/20">
+                              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#2F6B57] mb-2">De Făcut (Homework)</h4>
+                              <p className="text-sm text-[#1F2622] whitespace-pre-wrap">
                                 {session.content.homework}
                               </p>
                             </div>
@@ -162,28 +111,28 @@ export default async function ParentDossierPage() {
             </TabsContent>
             
             <TabsContent value="reports" className="mt-6 space-y-6">
-               {careerCase.reports.length === 0 ? (
-                <Card className="bg-warm-surface border-border border-dashed">
-                  <CardContent className="p-8 text-center text-muted-text">
+               {!careerCase.reports || careerCase.reports.length === 0 ? (
+                <Card className="bg-[#FFFDF8] border-[#E3DED3] border-dashed">
+                  <CardContent className="p-8 text-center text-[#6B746F]">
                     Niciun raport publicat.
                   </CardContent>
                 </Card>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {careerCase.reports.map((report: any) => (
-                    <Card key={report.id} className="bg-warm-surface border-border shadow-sm hover:border-forest-accent/50 transition-colors cursor-pointer">
+                    <Card key={report.id} className="bg-[#FFFDF8] border-[#E3DED3] shadow-sm hover:border-[#2F6B57]/50 transition-colors cursor-pointer">
                       <CardContent className="p-6">
                         <div className="flex items-center gap-3 mb-3">
-                           <div className="p-2 bg-sage-surface text-forest-accent rounded">
+                           <div className="p-2 bg-[#EDF4F0] text-[#2F6B57] rounded">
                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                            </div>
                            <div>
-                             <h3 className="font-medium text-primary-ink">{report.title}</h3>
-                             <p className="text-xs text-muted-text">{new Date(report.createdAt).toLocaleDateString('ro-RO')}</p>
+                             <h3 className="font-medium text-[#1F2622]">{report.title}</h3>
+                             <p className="text-xs text-[#6B746F]">{new Date(report.createdAt).toLocaleDateString('ro-RO')}</p>
                            </div>
                         </div>
-                        <p className="text-sm text-primary-text line-clamp-2">
-                          Raport generat din È™ablonul {report.templateVersion.template.name}.
+                        <p className="text-sm text-[#6B746F] line-clamp-2">
+                          Raport generat și publicat de specialist.
                         </p>
                       </CardContent>
                     </Card>
@@ -196,7 +145,7 @@ export default async function ParentDossierPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <div className="md:col-span-2 space-y-6">
-              <h2 className="text-xl font-medium text-primary-ink border-b border-border pb-2">Planul de CarierÄƒ (Livrabil)</h2>
+              <h2 className="text-xl font-medium text-[#1F2622] border-b border-[#E3DED3] pb-2">Planul de Carieră (Livrabil)</h2>
               
               {careerCase.careerPlans && careerCase.careerPlans.length > 0 ? (
                 <div className="space-y-6">
@@ -204,49 +153,49 @@ export default async function ParentDossierPage() {
                     const sections = careerCase.careerPlans[0].sections || {};
                     return (
                       <>
-                        <div className="bg-white p-6 rounded-md shadow-sm border border-border">
-                          <h3 className="font-semibold text-primary-ink mb-2">Puncte Tari Identificate</h3>
-                          <p className="text-sm text-primary-text">{sections.strengths || "-"}</p>
+                        <div className="bg-[#FFFDF8] p-6 rounded-md shadow-[0_1px_2px_rgba(31,38,34,0.05)] border border-[#E3DED3]">
+                          <h3 className="font-semibold text-[#1F2622] mb-2">Puncte Tari Identificate</h3>
+                          <p className="text-sm text-[#6B746F]">{sections.strengths || "-"}</p>
                         </div>
-                        <div className="bg-white p-6 rounded-md shadow-sm border border-border">
-                          <h3 className="font-semibold text-primary-ink mb-2">Arii de Interes (Top 3)</h3>
-                          <p className="text-sm text-primary-text">{sections.interests || "-"}</p>
+                        <div className="bg-[#FFFDF8] p-6 rounded-md shadow-[0_1px_2px_rgba(31,38,34,0.05)] border border-[#E3DED3]">
+                          <h3 className="font-semibold text-[#1F2622] mb-2">Arii de Interes (Top 3)</h3>
+                          <p className="text-sm text-[#6B746F]">{sections.interests || "-"}</p>
                         </div>
-                        <div className="bg-white p-6 rounded-md shadow-sm border border-border">
-                          <h3 className="font-semibold text-primary-ink mb-2">Obiective pe Termen Scurt</h3>
-                          <p className="text-sm text-primary-text">{sections.short_term || "-"}</p>
+                        <div className="bg-[#FFFDF8] p-6 rounded-md shadow-[0_1px_2px_rgba(31,38,34,0.05)] border border-[#E3DED3]">
+                          <h3 className="font-semibold text-[#1F2622] mb-2">Obiective pe Termen Scurt</h3>
+                          <p className="text-sm text-[#6B746F]">{sections.short_term || "-"}</p>
                         </div>
-                        <div className="bg-white p-6 rounded-md shadow-sm border border-border">
-                          <h3 className="font-semibold text-primary-ink mb-2">DirecÈ›ia pe Termen Lung</h3>
-                          <p className="text-sm text-primary-text">{sections.long_term || "-"}</p>
+                        <div className="bg-[#FFFDF8] p-6 rounded-md shadow-[0_1px_2px_rgba(31,38,34,0.05)] border border-[#E3DED3]">
+                          <h3 className="font-semibold text-[#1F2622] mb-2">Direcția pe Termen Lung</h3>
+                          <p className="text-sm text-[#6B746F]">{sections.long_term || "-"}</p>
                         </div>
                       </>
                     );
                   })()}
                 </div>
               ) : (
-                <p className="text-sm text-muted-text">Planul de carierÄƒ nu a fost Ã®ncÄƒ finalizat È™i publicat de cÄƒtre specialist.</p>
+                <p className="text-sm text-[#6B746F]">Planul de carieră nu a fost încă finalizat și publicat de către specialist.</p>
               )}
             </div>
 
             <div>
-              <h2 className="text-xl font-medium text-primary-ink border-b border-border pb-2 mb-6">Documente AtaÈ™ate</h2>
+              <h2 className="text-xl font-medium text-[#1F2622] border-b border-[#E3DED3] pb-2 mb-6">Documente Atașate</h2>
               {careerCase.documents && careerCase.documents.length > 0 ? (
                 <div className="space-y-3">
                   {careerCase.documents.map((doc: any) => (
-                    <a key={doc.id} href="#" className="block bg-white p-4 rounded-md shadow-sm border border-border hover:border-forest-accent transition-colors">
+                    <a key={doc.id} href="#" className="block bg-[#FFFDF8] p-4 rounded-md shadow-[0_1px_2px_rgba(31,38,34,0.05)] border border-[#E3DED3] hover:border-[#2F6B57] transition-colors">
                       <div className="flex items-center gap-3">
-                        <svg className="w-8 h-8 text-forest-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                        <svg className="w-8 h-8 text-[#2F6B57]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         <div>
-                          <p className="text-sm font-medium text-primary-ink">{doc.displayName}</p>
-                          <p className="text-xs text-muted-text">DescÄƒrcare sigurÄƒ (S3)</p>
+                          <p className="text-sm font-medium text-[#1F2622]">{doc.displayName}</p>
+                          <p className="text-xs text-[#6B746F]">Descărcare sigură (S3)</p>
                         </div>
                       </div>
                     </a>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-text">Niciun document nu a fost ataÈ™at Ã®ncÄƒ.</p>
+                <p className="text-sm text-[#6B746F]">Niciun document nu a fost atașat încă.</p>
               )}
             </div>
             
@@ -254,8 +203,8 @@ export default async function ParentDossierPage() {
         </TabsContent>
           </Tabs>
         ) : (
-          <Card className="bg-warm-surface border-border">
-            <CardContent className="p-8 text-center text-muted-text">
+          <Card className="bg-[#FFFDF8] border-[#E3DED3]">
+            <CardContent className="p-8 text-center text-[#6B746F]">
               Nu ai un dosar activ.
             </CardContent>
           </Card>

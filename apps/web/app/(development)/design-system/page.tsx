@@ -1,11 +1,11 @@
-﻿import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Label, Badge } from "@EduMind/ui";
+import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Label, Badge } from "@educariera/ui";
 
 export default function DesignSystemPage() {
   return (
     <div className="container mx-auto p-8 space-y-12 pb-20">
       <div className="space-y-4">
         <h1 className="text-4xl font-semibold tracking-tight text-primary-ink">Design System</h1>
-        <p className="text-muted-text">EduCarierÄƒ Component Library and Design Tokens</p>
+        <p className="text-muted-text">EduCarieră Component Library and Design Tokens</p>
       </div>
 
       <section className="space-y-4">
@@ -128,3 +128,4 @@ export default function DesignSystemPage() {
     </div>
   );
 }
+

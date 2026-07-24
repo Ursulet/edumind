@@ -1,88 +1,122 @@
-﻿export const dynamic = "force-dynamic";
-import { prisma } from "@/lib/db";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@EduMind/ui";
+import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { Button, Card, CardContent } from "@educariera/ui";
 import Link from "next/link";
+import { NewAppointmentDialog } from "@/components/scheduling/NewAppointmentDialog";
+
+const API = process.env.INTERNAL_API_URL || "http://api:4000";
+
+async function fetchWithAuth(path: string, headers: Record<string, string>) {
+  try {
+    const res = await fetch(`${API}${path}`, {
+      headers: { ...headers, "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
 
 export const metadata = {
-  title: "ProgramÄƒri - Portal PÄƒrinÈ›i",
+  title: "Programări - Portal Părinți | EduMind",
 };
 
 export default async function ParentAppointmentsPage() {
-  const appointments = await prisma.appointment.findMany({
-    include: {
-      type: true,
-      staff: { include: { user: true } },
-      case: { include: { child: true } },
-      videoMeeting: true,
-    },
-    orderBy: { startTime: "asc" }
-  });
+  const user = await getUserFromToken();
+  if (!user) redirect("/login");
 
-  const upcomingAppointments = appointments.filter(a => a.status === "SCHEDULED");
-  const pastAppointments = appointments.filter(a => a.status !== "SCHEDULED");
+  const authHeaders = await getAuthHeaders();
+
+  const caseData = await fetchWithAuth(`/api/v1/cases/mine`, authHeaders);
+  const activeCase = Array.isArray(caseData) ? caseData[0] : null;
+
+  let appointments: any[] = [];
+  
+  if (activeCase) {
+    const apts = await fetchWithAuth(`/api/v1/scheduling/appointments/case/${activeCase.id}`, authHeaders);
+    if (Array.isArray(apts)) {
+      appointments = apts;
+    }
+  }
+
+  const upcomingAppointments = appointments.filter((a) => a.status === "SCHEDULED");
+  const pastAppointments = appointments.filter((a) => a.status !== "SCHEDULED");
 
   return (
-    <div className="flex-1 w-full bg-ivory-background py-8">
-      <div className="container mx-auto px-4 max-w-5xl space-y-8">
+    <div className="flex-1 w-full py-4 md:py-6">
+      <div className="max-w-5xl mx-auto space-y-6">
         
-        <div className="flex items-start justify-between border-b border-border pb-6">
+        {/* Context Header */}
+        <div className="flex items-start justify-between border-b border-[#E3DED3] pb-6">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold text-primary-ink">
-              ProgramÄƒrile Mele
+            <h1 className="text-2xl font-semibold text-[#1F2622] tracking-[-0.025em]">
+              Programările Mele
             </h1>
-            <p className="text-sm text-primary-text">
-              GestioneazÄƒ È™edinÈ›ele de consiliere cu specialiÈ™tii noÈ™tri.
+            <p className="text-sm text-[#6B746F]">
+              Gestionează ședințele de consiliere cu specialiștii noștri.
             </p>
           </div>
-          <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover">
-            ProgrameazÄƒ È˜edinÈ›Äƒ NouÄƒ
-          </Button>
+          {activeCase && activeCase.assignments && activeCase.assignments.length > 0 && (
+            <NewAppointmentDialog 
+              caseId={activeCase.id}
+              staffId={activeCase.assignments[0].staff.id}
+              staffName={`${activeCase.assignments[0].staff.user.firstName} ${activeCase.assignments[0].staff.user.lastName}`}
+            />
+          )}
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-primary-ink">UrmÄƒtoarele È˜edinÈ›e</h2>
-          {upcomingAppointments.length === 0 ? (
-            <Card className="bg-warm-surface border-border border-dashed">
-              <CardContent className="p-8 text-center text-muted-text">
-                Nu ai nicio È™edinÈ›Äƒ viitoare programatÄƒ.
+          <h2 className="text-xl font-semibold text-[#1F2622]">Următoarele Ședințe</h2>
+          {!activeCase ? (
+            <Card className="bg-[#FFFDF8] border-[#E3DED3] border-dashed">
+              <CardContent className="p-8 text-center text-[#6B746F]">
+                Nu ai un dosar activ pentru a putea face programări.
+              </CardContent>
+            </Card>
+          ) : upcomingAppointments.length === 0 ? (
+            <Card className="bg-[#FFFDF8] border-[#E3DED3] border-dashed">
+              <CardContent className="p-8 text-center text-[#6B746F]">
+                Nu ai nicio ședință viitoare programată.
               </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {upcomingAppointments.map((apt) => (
-                <Card key={apt.id} className="bg-warm-surface border-border shadow-sm">
+                <Card key={apt.id} className="bg-[#FFFDF8] border-[#E3DED3] shadow-[0_1px_2px_rgba(31,38,34,0.05)]">
                   <CardContent className="p-6 space-y-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="bg-success/10 text-success px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-2 inline-block">
+                        <span className="bg-[#EDF4F0] text-[#2F6B57] px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-3 inline-block">
                           Confirmat
                         </span>
-                        <h3 className="text-lg font-semibold text-primary-ink">
-                          {apt.type.title}
+                        <h3 className="text-lg font-semibold text-[#1F2622]">
+                          {apt.type?.title || "Ședință Consiliere"}
                         </h3>
-                        <p className="text-sm text-primary-text font-medium mt-1">
+                        <p className="text-sm text-[#6B746F] font-medium mt-1">
                           {new Date(apt.startTime).toLocaleDateString('ro-RO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                         </p>
-                        <p className="text-sm text-muted-text">
+                        <p className="text-sm text-[#6B746F]">
                           Ora: {new Date(apt.startTime).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-muted-text">Specialist</div>
-                        <div className="text-sm font-medium">{apt.staff.user.firstName}</div>
+                        <div className="text-xs text-[#6B746F]">Specialist</div>
+                        <div className="text-sm font-medium text-[#1F2622]">{apt.staff?.user?.firstName || "Alocat"}</div>
                       </div>
                     </div>
                     
-                    <div className="pt-4 border-t border-border flex gap-3">
+                    <div className="pt-4 border-t border-[#E3DED3] flex gap-3">
                       {apt.videoMeeting && (
-                        <Button asChild className="flex-1 bg-forest-accent hover:bg-forest-hover text-warm-surface">
+                        <Button asChild className="flex-1 bg-[#2F6B57] hover:bg-[#275B4A] text-white">
                           <Link href={apt.videoMeeting.joinUrl} target="_blank">
-                            IntrÄƒ Ã®n ConferinÈ›Äƒ
+                            Intră în Conferință
                           </Link>
                         </Button>
                       )}
-                      <Button variant="outline" className="flex-1 text-danger border-danger/30 hover:bg-danger/5 hover:text-danger">
-                        AnuleazÄƒ
+                      <Button variant="outline" className="flex-1 text-[#B4453A] border-[#FECACA] hover:bg-[#FEF2F2] hover:text-[#B4453A]">
+                        Anulează
                       </Button>
                     </div>
                   </CardContent>
@@ -93,21 +127,21 @@ export default async function ParentAppointmentsPage() {
         </div>
 
         <div className="space-y-4 pt-8">
-          <h2 className="text-lg font-semibold text-primary-ink">Istoric È˜edinÈ›e</h2>
+          <h2 className="text-lg font-semibold text-[#1F2622]">Istoric Ședințe</h2>
           {pastAppointments.length === 0 ? (
-            <p className="text-sm text-muted-text">Nu existÄƒ istoric.</p>
+            <p className="text-sm text-[#6B746F]">Nu există istoric.</p>
           ) : (
             <div className="space-y-3">
               {pastAppointments.map(apt => (
-                <Card key={apt.id} className="bg-muted-surface border-border shadow-none">
+                <Card key={apt.id} className="bg-[#F7F5F0] border-[#E3DED3] shadow-none">
                   <CardContent className="p-4 flex justify-between items-center opacity-70">
                     <div>
-                      <p className="font-medium text-sm">{apt.type.title}</p>
-                      <p className="text-xs text-muted-text">
-                        {new Date(apt.startTime).toLocaleDateString('ro-RO')} â€¢ Specialist: {apt.staff.user.firstName}
+                      <p className="font-medium text-sm text-[#1F2622]">{apt.type?.title || "Ședință Consiliere"}</p>
+                      <p className="text-xs text-[#6B746F]">
+                        {new Date(apt.startTime).toLocaleDateString('ro-RO')} • Specialist: {apt.staff?.user?.firstName || "Necunoscut"}
                       </p>
                     </div>
-                    <span className="text-xs uppercase tracking-wider font-semibold text-muted-text">
+                    <span className="text-xs uppercase tracking-wider font-semibold text-[#6B746F]">
                       {apt.status}
                     </span>
                   </CardContent>

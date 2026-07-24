@@ -1,4 +1,4 @@
-﻿import { ProcessSectionData } from "@EduMind/validation";
+import { ProcessSectionData } from "@educariera/validation";
 
 export function ProcessSection({ data }: { data: ProcessSectionData }) {
   return (
@@ -39,3 +39,4 @@ export function ProcessSection({ data }: { data: ProcessSectionData }) {
     </section>
   );
 }
+

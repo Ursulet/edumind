@@ -1,6 +1,6 @@
-﻿export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
-import { Button, Card, CardContent } from "@EduMind/ui";
+import { Button, Card, CardContent } from "@educariera/ui";
 import Link from "next/link";
 
 export const metadata = {
@@ -22,12 +22,12 @@ export default async function SpecialistCalendarPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-primary-ink">Calendar SpecialiÈ™ti</h1>
-          <p className="text-sm text-muted-text">Vizualizarea programÄƒrilor È™i gestiunea disponibilitÄƒÈ›ii.</p>
+          <h1 className="text-2xl font-semibold text-primary-ink">Calendar Specialiști</h1>
+          <p className="text-sm text-muted-text">Vizualizarea programărilor și gestiunea disponibilității.</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">Gestiune Disponibilitate</Button>
-          <Button className="bg-forest-accent text-warm-surface">BlocheazÄƒ Interval</Button>
+          <Button className="bg-forest-accent text-warm-surface">Blochează Interval</Button>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export default async function SpecialistCalendarPage() {
         {appointments.length === 0 ? (
           <Card className="bg-warm-surface border-border">
             <CardContent className="p-8 text-center text-muted-text">
-              Nu existÄƒ programÄƒri active Ã®n calendar.
+              Nu există programări active în calendar.
             </CardContent>
           </Card>
         ) : (
@@ -70,7 +70,7 @@ export default async function SpecialistCalendarPage() {
                     </h3>
                     
                     <p className="text-sm text-primary-text">
-                      Elev: <strong>{childName}</strong> (Familia {familyName}) â€¢ Specialist: {apt.staff.user.firstName}
+                      Elev: <strong>{childName}</strong> (Familia {familyName}) • Specialist: {apt.staff.user.firstName}
                     </p>
                   </div>
 
@@ -95,4 +95,5 @@ export default async function SpecialistCalendarPage() {
     </div>
   );
 }
+
 

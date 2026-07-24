@@ -1,26 +1,26 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Textarea, Badge } from "@EduMind/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Textarea, Badge } from "@educariera/ui";
 
 // Mock Data
 const mockTemplates = [
   {
     id: "tpl-1",
-    name: "Confirmare PlatÄƒ Pachete Premium",
+    name: "Confirmare Plată Pachete Premium",
     event: "PAYMENT_CONFIRMED",
-    subject: "Plata ta pentru {{product.name}} a fost confirmatÄƒ!",
-    body: "Salut {{parent.firstName}},\n\nÃŽÈ›i mulÈ›umim pentru achiziÈ›ie. Plata de {{payment.amount}} a fost Ã®nregistratÄƒ.",
+    subject: "Plata ta pentru {{product.name}} a fost confirmată!",
+    body: "Salut {{parent.firstName}},\n\nÎți mulțumim pentru achiziție. Plata de {{payment.amount}} a fost înregistrată.",
     variables: ["parent.firstName", "product.name", "payment.amount"],
     version: 3,
     status: "PUBLISHED"
   },
   {
     id: "tpl-2",
-    name: "Reminder È˜edinÈ›Äƒ",
+    name: "Reminder Ședință",
     event: "APPOINTMENT_REMINDER",
-    subject: "Reminder: È˜edinÈ›a pentru {{child.firstName}} Ã®ncepe curÃ¢nd",
-    body: "Salut,\nAi o È™edinÈ›Äƒ programatÄƒ la {{appointment.time}} pe data de {{appointment.date}} cu consilierul {{specialist.name}}.",
+    subject: "Reminder: Ședința pentru {{child.firstName}} începe curând",
+    body: "Salut,\nAi o ședință programată la {{appointment.time}} pe data de {{appointment.date}} cu consilierul {{specialist.name}}.",
     variables: ["child.firstName", "appointment.time", "appointment.date", "specialist.name"],
     version: 1,
     status: "DRAFT"
@@ -37,7 +37,7 @@ export default function TemplatesAdminPage() {
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-primary-ink">Template-uri de Notificare</h1>
-          <p className="text-sm text-muted-text">GestioneazÄƒ e-mailurile trimise automat cÄƒtre clienÈ›i</p>
+          <p className="text-sm text-muted-text">Gestionează e-mailurile trimise automat către clienți</p>
         </div>
         <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover">
           + Template Nou
@@ -80,7 +80,7 @@ export default function TemplatesAdminPage() {
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={() => setIsPreview(!isPreview)}>
-                    {isPreview ? "ÃŽnapoi la Editor" : "Preview vizual"}
+                    {isPreview ? "Înapoi la Editor" : "Preview vizual"}
                   </Button>
                 </div>
               </CardHeader>
@@ -93,7 +93,7 @@ export default function TemplatesAdminPage() {
                       <Input defaultValue={selectedTemplate.subject} className="font-medium" />
                     </div>
                     <div className="space-y-2">
-                      <Label>ConÈ›inut (Markdown/Text)</Label>
+                      <Label>Conținut (Markdown/Text)</Label>
                       <Textarea 
                         defaultValue={selectedTemplate.body} 
                         className="min-h-[250px] font-mono text-sm leading-relaxed" 
@@ -104,7 +104,7 @@ export default function TemplatesAdminPage() {
                         Trimite E-mail de Test
                       </Button>
                       <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover">
-                        SalveazÄƒ Noua Versiune (v{selectedTemplate.version + 1})
+                        Salvează Noua Versiune (v{selectedTemplate.version + 1})
                       </Button>
                     </div>
                   </>
@@ -129,7 +129,7 @@ export default function TemplatesAdminPage() {
             </Card>
           ) : (
             <div className="h-full flex items-center justify-center text-muted-text border-2 border-dashed border-border rounded-lg bg-warm-surface">
-              SelecteazÄƒ un template din stÃ¢nga pentru a-l edita.
+              Selectează un template din stânga pentru a-l edita.
             </div>
           )}
         </div>
@@ -138,3 +138,4 @@ export default function TemplatesAdminPage() {
     </div>
   );
 }
+

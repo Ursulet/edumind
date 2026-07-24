@@ -46,4 +46,15 @@ export class AuditService {
       console.error('❌ Failed to persist audit event:', error, dto);
     }
   }
+
+  async getLogs(limit: number = 50, offset: number = 0) {
+    return this.prisma.auditEvent.findMany({
+      take: limit,
+      skip: offset,
+      orderBy: { createdAt: "desc" },
+      include: {
+        actor: { select: { firstName: true, lastName: true, email: true } },
+      },
+    });
+  }
 }

@@ -1,5 +1,5 @@
-﻿import { FinalCtaSectionData } from "@EduMind/validation";
-import { Button } from "@EduMind/ui";
+import { FinalCtaSectionData } from "@educariera/validation";
+import { Button } from "@educariera/ui";
 import Link from "next/link";
 
 export function FinalCtaSection({ data }: { data: FinalCtaSectionData }) {
@@ -30,3 +30,5 @@ export function FinalCtaSection({ data }: { data: FinalCtaSectionData }) {
     </section>
   );
 }
+
+

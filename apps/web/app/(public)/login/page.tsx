@@ -1,92 +1,177 @@
-﻿import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from "@EduMind/ui";
+"use client";
+
+import { useState, FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Autentificare | Edu-Cariera",
-};
-
 export default function LoginPage() {
-  return (
-    <div className="min-h-screen bg-ivory-background flex items-center justify-center p-4">
-      
-      <Card className="w-full max-w-md bg-white border-border shadow-xl">
-        <CardHeader className="space-y-2 pb-6 border-b border-border">
-          <div className="flex justify-center mb-4">
-             <div className="w-12 h-12 rounded bg-forest-accent flex items-center justify-center">
-              <svg className="w-7 h-7 text-warm-surface" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-            </div>
-          </div>
-          <CardTitle className="text-2xl text-center font-bold text-primary-ink">
-            Bine ai revenit
-          </CardTitle>
-          <p className="text-center text-sm text-primary-text">
-            Introdu datele pentru a accesa contul tÄƒu
-          </p>
-        </CardHeader>
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || null;
 
-        <CardContent className="pt-6 space-y-6">
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="nume@email.com" 
-                className="w-full bg-warm-surface"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  function getRedirectForRole(role: string): string {
+    switch (role) {
+      case "PLATFORM_OWNER":
+      case "SUPER_ADMIN":
+        return "/admin";
+      case "DEPARTMENT_ADMIN":
+        return "/director";
+      case "SPECIALIST":
+        return "/specialist";
+      case "PARENT":
+      default:
+        return "/dashboard";
+    }
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Email sau parolă incorecte.");
+        return;
+      }
+
+      // Redirect based on role (or to the originally requested page)
+      const destination = from || getRedirectForRole(data.user?.role || "PARENT");
+      router.push(destination);
+      router.refresh();
+    } catch {
+      setError("Eroare de conexiune. Verifică conexiunea la internet.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#1F2622] flex items-center justify-center text-white font-bold text-sm">
+              EM
+            </div>
+            <span className="font-semibold text-xl text-[#1F2622] tracking-tight">
+              EduMind
+            </span>
+          </Link>
+        </div>
+
+        {/* Card */}
+        <div className="bg-[#FFFDF8] border border-[#E3DED3] rounded-2xl shadow-[0_1px_2px_rgba(31,38,34,0.05)] overflow-hidden">
+          <div className="px-8 pt-8 pb-6 border-b border-[#E3DED3]">
+            <h1 className="text-2xl font-semibold text-[#1F2622] tracking-[-0.025em]">
+              Bine ai revenit
+            </h1>
+            <p className="text-sm text-[#6B746F] mt-1">
+              Introdu datele pentru a accesa contul tău
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="px-8 py-6 space-y-5">
+            {/* Error Message */}
+            {error && (
+              <div className="rounded-lg bg-[#FEF2F2] border border-[#FECACA] px-4 py-3 text-sm text-[#B4453A]">
+                {error}
+              </div>
+            )}
+
+            {/* Email */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-[#1F2622]"
+              >
+                Adresă email
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nume@email.com"
+                className="w-full rounded-lg border border-[#E3DED3] bg-[#F7F5F0] px-4 py-2.5 text-sm text-[#1F2622] placeholder:text-[#6B746F] focus:outline-none focus:ring-2 focus:ring-[#2F6B57] focus:border-transparent transition-all"
               />
             </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="password">ParolÄƒ</Label>
-                <Link href="#" className="text-xs font-medium text-forest-accent hover:underline">
+
+            {/* Password */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-[#1F2622]"
+                >
+                  Parolă
+                </label>
+                <Link
+                  href="/resetare-parola"
+                  className="text-xs font-medium text-[#2F6B57] hover:text-[#275B4A] transition-colors"
+                >
                   Ai uitat parola?
                 </Link>
               </div>
-              <Input 
-                id="password" 
-                type="password" 
-                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
-                className="w-full bg-warm-surface"
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full rounded-lg border border-[#E3DED3] bg-[#F7F5F0] px-4 py-2.5 text-sm text-[#1F2622] placeholder:text-[#6B746F] focus:outline-none focus:ring-2 focus:ring-[#2F6B57] focus:border-transparent transition-all"
               />
             </div>
-          </div>
 
-          {/* Quick Mock Routing Buttons for Demonstration */}
-          <div className="pt-2 flex flex-col gap-3">
-            <Link href="/dashboard" className="w-full">
-              <Button className="w-full bg-forest-accent text-warm-surface hover:bg-forest-hover">
-                Autentificare (PÄƒrinte)
-              </Button>
-            </Link>
-            
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <Link href="/specialist">
-                <Button variant="outline" className="w-full text-xs h-9 border-border text-primary-ink hover:bg-muted-surface">
-                  Login Specialist
-                </Button>
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-[#1F2622] text-white px-4 py-2.5 text-sm font-semibold hover:bg-[#2A332E] transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+            >
+              {loading ? "Se autentifică..." : "Autentificare"}
+            </button>
+          </form>
+
+          <div className="px-8 pb-8">
+            <p className="text-center text-sm text-[#6B746F]">
+              Nu ai cont?{" "}
+              <Link
+                href="/inscriere"
+                className="font-semibold text-[#2F6B57] hover:text-[#275B4A] transition-colors"
+              >
+                Aplică acum
               </Link>
-              <Link href="/admin">
-                <Button variant="outline" className="w-full text-xs h-9 border-border text-primary-ink hover:bg-muted-surface">
-                  Login Admin
-                </Button>
-              </Link>
-            </div>
+            </p>
           </div>
-          
-        </CardContent>
-        
-        <div className="bg-muted-surface/30 px-6 py-4 border-t border-border text-center">
-          <p className="text-sm text-muted-text">
-            Nu ai cont?{" "}
-            <Link href="/inscriere" className="font-semibold text-forest-accent hover:underline">
-              CreeazÄƒ unul acum
-            </Link>
+        </div>
+
+        {/* Demo hint */}
+        <div className="mt-4 rounded-xl bg-[#EDF4F0] border border-[#DCE8E1] px-4 py-3 text-center">
+          <p className="text-xs text-[#6B746F]">
+            <span className="font-semibold text-[#2F6B57]">Demo Admin:</span>{" "}
+            admin@edumind.ro / AdminPassword123!
           </p>
         </div>
-      </Card>
-      
+      </div>
     </div>
   );
 }

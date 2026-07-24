@@ -1,5 +1,5 @@
-﻿{
-  "name": "@EduMind/web",
+{
+  "name": "@educariera/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,9 +10,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@EduMind/types": "*",
-    "@EduMind/ui": "*",
-    "@EduMind/validation": "*",
+    "@educariera/types": "*",
+    "@educariera/ui": "*",
+    "@educariera/validation": "*",
     "@prisma/client": "^6.19.3",
     "next": "16.2.11",
     "ollama": "^0.6.3",
@@ -31,3 +31,5 @@
     "typescript": "^5"
   }
 }
+
+

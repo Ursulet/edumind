@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Card, CardContent } from "@EduMind/ui";
+import { Button, Input, Label, Card, CardContent } from "@educariera/ui";
 
 export function RegistrationWizard() {
   const [step, setStep] = useState(1);
@@ -59,20 +59,20 @@ export function RegistrationWizard() {
 
   if (submitted) {
     return (
-      <Card className="shadow-lg border-[#E2E8F0] bg-white text-center p-8">
+      <Card className="shadow-[0_1px_2px_rgba(31,38,34,0.05)] border-[#E3DED3] bg-[#FFFDF8] text-center p-8">
         <CardContent className="space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#CCFBF1] text-[#0F766E]">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EDF4F0] text-[#2F6B57]">
             <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-[#0B2239]">Aplicația a fost înregistrată!</h2>
-          <p className="text-[#64748B] max-w-md mx-auto">
+          <h2 className="text-2xl font-semibold text-[#1F2622] tracking-[-0.025em]">Aplicația a fost înregistrată!</h2>
+          <p className="text-[#6B746F] max-w-md mx-auto">
             Vă mulțumim pentru încredere. Un specialist EduMind va analiza aplicația dumneavoastră și vă va contacta în cel mai scurt timp.
           </p>
           <div className="pt-4">
             <a href="/login">
-              <Button className="bg-[#0B2239] text-white">Mergi la Autentificare</Button>
+              <Button className="bg-[#1F2622] text-white hover:bg-[#2A332E]">Mergi la Autentificare</Button>
             </a>
           </div>
         </CardContent>
@@ -81,16 +81,16 @@ export function RegistrationWizard() {
   }
 
   return (
-    <Card className="shadow-sm border-[#E2E8F0] bg-white">
+    <Card className="shadow-[0_1px_2px_rgba(31,38,34,0.05)] border-[#E3DED3] bg-[#FFFDF8]">
       <CardContent className="p-8">
         {/* Progress Stepper */}
         <div className="flex items-center justify-between mb-8 relative">
-          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-[#E2E8F0] -z-10 -translate-y-1/2" />
+          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-[#E3DED3] -z-10 -translate-y-1/2" />
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                s <= step ? "bg-[#0B2239] text-white" : "bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]"
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
+                s <= step ? "bg-[#1F2622] text-white" : "bg-[#F1EEE7] text-[#6B746F] border border-[#E3DED3]"
               }`}
             >
               {s}
@@ -107,7 +107,7 @@ export function RegistrationWizard() {
         {/* Step 1: Parent Info */}
         {step === 1 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-[#0B2239]">Date Părinte / Tutore</h2>
+            <h2 className="text-xl font-semibold text-[#1F2622]">Date Părinte / Tutore</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="parentFirstName">Prenume</Label>
@@ -154,7 +154,7 @@ export function RegistrationWizard() {
         {/* Step 2: Child Info */}
         {step === 2 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-[#0B2239]">Date Elev</h2>
+            <h2 className="text-xl font-semibold text-[#1F2622]">Date Elev</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="childFirstName">Prenume copil</Label>
@@ -230,16 +230,16 @@ export function RegistrationWizard() {
         {/* Step 3: Consents */}
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-[#0B2239]">Acorduri și Declarații</h2>
+            <h2 className="text-xl font-semibold text-[#1F2622]">Acorduri și Declarații</h2>
             <div className="space-y-4">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.consentParticipation}
                   onChange={(e) => updateField("consentParticipation", e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-[#E2E8F0] accent-[#0F766E]"
+                  className="mt-1 h-4 w-4 rounded border-[#E3DED3] accent-[#2F6B57]"
                 />
-                <span className="text-sm text-[#102A43]">
+                <span className="text-sm text-[#1F2622]">
                   Mă angajez să particip activ în procesul de consiliere educațională al copilului meu.
                 </span>
               </label>
@@ -248,9 +248,9 @@ export function RegistrationWizard() {
                   type="checkbox"
                   checked={formData.consentDataProcessing}
                   onChange={(e) => updateField("consentDataProcessing", e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-[#E2E8F0] accent-[#0F766E]"
+                  className="mt-1 h-4 w-4 rounded border-[#E3DED3] accent-[#2F6B57]"
                 />
-                <span className="text-sm text-[#102A43]">
+                <span className="text-sm text-[#1F2622]">
                   Sunt de acord cu prelucrarea datelor cu caracter personal conform politicii GDPR.
                 </span>
               </label>
@@ -259,9 +259,9 @@ export function RegistrationWizard() {
                   type="checkbox"
                   checked={formData.consentTerms}
                   onChange={(e) => updateField("consentTerms", e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-[#E2E8F0] accent-[#0F766E]"
+                  className="mt-1 h-4 w-4 rounded border-[#E3DED3] accent-[#2F6B57]"
                 />
-                <span className="text-sm text-[#102A43]">
+                <span className="text-sm text-[#1F2622]">
                   Accept termenii și condițiile de utilizare a platformei EduMind.
                 </span>
               </label>
@@ -270,12 +270,12 @@ export function RegistrationWizard() {
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E2E8F0]">
+        <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#E3DED3]">
           <Button
             variant="outline"
             onClick={() => setStep((s) => Math.max(s - 1, 1))}
             disabled={step === 1 || loading}
-            className="text-[#64748B]"
+            className="text-[#6B746F] border-[#E3DED3]"
           >
             Înapoi
           </Button>
@@ -283,7 +283,7 @@ export function RegistrationWizard() {
           {step < 3 ? (
             <Button
               onClick={() => setStep((s) => Math.min(s + 1, 3))}
-              className="bg-[#0B2239] text-white hover:bg-[#123A5A]"
+              className="bg-[#1F2622] text-white hover:bg-[#2A332E]"
             >
               Continuă
             </Button>
@@ -291,7 +291,7 @@ export function RegistrationWizard() {
             <Button
               onClick={handleSubmit}
               disabled={loading || !formData.consentTerms || !formData.consentDataProcessing}
-              className="bg-[#0F766E] text-white hover:bg-[#115E59]"
+              className="bg-[#2F6B57] text-white hover:bg-[#275B4A]"
             >
               {loading ? "Se procesează..." : "Trimite Aplicația"}
             </Button>
@@ -301,3 +301,4 @@ export function RegistrationWizard() {
     </Card>
   );
 }
+

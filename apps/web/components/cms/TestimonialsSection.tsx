@@ -1,5 +1,5 @@
-﻿import React from "react";
-import { TestimonialsSectionData } from "@EduMind/validation";
+import React from "react";
+import { TestimonialsSectionData } from "@educariera/validation";
 
 export function TestimonialsSection({ data }: { data: TestimonialsSectionData }) {
   return (
@@ -27,3 +27,4 @@ export function TestimonialsSection({ data }: { data: TestimonialsSectionData })
     </section>
   );
 }
+

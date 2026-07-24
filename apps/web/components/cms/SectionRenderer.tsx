@@ -1,4 +1,4 @@
-﻿import { CmsSection } from "@prisma/client";
+import { CmsSection } from "@prisma/client";
 import { HeroSection } from "./HeroSection";
 import { TrustStripSection } from "./TrustStripSection";
 import { ProblemSection } from "./ProblemSection";
@@ -9,7 +9,7 @@ import { FaqSection } from "./FaqSection";
 import { StatsSection } from "./StatsSection";
 import { TestimonialsSection } from "./TestimonialsSection";
 import { PricingSection } from "./PricingSection";
-import { CmsSectionDataSchema } from "@EduMind/validation";
+import { CmsSectionDataSchema } from "@educariera/validation";
 
 export function SectionRenderer({ section }: { section: CmsSection }) {
   const parsed = CmsSectionDataSchema.safeParse({
@@ -55,3 +55,4 @@ export function SectionRenderer({ section }: { section: CmsSection }) {
       return null;
   }
 }
+

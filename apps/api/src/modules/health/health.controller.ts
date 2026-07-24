@@ -1,11 +1,11 @@
-﻿import { Controller, Get } from '@nestjs/common';
-import { HealthCheckResponse } from '@EduMind/types';
+import { Controller, Get } from '@nestjs/common';
+import { HealthCheckResponse } from '@educariera/types';
 
 @Controller()
 export class HealthController {
   private readonly startTime = Date.now();
 
-  // Root endpoint â€” used by Coolify/load balancer healthchecks
+  // Root endpoint — used by Coolify/load balancer healthchecks
   @Get()
   getRoot() {
     return { status: 'ok', service: 'EduMind-api' };
@@ -32,4 +32,5 @@ export class HealthController {
     };
   }
 }
+
 

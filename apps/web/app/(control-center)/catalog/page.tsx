@@ -1,5 +1,5 @@
-﻿import { prisma } from "@/lib/db";
-import { Button, Card, CardContent } from "@EduMind/ui";
+import { prisma } from "@/lib/db";
+import { Button, Card, CardContent } from "@educariera/ui";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -25,10 +25,10 @@ export default async function CatalogPage() {
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-primary-ink">Catalog Comercial</h1>
-          <p className="text-sm text-muted-text">GestioneazÄƒ produsele, pachetele de È™edinÈ›e È™i ofertele platformei.</p>
+          <p className="text-sm text-muted-text">Gestionează produsele, pachetele de ședințe și ofertele platformei.</p>
         </div>
         <Button asChild>
-          <Link href="/catalog/new">AdaugÄƒ Produs Nou</Link>
+          <Link href="/catalog/new">Adaugă Produs Nou</Link>
         </Button>
       </div>
 
@@ -36,7 +36,7 @@ export default async function CatalogPage() {
         {products.length === 0 ? (
           <Card className="bg-warm-surface border-border">
             <CardContent className="p-8 text-center text-muted-text">
-              Nu existÄƒ produse definite.
+              Nu există produse definite.
             </CardContent>
           </Card>
         ) : (
@@ -56,12 +56,12 @@ export default async function CatalogPage() {
                         </span>
                       ) : (
                         <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider">
-                          CiornÄƒ (v{latestVersion?.version || 1})
+                          Ciornă (v{latestVersion?.version || 1})
                         </span>
                       )}
                     </div>
                     <h3 className="text-lg font-semibold text-primary-ink">
-                      {latestVersion?.internalName || "Produs FÄƒrÄƒ Nume"}
+                      {latestVersion?.internalName || "Produs Fără Nume"}
                     </h3>
                     <p className="text-sm text-primary-text line-clamp-1">
                       {latestVersion?.marketingName}
@@ -71,7 +71,7 @@ export default async function CatalogPage() {
                   <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     <Button variant="outline" asChild>
                       <Link href={`/catalog/${product.id}`}>
-                        Vezi Versiuni & EditeazÄƒ
+                        Vezi Versiuni & Editează
                       </Link>
                     </Button>
                   </div>
@@ -84,3 +84,4 @@ export default async function CatalogPage() {
     </div>
   );
 }
+

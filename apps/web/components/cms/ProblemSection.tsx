@@ -1,4 +1,4 @@
-﻿import { ProblemSectionData } from "@EduMind/validation";
+import { ProblemSectionData } from "@educariera/validation";
 
 export function ProblemSection({ data }: { data: ProblemSectionData }) {
   return (
@@ -16,3 +16,4 @@ export function ProblemSection({ data }: { data: ProblemSectionData }) {
     </section>
   );
 }
+

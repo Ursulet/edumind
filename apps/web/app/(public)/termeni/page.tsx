@@ -1,7 +1,7 @@
-﻿import { Card, CardContent } from "@EduMind/ui";
+import { Card, CardContent } from "@educariera/ui";
 
 export const metadata = {
-  title: "Termeni È™i CondiÈ›ii | Edu-Cariera",
+  title: "Termeni și Condiții | Edu-Cariera",
 };
 
 export default function TermsPage() {
@@ -10,7 +10,7 @@ export default function TermsPage() {
       <div className="max-w-3xl mx-auto space-y-8">
         
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-ink tracking-tight">Termeni È™i CondiÈ›ii</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary-ink tracking-tight">Termeni și Condiții</h1>
           <p className="text-lg text-primary-text">Ultima actualizare: Iulie 2026</p>
         </div>
 
@@ -18,27 +18,27 @@ export default function TermsPage() {
           <CardContent className="p-8 prose prose-slate max-w-none">
             <h2 className="text-2xl font-semibold text-primary-ink mb-4">1. Preambul</h2>
             <p className="text-primary-text mb-6 leading-relaxed">
-              AceÈ™ti Termeni È™i CondiÈ›ii guverneazÄƒ utilizarea platformei EduMind de cÄƒtre pÄƒrinÈ›i, elevi È™i specialiÈ™ti Ã®n orientare vocaÈ›ionalÄƒ. Prin accesarea platformei, sunteÈ›i de acord cu aceÈ™ti termeni.
+              Acești Termeni și Condiții guvernează utilizarea platformei EduMind de către părinți, elevi și specialiști în orientare vocațională. Prin accesarea platformei, sunteți de acord cu acești termeni.
             </p>
 
             <h2 className="text-2xl font-semibold text-primary-ink mb-4">2. Servicii Oferite</h2>
             <p className="text-primary-text mb-6 leading-relaxed">
-              EduMind oferÄƒ acces la instrumente de testare standardizatÄƒ (ex. RIASEC) È™i sesiuni video de consiliere 1-la-1 cu specialiÈ™ti acreditaÈ›i. Toate rapoartele generate au un caracter consultativ.
+              EduMind oferă acces la instrumente de testare standardizată (ex. RIASEC) și sesiuni video de consiliere 1-la-1 cu specialiști acreditați. Toate rapoartele generate au un caracter consultativ.
             </p>
 
             <h2 className="text-2xl font-semibold text-primary-ink mb-4">3. Contul de Utilizator</h2>
             <p className="text-primary-text mb-6 leading-relaxed">
-              Crearea unui cont necesitÄƒ furnizarea de informaÈ›ii exacte È™i complete. Utilizatorul este responsabil pentru pÄƒstrarea confidenÈ›ialitÄƒÈ›ii credenÈ›ialelor de acces (inclusiv autentificarea MFA acolo unde este activatÄƒ).
+              Crearea unui cont necesită furnizarea de informații exacte și complete. Utilizatorul este responsabil pentru păstrarea confidențialității credențialelor de acces (inclusiv autentificarea MFA acolo unde este activată).
             </p>
 
-            <h2 className="text-2xl font-semibold text-primary-ink mb-4">4. PlÄƒÈ›i È™i RambursÄƒri</h2>
+            <h2 className="text-2xl font-semibold text-primary-ink mb-4">4. Plăți și Rambursări</h2>
             <p className="text-primary-text mb-6 leading-relaxed">
-              Toate plÄƒÈ›ile sunt procesate Ã®n siguranÈ›Äƒ de furnizorii noÈ™tri parteneri. RambursÄƒrile sunt posibile conform legislaÈ›iei Ã®n vigoare, dar exclusiv Ã®nainte de efectuarea testÄƒrii sau a sesiunii video. DupÄƒ prestarea serviciului, contravaloarea nu se returneazÄƒ.
+              Toate plățile sunt procesate în siguranță de furnizorii noștri parteneri. Rambursările sunt posibile conform legislației în vigoare, dar exclusiv înainte de efectuarea testării sau a sesiunii video. După prestarea serviciului, contravaloarea nu se returnează.
             </p>
 
-            <h2 className="text-2xl font-semibold text-primary-ink mb-4">5. SoluÈ›ionarea Disputelor (ANPC)</h2>
+            <h2 className="text-2xl font-semibold text-primary-ink mb-4">5. Soluționarea Disputelor (ANPC)</h2>
             <p className="text-primary-text mb-6 leading-relaxed">
-              ÃŽn cazul oricÄƒror neÃ®nÈ›elegeri, ne propunem rezolvarea pe cale amiabilÄƒ. DacÄƒ acest lucru nu este posibil, consumatorii pot accesa platforma SOL a Comisiei Europene sau se pot adresa AutoritÄƒÈ›ii NaÈ›ionale pentru ProtecÈ›ia Consumatorilor (ANPC).
+              În cazul oricăror neînțelegeri, ne propunem rezolvarea pe cale amiabilă. Dacă acest lucru nu este posibil, consumatorii pot accesa platforma SOL a Comisiei Europene sau se pot adresa Autorității Naționale pentru Protecția Consumatorilor (ANPC).
             </p>
           </CardContent>
         </Card>
@@ -47,3 +47,4 @@ export default function TermsPage() {
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
-﻿import React from "react";
-import { StatsSectionData } from "@EduMind/validation";
+import React from "react";
+import { StatsSectionData } from "@educariera/validation";
 
 export function StatsSection({ data }: { data: StatsSectionData }) {
   return (
@@ -24,3 +24,4 @@ export function StatsSection({ data }: { data: StatsSectionData }) {
     </section>
   );
 }
+

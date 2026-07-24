@@ -1,5 +1,5 @@
-﻿import { prisma } from "@/lib/db";
-import { Button, Card, CardContent } from "@EduMind/ui";
+import { prisma } from "@/lib/db";
+import { Button, Card, CardContent } from "@educariera/ui";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -23,11 +23,11 @@ export default async function AdminReportsPage() {
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-semibold text-primary-ink">Motor de Rapoarte</h1>
-          <p className="text-sm text-muted-text">GestioneazÄƒ rapoartele de evaluare È™i consiliere emise cÄƒtre pÄƒrinÈ›i.</p>
+          <p className="text-sm text-muted-text">Gestionează rapoartele de evaluare și consiliere emise către părinți.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">È˜abloane Rapoarte</Button>
-          <Button>GenereazÄƒ Raport Nou</Button>
+          <Button variant="outline">Șabloane Rapoarte</Button>
+          <Button>Generează Raport Nou</Button>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export default async function AdminReportsPage() {
         {reports.length === 0 ? (
           <Card className="bg-warm-surface border-border">
             <CardContent className="p-8 text-center text-muted-text">
-              Nu existÄƒ rapoarte generate.
+              Nu există rapoarte generate.
             </CardContent>
           </Card>
         ) : (
@@ -54,7 +54,7 @@ export default async function AdminReportsPage() {
                         </span>
                       ) : report.status === "DRAFT" ? (
                         <span className="bg-warning/10 text-warning px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-warning/20">
-                          CiornÄƒ
+                          Ciornă
                         </span>
                       ) : (
                         <span className="bg-muted-surface text-muted-text px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-border">
@@ -78,9 +78,9 @@ export default async function AdminReportsPage() {
                   <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     {report.status === "DRAFT" ? (
                       <>
-                        <Button variant="outline" className="w-full sm:w-auto">EditeazÄƒ</Button>
+                        <Button variant="outline" className="w-full sm:w-auto">Editează</Button>
                         <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover w-full sm:w-auto">
-                          PublicÄƒ la PÄƒrinte
+                          Publică la Părinte
                         </Button>
                       </>
                     ) : (
@@ -98,3 +98,4 @@ export default async function AdminReportsPage() {
     </div>
   );
 }
+

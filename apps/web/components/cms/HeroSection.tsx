@@ -1,5 +1,5 @@
-﻿import { HeroSectionData } from "@EduMind/validation";
-import { Button } from "@EduMind/ui";
+import { HeroSectionData } from "@educariera/validation";
+import { Button } from "@educariera/ui";
 import Link from "next/link";
 
 export function HeroSection({ data }: { data: HeroSectionData }) {
@@ -52,3 +52,5 @@ export function HeroSection({ data }: { data: HeroSectionData }) {
     </section>
   );
 }
+
+
