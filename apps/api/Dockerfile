@@ -22,5 +22,7 @@ COPY --from=builder /app/apps/api ./apps/api
 
 EXPOSE 4000
 
-# Run migrations + seed (tolerant) then start compiled JS directly
-CMD ["sh", "-c", "cd apps/api && (npx prisma migrate deploy || true) && (npx prisma db seed || true) && node dist/src/main.js"]
+# prisma db push creates all tables directly from schema (no migration files needed)
+# prisma db seed populates initial data (tolerant if already seeded)
+# node dist/src/main.js starts the compiled NestJS server
+CMD ["sh", "-c", "cd apps/api && npx prisma db push --accept-data-loss && (npx prisma db seed || true) && node dist/src/main.js"]

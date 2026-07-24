@@ -5,6 +5,12 @@ import { HealthCheckResponse } from '@educariera/types';
 export class HealthController {
   private readonly startTime = Date.now();
 
+  // Root endpoint — used by Coolify/load balancer healthchecks
+  @Get()
+  getRoot() {
+    return { status: 'ok', service: 'educariera-api' };
+  }
+
   @Get('health')
   getHealth(): HealthCheckResponse {
     return {
@@ -26,3 +32,4 @@ export class HealthController {
     };
   }
 }
+

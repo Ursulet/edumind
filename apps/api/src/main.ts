@@ -1,11 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1', {
+    // Exclude root path from prefix so healthchecks work
+    exclude: ['/'],
+  });
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.enableCors({
     origin: [
@@ -20,3 +24,4 @@ async function bootstrap() {
   console.info(`🚀 EduCarieră API running on port ${port}`);
 }
 bootstrap();
+
