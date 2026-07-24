@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     // Forward login request to the NestJS API
     const apiUrl = process.env.INTERNAL_API_URL || "http://api:4000";
-    const apiRes = await fetch(`${apiUrl}/api/v1/login`, {
+    const apiRes = await fetch(`${apiUrl}/api/v1/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
