@@ -1,4 +1,4 @@
-import { ProblemSectionData } from "@educariera/validation";
+import { ProblemSectionData } from "@edumind/validation";
 
 export function ProblemSection({ data }: { data: ProblemSectionData }) {
   return (

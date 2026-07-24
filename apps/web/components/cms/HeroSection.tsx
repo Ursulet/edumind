@@ -1,5 +1,5 @@
-import { HeroSectionData } from "@educariera/validation";
-import { Button } from "@educariera/ui";
+import { HeroSectionData } from "@edumind/validation";
+import { Button } from "@edumind/ui";
 import Link from "next/link";
 
 export function HeroSection({ data }: { data: HeroSectionData }) {

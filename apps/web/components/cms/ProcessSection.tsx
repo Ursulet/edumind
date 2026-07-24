@@ -1,4 +1,4 @@
-import { ProcessSectionData } from "@educariera/validation";
+import { ProcessSectionData } from "@edumind/validation";
 
 export function ProcessSection({ data }: { data: ProcessSectionData }) {
   return (

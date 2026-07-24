@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@educariera/ui";
+import { Card, CardContent } from "@edumind/ui";
 
 export const metadata = {
   title: "Politica de Confidențialitate | Edu-Cariera",

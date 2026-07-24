@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
-import { Button, Card, CardContent } from "@educariera/ui";
+import { Button, Card, CardContent } from "@edumind/ui";
 
 export const metadata = {
   title: "Încasări și Plăți - Control Center",

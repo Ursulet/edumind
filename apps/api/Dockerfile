@@ -6,9 +6,9 @@ COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
 
-RUN npm install
+RUN rm -f package-lock.json && npm install
 RUN cd apps/api && npx prisma generate
-RUN npm run build --workspace=@educariera/api
+RUN npm run build --workspace=@edumind/api
 
 # ---- Runner Stage ----
 FROM node:20-alpine AS runner

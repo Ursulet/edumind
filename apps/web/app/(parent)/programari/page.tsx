@@ -1,6 +1,6 @@
 import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Button, Card, CardContent } from "@educariera/ui";
+import { Button, Card, CardContent } from "@edumind/ui";
 import Link from "next/link";
 import { NewAppointmentDialog } from "@/components/scheduling/NewAppointmentDialog";
 

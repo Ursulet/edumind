@@ -6,9 +6,9 @@ COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
 
-RUN npm install
+RUN rm -f package-lock.json && npm install
 RUN cd apps/api && npx prisma generate
-RUN npm run build --workspace=@educariera/web
+RUN npm run build --workspace=@edumind/web
 
 # ---- Runner Stage ----
 FROM node:20-alpine AS runner
@@ -25,4 +25,4 @@ COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start", "--workspace=@educariera/web"]
+CMD ["npm", "run", "start", "--workspace=@edumind/web"]

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@educariera/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@edumind/ui";
 import { e2eJourneys } from "../../../../lib/e2e-mocks";
 
 export default function E2ESimulatorPage() {

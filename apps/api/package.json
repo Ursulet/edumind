@@ -1,5 +1,5 @@
 {
-  "name": "@educariera/api",
+  "name": "@edumind/api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@educariera/types": "*",
-    "@educariera/validation": "*",
+    "@edumind/types": "*",
+    "@edumind/validation": "*",
     "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",

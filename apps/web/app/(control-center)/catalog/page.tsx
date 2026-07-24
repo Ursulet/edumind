@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { Button, Card, CardContent } from "@educariera/ui";
+import { Button, Card, CardContent } from "@edumind/ui";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";

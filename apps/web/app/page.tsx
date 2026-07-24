@@ -1,6 +1,6 @@
 import { SectionRenderer } from "@/components/cms/SectionRenderer";
 import Link from "next/link";
-import { Button } from "@educariera/ui";
+import { Button } from "@edumind/ui";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";
 

@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ApiErrorPayload } from '@educariera/types';
+import { ApiErrorPayload } from '@edumind/types';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {

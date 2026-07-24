@@ -1,5 +1,5 @@
-import { FinalCtaSectionData } from "@educariera/validation";
-import { Button } from "@educariera/ui";
+import { FinalCtaSectionData } from "@edumind/validation";
+import { Button } from "@edumind/ui";
 import Link from "next/link";
 
 export function FinalCtaSection({ data }: { data: FinalCtaSectionData }) {

@@ -1,4 +1,4 @@
-import { HealthCheckResponse } from '@educariera/types';
+import { HealthCheckResponse } from '@edumind/types';
 
 export class EduCarieraApiClient {
   private baseUrl: string;

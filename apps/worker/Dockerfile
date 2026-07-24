@@ -3,8 +3,8 @@ WORKDIR /app
 COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
-RUN npm install
-RUN npm run build --workspace=@educariera/worker
+RUN rm -f package-lock.json && npm install
+RUN npm run build --workspace=@edumind/worker
 
 FROM node:20-alpine AS runner
 WORKDIR /app

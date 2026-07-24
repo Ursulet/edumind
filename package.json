@@ -8,8 +8,8 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspaces --if-present",
-    "dev:web": "npm run dev --workspace=@educariera/web",
-    "dev:api": "npm run dev --workspace=@educariera/api",
+    "dev:web": "npm run dev --workspace=@edumind/web",
+    "dev:api": "npm run dev --workspace=@edumind/api",
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",

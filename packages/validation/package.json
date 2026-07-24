@@ -1,5 +1,5 @@
 {
-  "name": "@educariera/validation",
+  "name": "@edumind/validation",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",

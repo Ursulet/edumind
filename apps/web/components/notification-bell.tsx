@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getNotifications, markAsRead } from "@/lib/actions/notifications";
-import { Badge } from "@educariera/ui";
+import { Badge } from "@edumind/ui";
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);

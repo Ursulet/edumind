@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Textarea, Badge } from "@educariera/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Textarea, Badge } from "@edumind/ui";
 
 // Mock Data
 const mockTemplates = [

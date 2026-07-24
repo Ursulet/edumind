@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Card, CardContent } from "@educariera/ui";
+import { Button, Input, Label, Card, CardContent } from "@edumind/ui";
 
 export function RegistrationWizard() {
   const [step, setStep] = useState(1);

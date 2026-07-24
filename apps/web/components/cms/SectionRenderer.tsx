@@ -9,7 +9,7 @@ import { FaqSection } from "./FaqSection";
 import { StatsSection } from "./StatsSection";
 import { TestimonialsSection } from "./TestimonialsSection";
 import { PricingSection } from "./PricingSection";
-import { CmsSectionDataSchema } from "@educariera/validation";
+import { CmsSectionDataSchema } from "@edumind/validation";
 
 export function SectionRenderer({ section }: { section: CmsSection }) {
   const parsed = CmsSectionDataSchema.safeParse({

@@ -1,4 +1,4 @@
-import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Label, Badge } from "@educariera/ui";
+import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Label, Badge } from "@edumind/ui";
 
 export default function DesignSystemPage() {
   return (

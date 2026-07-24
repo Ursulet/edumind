@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Card, CardContent, Button } from "@educariera/ui";
+import { Card, CardContent, Button } from "@edumind/ui";
 import Link from "next/link";
 
 const prisma = new PrismaClient();

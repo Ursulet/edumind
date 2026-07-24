@@ -1,4 +1,4 @@
-﻿# ðŸš€ Ghid Deployment Coolify â€” EduMind / EduCarierÄƒ
+# ðŸš€ Ghid Deployment Coolify â€” EduMind / EduCarierÄƒ
 
 Platforma **EduMind (EduCarierÄƒ)** este 100% pregÄƒtitÄƒ pentru deployment automat Ã®n **Coolify**.
 
@@ -75,5 +75,5 @@ DacÄƒ doriÈ›i servicii separate gestionate individual Ã®n Coolify:
     npx prisma db seed
     ```
 - **Login Admin IniÈ›ial**:
-  - Email: `owner@educariera.ro` sau utilizatorul creat prin seed.
+  - Email: `owner@edumind.ro` sau utilizatorul creat prin seed.
 

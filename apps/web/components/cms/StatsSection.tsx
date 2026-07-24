@@ -1,5 +1,5 @@
 import React from "react";
-import { StatsSectionData } from "@educariera/validation";
+import { StatsSectionData } from "@edumind/validation";
 
 export function StatsSection({ data }: { data: StatsSectionData }) {
   return (

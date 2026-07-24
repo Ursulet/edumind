@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { Button, Card, CardContent, CardHeader, CardTitle, Textarea, Label } from "@educariera/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Textarea, Label } from "@edumind/ui";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 

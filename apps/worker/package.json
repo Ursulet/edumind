@@ -1,5 +1,5 @@
 {
-  "name": "@educariera/worker",
+  "name": "@edumind/worker",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@educariera/types": "*",
-    "@educariera/validation": "*",
+    "@edumind/types": "*",
+    "@edumind/validation": "*",
     "bullmq": "^5.81.1",
     "ioredis": "^5.11.1"
   },

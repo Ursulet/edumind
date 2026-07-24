@@ -1,5 +1,5 @@
-import { ProgramCardsSectionData } from "@educariera/validation";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, Button } from "@educariera/ui";
+import { ProgramCardsSectionData } from "@edumind/validation";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, Button } from "@edumind/ui";
 import Link from "next/link";
 
 export function ProgramCardsSection({ data }: { data: ProgramCardsSectionData }) {

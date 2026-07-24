@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogFooter, Button } from "@educariera/ui";
+import { Dialog, DialogFooter, Button } from "@edumind/ui";
 
 export function NewAppointmentDialog({ caseId, staffId, staffName }: { caseId: string, staffId: string, staffName: string }) {
   const [isOpen, setIsOpen] = useState(false);

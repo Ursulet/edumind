@@ -1,5 +1,5 @@
 import { getAuthHeaders } from "@/lib/auth";
-import { Card, CardContent, CardHeader, Badge } from "@educariera/ui";
+import { Card, CardContent, CardHeader, Badge } from "@edumind/ui";
 
 export const dynamic = "force-dynamic";
 

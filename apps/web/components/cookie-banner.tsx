@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@educariera/ui";
+import { Button } from "@edumind/ui";
 import Link from "next/link";
 
 export function CookieBanner() {

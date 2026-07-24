@@ -1,6 +1,6 @@
 import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Button, Card, CardContent, Badge } from "@educariera/ui";
+import { Button, Card, CardContent, Badge } from "@edumind/ui";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";
 
