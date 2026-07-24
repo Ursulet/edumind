@@ -1,4 +1,4 @@
-﻿import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
@@ -123,10 +123,10 @@ async function main() {
   // 5. Create Default Super Admin Account
   const defaultPasswordHash = await argon2.hash('AdminPassword123!');
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@EduMind.ro' },
+    where: { email: 'admin@edumind.ro' },
     update: {},
     create: {
-      email: 'admin@EduMind.ro',
+      email: 'admin@edumind.ro',
       passwordHash: defaultPasswordHash,
       firstName: 'Super',
       lastName: 'Admin',

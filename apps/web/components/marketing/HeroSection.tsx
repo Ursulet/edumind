@@ -60,13 +60,13 @@ export function HeroSection() {
             </svg>
 
             {/* Teenager Placeholder Image */}
-            <div className="absolute right-0 lg:right-10 bottom-10 w-[340px] h-[480px] bg-[#EDF4F0] rounded-[2rem] border border-[#E3DED3] overflow-hidden shadow-lg object-cover z-10 flex items-center justify-center">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-90" />
+            <div className="absolute right-0 lg:right-0 bottom-10 w-[360px] h-[500px] bg-[#EDF4F0] rounded-[2rem] border border-[#E3DED3] overflow-hidden shadow-lg object-cover z-10 flex items-center justify-center">
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-90" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1F2622]/40 to-transparent" />
             </div>
 
             {/* Floating EduMind Profile Card */}
-            <div className="absolute left-0 lg:-left-12 top-10 w-[320px] bg-white/90 backdrop-blur-xl rounded-2xl border border-white/50 shadow-[0_20px_40px_-15px_rgba(31,38,34,0.1)] z-20 overflow-hidden">
+            <div className="absolute right-[40px] lg:right-[180px] top-4 w-[320px] bg-white/95 backdrop-blur-xl rounded-2xl border border-white/50 shadow-[0_20px_40px_-15px_rgba(31,38,34,0.1)] z-20 overflow-hidden">
               <div className="px-6 py-4 border-b border-[#E3DED3]/50 bg-white/50">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6B746F] mb-1">Profil EduMind</p>
                 <h3 className="text-base font-bold text-[#1F2622]">ANDREI · CLASA A XI-A</h3>
@@ -126,7 +126,7 @@ export function HeroSection() {
             </div>
 
             {/* Smaller floating element 1 */}
-            <div className="absolute right-0 bottom-40 bg-white shadow-xl rounded-xl p-3 flex items-center gap-3 z-20 border border-[#E3DED3]/50 animate-bounce" style={{ animationDuration: '3s' }}>
+            <div className="absolute right-[-20px] lg:right-[-40px] bottom-32 bg-white shadow-xl rounded-xl p-3 flex items-center gap-3 z-30 border border-[#E3DED3]/50 animate-bounce" style={{ animationDuration: '3s' }}>
               <div className="w-8 h-8 rounded-full bg-[#EDF4F0] flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-[#2F6B57]" />
               </div>
