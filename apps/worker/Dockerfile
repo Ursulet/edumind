@@ -1,10 +1,10 @@
 ﻿FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps/worker ./apps/worker
 RUN npm install
-RUN npm run build --workspace=@educariera/worker
+RUN npx tsc --project apps/worker/tsconfig.json
 
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -14,4 +14,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/worker ./apps/worker
 
-CMD ["npm", "run", "start", "--workspace=@educariera/worker"]
+CMD ["node", "apps/worker/dist/index.js"]

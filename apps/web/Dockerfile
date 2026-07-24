@@ -1,6 +1,6 @@
 ﻿FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps/web ./apps/web
 COPY apps/api/prisma ./apps/api/prisma
