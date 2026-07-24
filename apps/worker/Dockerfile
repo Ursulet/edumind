@@ -4,7 +4,7 @@ COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps/worker ./apps/worker
 RUN npm install
-RUN npx tsc --project apps/worker/tsconfig.json
+RUN npm run build --workspace=@educariera/worker
 
 FROM node:20-alpine AS runner
 WORKDIR /app
