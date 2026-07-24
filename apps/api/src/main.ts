@@ -7,10 +7,16 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
   app.useGlobalFilters(new GlobalExceptionFilter());
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      process.env.CORS_ORIGIN || 'https://edumind.stefandevelopment.ro',
+      'http://localhost:3000',
+    ],
+    credentials: true,
+  });
 
-  const port = process.env.PORT || 3001;
-  await app.listen(port);
-  console.info(`🚀 EduCarieră API server running on port ${port} with prefix /api/v1`);
+  const port = Number(process.env.PORT) || 4000;
+  await app.listen(port, '0.0.0.0');
+  console.info(`🚀 EduCarieră API running on port ${port}`);
 }
 bootstrap();

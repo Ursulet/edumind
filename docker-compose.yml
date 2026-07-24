@@ -3,7 +3,6 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: edumind_postgres
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -15,11 +14,11 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 10s
 
   redis:
     image: redis:7-alpine
-    container_name: edumind_redis
     restart: always
     volumes:
       - redis_data:/data
@@ -28,14 +27,13 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    container_name: edumind_api
-    restart: always
+    restart: on-failure
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-educariera}?schema=public"
       REDIS_URL: "redis://redis:6379"
       JWT_SECRET: ${JWT_SECRET:-super-secret-jwt-key-replace-in-production}
-      PORT: 4000
-      CORS_ORIGIN: "https://edumind.stefandevelopment.ro"
+      PORT: "4000"
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://edumind.stefandevelopment.ro}
     depends_on:
       postgres:
         condition: service_healthy
@@ -48,14 +46,13 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    container_name: edumind_web
     restart: always
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://edumind.stefandevelopment.ro/api/v1}
       INTERNAL_API_URL: "http://api:4000"
       DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-educariera}?schema=public"
     depends_on:
-      - api
+      - postgres
     ports:
       - "3000:3000"
 
@@ -63,18 +60,19 @@ services:
     build:
       context: .
       dockerfile: apps/worker/Dockerfile
-    container_name: edumind_worker
-    restart: always
+    restart: on-failure
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-educariera}?schema=public"
       REDIS_URL: "redis://redis:6379"
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASS: ${SMTP_PASS}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
 volumes:
   postgres_data:
