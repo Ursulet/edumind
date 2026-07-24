@@ -31,7 +31,17 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    const apiUrl = process.env.INTERNAL_API_URL || "http://api:4000";
+    return [
+      {
+        source: "/api/v1/:path*",
+        destination: `${apiUrl}/api/v1/:path*`,
+      },
+    ];
+  },
 };
+
 
 export default nextConfig;
 
