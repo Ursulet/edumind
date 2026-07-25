@@ -19,7 +19,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromAuthHeaderAsBearerToken(),
-        (req) => req?.cookies?.em_token,
+        (req) => {
+          if (req?.cookies?.em_token) return req.cookies.em_token;
+          const cookieHeader = req?.headers?.cookie;
+          if (cookieHeader) {
+            const match = cookieHeader.match(/(?:^|;\s*)em_token=([^;]*)/);
+            if (match) return match[1];
+          }
+          return null;
+        },
       ]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET || 'super-secret-jwt-key-min-16-chars',
