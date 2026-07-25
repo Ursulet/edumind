@@ -11,10 +11,6 @@ export default function AdminCmsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newPage, setNewPage] = useState({ title: "", slug: "" });
 
-  useEffect(() => {
-    fetchPages();
-  }, []);
-
   const fetchPages = async () => {
     try {
       const res = await fetch("/api/v1/cms/pages");
@@ -28,6 +24,10 @@ export default function AdminCmsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
 
   const handleCreatePage = async () => {
     if (!newPage.title || !newPage.slug) {

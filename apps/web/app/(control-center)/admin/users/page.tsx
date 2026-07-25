@@ -26,10 +26,6 @@ export default function AdminUsersPage() {
   const [childLastName, setChildLastName] = useState("");
   const [childDob, setChildDob] = useState("");
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   const fetchUsers = async () => {
     try {
       const res = await fetch("/api/v1/admin/users");
@@ -43,6 +39,10 @@ export default function AdminUsersPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const handleCreateUser = async () => {
     try {
