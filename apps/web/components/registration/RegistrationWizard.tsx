@@ -14,6 +14,8 @@ export function RegistrationWizard() {
     parentLastName: "",
     email: "",
     phone: "",
+    password: "",
+    confirmPassword: "",
     childFirstName: "",
     childLastName: "",
     dateOfBirth: "",
@@ -31,6 +33,15 @@ export function RegistrationWizard() {
   };
 
   const handleSubmit = async () => {
+    if (formData.password !== formData.confirmPassword) {
+      setError("Parolele nu se potrivesc.");
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError("Parola trebuie să aibă minim 6 caractere.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -68,7 +79,7 @@ export function RegistrationWizard() {
           </div>
           <h2 className="text-2xl font-semibold text-[#1F2622] tracking-[-0.025em]">Aplicația a fost înregistrată!</h2>
           <p className="text-[#6B746F] max-w-md mx-auto">
-            Vă mulțumim pentru încredere. Un specialist EduMind va analiza aplicația dumneavoastră și vă va contacta în cel mai scurt timp.
+            Vă mulțumim pentru încredere. Acum vă puteți autentifica în contul creat pentru a vizualiza statusul dosarului dumneavoastră.
           </p>
           <div className="pt-4">
             <a href="/login">
@@ -128,25 +139,54 @@ export function RegistrationWizard() {
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => updateField("email", e.target.value)}
-                placeholder="ion.popescu@exemplu.ro"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => updateField("email", e.target.value)}
+                  placeholder="ion.popescu@exemplu.ro"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Telefon</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => updateField("phone", e.target.value)}
+                  placeholder="07xx xxx xxx"
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Telefon</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => updateField("phone", e.target.value)}
-                placeholder="07xx xxx xxx"
-              />
+            
+            {/* Secțiune nouă de parolă */}
+            <div className="pt-4 border-t border-[#E3DED3]">
+              <h3 className="text-sm font-semibold text-[#1F2622] mb-4">Securitate Cont</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">Parolă</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => updateField("password", e.target.value)}
+                    placeholder="Minim 6 caractere"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirmare parolă</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => updateField("confirmPassword", e.target.value)}
+                    placeholder="Rescrieți parola"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -165,7 +165,7 @@ export class CasesService {
     if (!staff) throw new ForbiddenException("Staff profile not found");
 
     // We assume productId actually points to a ProductVersion for simplicity, or we just grab the first version
-    const product = await this.prisma.catalogProduct.findUnique({ 
+    const product = await this.prisma.product.findUnique({ 
       where: { id: productId },
       include: { versions: { take: 1, orderBy: { version: "desc" } } }
     });
@@ -174,13 +174,13 @@ export class CasesService {
       throw new NotFoundException("Product or product version not found");
     }
 
-    return this.prisma.recommendation.create({
+    return this.prisma.productRecommendation.create({
       data: {
         caseId,
         productVersionId: product.versions[0].id,
         staffId: staff.id,
         reason,
-        status: "RECOMMENDED"
+        status: "DRAFT"
       }
     });
   }

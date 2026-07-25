@@ -24,4 +24,9 @@ export class AdminController {
   addChildToParent(@Param("parentId") parentId: string, @Body() childData: any) {
     return this.svc.addChildToParent(parentId, childData);
   }
+
+  @Post("users/create")
+  createUser(@Body() userData: any) {
+    return this.svc.createUser(userData);
+  }
 }

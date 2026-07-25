@@ -114,8 +114,8 @@ export class SchedulingService {
     
     return this.prisma.appointment.findMany({
       where: isGodMode 
-        ? { status: { in: ["SCHEDULED", "IN_PROGRESS"] }, startTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } }
-        : { staff: { userId }, status: { in: ["SCHEDULED", "IN_PROGRESS"] }, startTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } },
+        ? { status: { in: ["SCHEDULED"] }, startTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } }
+        : { staff: { userId }, status: { in: ["SCHEDULED"] }, startTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } },
       include: {
         type: true,
         videoMeeting: true,

@@ -8,7 +8,20 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   
-  // Child form
+  // Create User form
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newUser, setNewUser] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "USER",
+    childFirstName: "",
+    childLastName: "",
+    childDob: ""
+  });
+
+  // Child form for adding to existing user
   const [childFirstName, setChildFirstName] = useState("");
   const [childLastName, setChildLastName] = useState("");
   const [childDob, setChildDob] = useState("");
@@ -31,6 +44,34 @@ export default function AdminUsersPage() {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreateUser = async () => {
+    try {
+      const token = document.cookie.split("em_token=")[1]?.split(";")[0];
+      const res = await fetch(`/api/v1/admin/users/create`, {
+        method: "POST",
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newUser)
+      });
+      
+      if (res.ok) {
+        setNewUser({
+          firstName: "", lastName: "", email: "", password: "", role: "USER", childFirstName: "", childLastName: "", childDob: ""
+        });
+        setShowCreateModal(false);
+        fetchUsers();
+        alert("Utilizatorul a fost creat cu succes!");
+      } else {
+        const err = await res.json();
+        alert("Eroare: " + err.message);
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -98,7 +139,72 @@ export default function AdminUsersPage() {
           <h1 className="text-2xl font-semibold text-[#1F2622]">Management Utilizatori</h1>
           <p className="text-sm text-[#6B746F]">Schimbă roluri și gestionează conturile părinților din platformă.</p>
         </div>
+        <Button 
+          className="bg-[#1F2622] text-white hover:bg-[#2A332E]"
+          onClick={() => setShowCreateModal(true)}
+        >
+          Creează Utilizator Nou
+        </Button>
       </div>
+
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <Card className="bg-[#FFFDF8] w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <CardContent className="p-6 space-y-4">
+              <h2 className="text-lg font-bold">Creează Cont Nou</h2>
+              <div className="space-y-3">
+                <div className="space-y-1">
+                  <Label className="text-xs">Email</Label>
+                  <Input value={newUser.email} onChange={(e) => setNewUser({...newUser, email: e.target.value})} />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Parolă</Label>
+                  <Input type="password" value={newUser.password} onChange={(e) => setNewUser({...newUser, password: e.target.value})} />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Prenume</Label>
+                    <Input value={newUser.firstName} onChange={(e) => setNewUser({...newUser, firstName: e.target.value})} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Nume</Label>
+                    <Input value={newUser.lastName} onChange={(e) => setNewUser({...newUser, lastName: e.target.value})} />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Rol</Label>
+                  <select className="w-full text-sm border-[#E3DED3] rounded-md px-3 py-2 bg-white" value={newUser.role} onChange={(e) => setNewUser({...newUser, role: e.target.value})}>
+                    <option value="USER">User Simplu</option>
+                    <option value="PARENT">Părinte</option>
+                    <option value="SPECIALIST">Specialist</option>
+                    <option value="DEPARTMENT_ADMIN">Director</option>
+                  </select>
+                </div>
+                
+                {newUser.role === "PARENT" && (
+                  <div className="pt-4 border-t border-[#E3DED3] space-y-3">
+                    <h3 className="text-sm font-semibold">Date Copil (Opțional)</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <Label className="text-xs">Prenume Copil</Label>
+                        <Input value={newUser.childFirstName} onChange={(e) => setNewUser({...newUser, childFirstName: e.target.value})} />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-xs">Nume Copil</Label>
+                        <Input value={newUser.childLastName} onChange={(e) => setNewUser({...newUser, childLastName: e.target.value})} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="pt-4 flex gap-2">
+                <Button className="flex-1 bg-[#1F2622] text-white" onClick={handleCreateUser}>Creează</Button>
+                <Button variant="outline" onClick={() => setShowCreateModal(false)}>Anulează</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">

@@ -59,7 +59,7 @@ export default function TemplatesAdminPage() {
                 <p className="text-xs font-mono text-muted-text">{tpl.event}</p>
               </CardContent>
             </Card>
-          ))}
+          )))}
         </div>
 
         {/* Right Column: Editor */}

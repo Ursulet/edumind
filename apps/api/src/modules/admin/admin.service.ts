@@ -15,14 +15,34 @@ export class AdminService {
     });
   }
 
-  async updateUserRole(userId: string, role: any) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+  async updateUserRole(userId: string, role: string) {
+    const user = await this.prisma.user.findUnique({ 
+      where: { id: userId },
+      include: {
+        parentProfile: true,
+        userRoles: { include: { role: true } }
+      }
+    });
     if (!user) throw new NotFoundException("User not found");
 
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: { role },
-    });
+    // We assume the user has at least one organization assigned. If not, default to something or find one.
+    const orgId = user.userRoles[0]?.organizationId || "org-default";
+
+    // Find the role ID
+    const roleRecord = await this.prisma.role.findUnique({ where: { name: role } });
+    if (!roleRecord) throw new NotFoundException(`Role ${role} not found in DB`);
+
+    // Update user role mapping
+    if (user.userRoles.length > 0) {
+      await this.prisma.userRole.update({
+        where: { id: user.userRoles[0].id },
+        data: { roleId: roleRecord.id }
+      });
+    } else {
+      await this.prisma.userRole.create({
+        data: { userId: user.id, roleId: roleRecord.id, organizationId: orgId }
+      });
+    }
 
     // Create profiles if they don't exist based on new role
     if (role === "PARENT" && !user.parentProfile) {
@@ -32,14 +52,14 @@ export class AdminService {
         // Create family and parent profile
         const family = await this.prisma.family.create({
           data: {
-            organizationId: user.organizationId,
+            organizationId: orgId,
           }
         });
         await this.prisma.parentProfile.create({
           data: {
             userId,
             familyId: family.id,
-            relationshipToChild: "PARINTE"
+            relationship: "PARINTE"
           }
         });
       }
@@ -48,15 +68,13 @@ export class AdminService {
       if (!existingStaff) {
         await this.prisma.staffProfile.create({
           data: {
-            userId,
-            organizationId: user.organizationId || "", // requires organizationId
-            capacity: 20
+            userId
           }
         });
       }
     }
 
-    return updatedUser;
+    return this.prisma.user.findUnique({ where: { id: userId } });
   }
 
   async addChildToParent(parentId: string, childData: { firstName: string; lastName: string; dob?: string }) {
@@ -66,7 +84,7 @@ export class AdminService {
       throw new NotFoundException("Parent profile not found. Make sure user is a PARENT first.");
     }
 
-    return this.prisma.child.create({
+    return this.prisma.childProfile.create({
       data: {
         familyId: parentProfile.familyId,
         firstName: childData.firstName,
@@ -74,5 +92,54 @@ export class AdminService {
         dateOfBirth: childData.dob ? new Date(childData.dob) : undefined,
       }
     });
+  }
+
+  async createUser(userData: any) {
+    const argon2 = require('argon2');
+    const existing = await this.prisma.user.findUnique({ where: { email: userData.email.toLowerCase().trim() } });
+    if (existing) throw new Error("Email deja folosit!");
+
+    const passwordHash = userData.password ? await argon2.hash(userData.password) : "";
+    const user = await this.prisma.user.create({
+      data: {
+        email: userData.email.toLowerCase().trim(),
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        passwordHash,
+        status: "ACTIVE"
+      }
+    });
+
+    const orgId = "org-default";
+    const roleRecord = await this.prisma.role.findUnique({ where: { name: userData.role } });
+    if (roleRecord) {
+      await this.prisma.userRole.create({
+        data: { userId: user.id, roleId: roleRecord.id, organizationId: orgId }
+      });
+    }
+
+    if (userData.role === "PARENT") {
+      const family = await this.prisma.family.create({ data: { organizationId: orgId } });
+      await this.prisma.parentProfile.create({ data: { userId: user.id, familyId: family.id, relationship: "PARINTE" } });
+      
+      if (userData.childFirstName && userData.childLastName) {
+        await this.prisma.childProfile.create({
+          data: {
+            familyId: family.id,
+            firstName: userData.childFirstName,
+            lastName: userData.childLastName,
+            dateOfBirth: userData.childDob ? new Date(userData.childDob) : undefined,
+          }
+        });
+      }
+    } else if (["SPECIALIST", "DEPARTMENT_ADMIN"].includes(userData.role)) {
+      await this.prisma.staffProfile.create({
+        data: {
+          userId: user.id
+        }
+      });
+    }
+
+    return user;
   }
 }

@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, Button } from "@edumind/ui";
 import { NewRecommendationForm } from "@/components/cases/NewRecommendationForm";
+import { QuickActions } from "@/components/cases/QuickActions";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +87,8 @@ export default async function SpecialistCaseDetailPage({ params }: { params: Pro
         </div>
 
         <div className="space-y-6">
+          <QuickActions caseId={careerCase.id} />
+          
           <Card className="bg-[#FFFDF8] border-[#E3DED3]">
             <CardHeader>
               <CardTitle>Recomandări</CardTitle>

@@ -9,6 +9,7 @@ export interface CreateApplicationDto {
   parentLastName: string;
   email: string;
   phone: string;
+  password?: string; // <--- ADDED
   childFirstName: string;
   childLastName: string;
   dateOfBirth?: string;
@@ -27,6 +28,9 @@ export interface ReviewApplicationDto {
   internalNote?: string;
 }
 
+// @ts-ignore
+import * as argon2 from 'argon2';
+
 @Injectable()
 export class ApplicationsService {
   constructor(
@@ -37,14 +41,16 @@ export class ApplicationsService {
   async createApplication(dto: CreateApplicationDto) {
     let user = await this.prisma.user.findUnique({ where: { email: dto.email.toLowerCase().trim() } });
     if (!user) {
+      // hash password if provided
+      const passwordHash = dto.password ? await argon2.hash(dto.password) : "";
       user = await this.prisma.user.create({
         data: {
           email: dto.email.toLowerCase().trim(),
           firstName: dto.parentFirstName,
           lastName: dto.parentLastName,
           phone: dto.phone,
-          passwordHash: "",
-          status: "PENDING_VERIFICATION",
+          passwordHash: passwordHash,
+          status: dto.password ? "ACTIVE" : "PENDING_VERIFICATION",
         },
       });
     }
