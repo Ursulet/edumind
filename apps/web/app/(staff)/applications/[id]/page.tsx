@@ -40,7 +40,7 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
 
   const { prisma } = await import("@/lib/db");
   const staffList = await prisma.staffProfile.findMany({
-    where: { user: { organizationId: user.organizationId } },
+    where: { user: { userRoles: { some: { organizationId: user.organizationId } } } },
     include: { user: true }
   });
 

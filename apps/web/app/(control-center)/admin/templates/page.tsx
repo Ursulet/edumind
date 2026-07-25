@@ -70,7 +70,7 @@ export default function TemplatesAdminPage() {
                 <div>
                   <CardTitle className="text-lg">Editare: {selectedTemplate.name}</CardTitle>
                   <p className="text-xs text-muted-text mt-1">
-                    Variabile permise: {selectedTemplate.variables.map(v => <span key={v} className="mx-1 font-mono text-forest-accent bg-sage-surface px-1 rounded">{`{{${v}}}`}</span>)}
+                    Variabile permise: {selectedTemplate.variables.map((v: string) => <span key={v} className="mx-1 font-mono text-forest-accent bg-sage-surface px-1 rounded">{`{{${v}}}`}</span>)}
                   </p>
                 </div>
                 <div className="flex gap-2">
