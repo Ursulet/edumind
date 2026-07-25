@@ -83,7 +83,27 @@ export default async function StaffShellLayout({ children }: { children: ReactNo
 
       {/* Main content */}
       <main className="flex-1 pl-64 flex flex-col min-h-screen">
-        <header className="flex h-16 items-center border-b border-[#E3DED3] bg-[#FFFDF8] px-8 shadow-[0_1px_2px_rgba(31,38,34,0.05)]">
+        <header className="flex h-16 items-center justify-between border-b border-[#E3DED3] bg-[#FFFDF8] px-8 shadow-[0_1px_2px_rgba(31,38,34,0.05)]">
+          
+          {/* Global Search */}
+          <div className="flex-1 max-w-md relative">
+            <form action="/search" method="GET">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-[#6B746F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Caută dosar, email, părinte sau copil..."
+                  className="block w-full pl-9 pr-3 py-2 border border-[#E3DED3] rounded-md leading-5 bg-[#F7F5F0] placeholder-[#94A3B8] focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#2F6B57] focus:border-[#2F6B57] sm:text-sm transition-colors"
+                />
+              </div>
+            </form>
+          </div>
+
           <p className="text-sm text-[#6B746F]">
             Autentificat ca{" "}
             <span className="font-medium text-[#1F2622]">{displayName}</span>

@@ -10,11 +10,7 @@ export default function TemplatesAdminPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/v1/notifications/templates", {
-      headers: {
-        Authorization: `Bearer ${document.cookie.split("em_token=")[1]?.split(";")[0]}`
-      }
-    })
+    fetch("/api/v1/notifications/templates")
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data)) setTemplates(data);

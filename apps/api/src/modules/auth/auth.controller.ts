@@ -32,9 +32,9 @@ export class AuthController {
 
     const result = await this.authService.login(dto, { ip, requestId });
 
-    // Set secure HttpOnly cookie for web client
-    res.cookie('access_token', result.accessToken, {
-      httpOnly: true,
+    // Set cookie for web client (httpOnly: false so client can read it for Bearer tokens)
+    res.cookie('em_token', result.accessToken, {
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
@@ -47,7 +47,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token', { path: '/' });
+    res.clearCookie('em_token', { path: '/' });
     return { status: 'ok', message: 'Logged out successfully' };
   }
 

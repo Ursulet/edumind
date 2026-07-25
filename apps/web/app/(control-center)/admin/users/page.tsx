@@ -32,10 +32,7 @@ export default function AdminUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const token = document.cookie.split("em_token=")[1]?.split(";")[0];
-      const res = await fetch("/api/v1/admin/users", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch("/api/v1/admin/users");
       if (res.ok) {
         const data = await res.json();
         setUsers(data);
@@ -49,11 +46,9 @@ export default function AdminUsersPage() {
 
   const handleCreateUser = async () => {
     try {
-      const token = document.cookie.split("em_token=")[1]?.split(";")[0];
       const res = await fetch(`/api/v1/admin/users/create`, {
         method: "POST",
         headers: { 
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(newUser)
@@ -77,11 +72,9 @@ export default function AdminUsersPage() {
 
   const updateRole = async (userId: string, role: string) => {
     try {
-      const token = document.cookie.split("em_token=")[1]?.split(";")[0];
       const res = await fetch(`/api/v1/admin/users/${userId}/role`, {
         method: "PATCH",
         headers: { 
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ role })
@@ -102,11 +95,9 @@ export default function AdminUsersPage() {
       return;
     }
     try {
-      const token = document.cookie.split("em_token=")[1]?.split(";")[0];
       const res = await fetch(`/api/v1/admin/users/${selectedUser.id}/children`, {
         method: "POST",
         headers: { 
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ 
