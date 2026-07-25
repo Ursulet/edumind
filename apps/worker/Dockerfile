@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
-RUN rm -f package-lock.json && npm install
+RUN npm install
 RUN npm run build --workspace=@edumind/worker
 
 FROM node:20-alpine AS runner

@@ -6,7 +6,7 @@ COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
 
-RUN rm -f package-lock.json && npm install
+RUN npm install
 RUN cd apps/api && npx prisma generate
 RUN npm run build --workspace=@edumind/api
 
