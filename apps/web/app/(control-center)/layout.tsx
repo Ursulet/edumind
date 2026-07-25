@@ -8,6 +8,8 @@ import {
   Database, Server, Workflow, Key
 } from "lucide-react";
 
+import { AdminSidebarAccordion } from "@/components/admin/AdminSidebarAccordion";
+
 export default async function ControlCenterShellLayout({ children }: { children: ReactNode }) {
   const user = await getUserFromToken();
   if (!user) redirect("/login");
@@ -114,27 +116,7 @@ export default async function ControlCenterShellLayout({ children }: { children:
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4 px-4 space-y-6 scrollbar-hide">
-          {sidebarGroups.map((group, index) => (
-            <div key={index}>
-              <h3 className="px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B746F] mb-3">
-                {group.label}
-              </h3>
-              <div className="space-y-0.5">
-                {group.items.map((item, idx) => (
-                  <Link
-                    key={idx}
-                    href={item.href}
-                    className="flex items-center gap-3 rounded-lg px-2 py-2 text-[13px] font-medium text-[#1F2622] hover:bg-[#EDF4F0] hover:text-[#2F6B57] transition-colors group"
-                  >
-                    <span className="text-[#6B746F] group-hover:text-[#2F6B57]">{item.icon}</span>
-                    {item.text}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </nav>
+        <AdminSidebarAccordion groups={sidebarGroups} />
       </aside>
       
       {/* Main Container */}

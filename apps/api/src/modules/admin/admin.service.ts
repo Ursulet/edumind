@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma/prisma.service";
 
 @Injectable()
@@ -25,8 +25,13 @@ export class AdminService {
     });
     if (!user) throw new NotFoundException("User not found");
 
-    // We assume the user has at least one organization assigned. If not, default to something or find one.
-    const orgId = user.userRoles[0]?.organizationId || "org-default";
+    // Fetch the first organization or fallback
+    let orgId = user.userRoles[0]?.organizationId;
+    if (!orgId) {
+      const defaultOrg = await this.prisma.organization.findFirst();
+      if (!defaultOrg) throw new BadRequestException("Nu există nicio organizație în sistem.");
+      orgId = defaultOrg.id;
+    }
 
     // Find the role ID
     const roleRecord = await this.prisma.role.findUnique({ where: { name: role } });
@@ -97,7 +102,7 @@ export class AdminService {
   async createUser(userData: any) {
     const argon2 = require('argon2');
     const existing = await this.prisma.user.findUnique({ where: { email: userData.email.toLowerCase().trim() } });
-    if (existing) throw new Error("Email deja folosit!");
+    if (existing) throw new BadRequestException("Email deja folosit!");
 
     const passwordHash = userData.password ? await argon2.hash(userData.password) : "";
     const user = await this.prisma.user.create({
@@ -110,7 +115,10 @@ export class AdminService {
       }
     });
 
-    const orgId = "org-default";
+    const defaultOrg = await this.prisma.organization.findFirst();
+    if (!defaultOrg) throw new BadRequestException("Nu există nicio organizație în sistem.");
+    const orgId = defaultOrg.id;
+
     const roleRecord = await this.prisma.role.findUnique({ where: { name: userData.role } });
     if (roleRecord) {
       await this.prisma.userRole.create({

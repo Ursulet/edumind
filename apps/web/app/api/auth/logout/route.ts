@@ -13,3 +13,17 @@ export async function POST() {
   });
   return response;
 }
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  url.pathname = "/login";
+  const response = NextResponse.redirect(url);
+  response.cookies.set(COOKIE_NAME, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+    path: "/",
+  });
+  return response;
+}

@@ -29,15 +29,15 @@ export function PublicHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Link href="/login">
+        <div className="flex items-center gap-2 md:gap-3">
+          <Link href="/login" className="hidden sm:block">
             <Button variant="outline" className="border-[#E3DED3] text-[#1F2622] hover:bg-[#F1EEE7]">
               Intră în cont
             </Button>
           </Link>
           <Link href="/inscriere">
             <Button className="bg-[#2F6B57] text-white hover:bg-[#275B4A]">
-              Înscriere Familii
+              Creare Cont
             </Button>
           </Link>
         </div>
