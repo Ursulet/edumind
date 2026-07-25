@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Button, Card, CardContent } from "@edumind/ui";
 import Link from "next/link";
 import { NewAppointmentDialog } from "@/components/scheduling/NewAppointmentDialog";
+import { CancelAppointmentButton } from "@/components/parent/CancelAppointmentButton";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";
 
@@ -115,9 +116,7 @@ export default async function ParentAppointmentsPage() {
                           </Link>
                         </Button>
                       )}
-                      <Button variant="outline" className="flex-1 text-[#B4453A] border-[#FECACA] hover:bg-[#FEF2F2] hover:text-[#B4453A]">
-                        Anulează
-                      </Button>
+                      <CancelAppointmentButton appointmentId={apt.id} />
                     </div>
                   </CardContent>
                 </Card>

@@ -8,6 +8,10 @@ export default async function StaffShellLayout({ children }: { children: ReactNo
   const user = await getUserFromToken();
   if (!user) redirect("/login");
 
+  if (!["SPECIALIST", "DEPARTMENT_ADMIN", "SUPER_ADMIN", "PLATFORM_OWNER"].includes(user.role)) {
+    redirect("/dashboard");
+  }
+
   const isDirector =
     user.role === "DEPARTMENT_ADMIN" ||
     user.role === "SUPER_ADMIN" ||

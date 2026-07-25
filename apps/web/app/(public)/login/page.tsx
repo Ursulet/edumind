@@ -164,11 +164,13 @@ function LoginForm() {
           </div>
         </div>
 
-        {/* Demo hint */}
-        <div className="mt-4 rounded-xl bg-[#EDF4F0] border border-[#DCE8E1] px-4 py-3 text-center">
+        {/* Forgot password link */}
+        <div className="mt-4 text-center">
           <p className="text-xs text-[#6B746F]">
-            <span className="font-semibold text-[#2F6B57]">Demo Admin:</span>{" "}
-            admin@edumind.ro / AdminPassword123!
+            Probleme la autentificare?{" "}
+            <a href="/resetare-parola" className="font-semibold text-[#2F6B57] hover:text-[#275B4A] transition-colors">
+              Resetează parola
+            </a>
           </p>
         </div>
       </div>

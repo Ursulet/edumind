@@ -1,4 +1,4 @@
-﻿import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma/prisma.service";
 import { AuditService } from "../audit/audit.service";
 import { SlotGeneratorService } from "./slot-generator.service";
@@ -106,6 +106,22 @@ export class SchedulingService {
       },
       orderBy: { startTime: "asc" },
       take: 5,
+    });
+  }
+
+  async getMyAppointments(userId: string, role?: string) {
+    const isGodMode = role === "SUPER_ADMIN" || role === "PLATFORM_OWNER";
+    
+    return this.prisma.appointment.findMany({
+      where: isGodMode 
+        ? { status: { in: ["SCHEDULED", "IN_PROGRESS"] }, startTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } }
+        : { staff: { userId }, status: { in: ["SCHEDULED", "IN_PROGRESS"] }, startTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } },
+      include: {
+        type: true,
+        videoMeeting: true,
+        case: { include: { child: true } }
+      },
+      orderBy: { startTime: "asc" }
     });
   }
 }

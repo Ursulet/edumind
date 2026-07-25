@@ -1,35 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Textarea, Badge } from "@edumind/ui";
 
-// Mock Data
-const mockTemplates = [
-  {
-    id: "tpl-1",
-    name: "Confirmare Plată Pachete Premium",
-    event: "PAYMENT_CONFIRMED",
-    subject: "Plata ta pentru {{product.name}} a fost confirmată!",
-    body: "Salut {{parent.firstName}},\n\nÎți mulțumim pentru achiziție. Plata de {{payment.amount}} a fost înregistrată.",
-    variables: ["parent.firstName", "product.name", "payment.amount"],
-    version: 3,
-    status: "PUBLISHED"
-  },
-  {
-    id: "tpl-2",
-    name: "Reminder Ședință",
-    event: "APPOINTMENT_REMINDER",
-    subject: "Reminder: Ședința pentru {{child.firstName}} începe curând",
-    body: "Salut,\nAi o ședință programată la {{appointment.time}} pe data de {{appointment.date}} cu consilierul {{specialist.name}}.",
-    variables: ["child.firstName", "appointment.time", "appointment.date", "specialist.name"],
-    version: 1,
-    status: "DRAFT"
-  }
-];
-
 export default function TemplatesAdminPage() {
-  const [selectedTemplate, setSelectedTemplate] = useState<typeof mockTemplates[0] | null>(null);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
   const [isPreview, setIsPreview] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/v1/notifications/templates", {
+      headers: {
+        Authorization: `Bearer ${document.cookie.split("em_token=")[1]?.split(";")[0]}`
+      }
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) setTemplates(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -48,7 +40,10 @@ export default function TemplatesAdminPage() {
         
         {/* Left Column: List of templates */}
         <div className="lg:col-span-1 space-y-4">
-          {mockTemplates.map(tpl => (
+          {loading ? (
+            <div className="text-sm text-muted-text">Se încarcă...</div>
+          ) : (
+            templates.map(tpl => (
             <Card 
               key={tpl.id} 
               className={`cursor-pointer transition-colors hover:border-forest-accent ${selectedTemplate?.id === tpl.id ? 'border-forest-accent bg-sage-surface/10' : 'bg-white border-border'}`}

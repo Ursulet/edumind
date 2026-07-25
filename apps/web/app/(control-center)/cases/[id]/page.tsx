@@ -1,7 +1,8 @@
 import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { Button, Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent, Textarea } from "@edumind/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Tabs, TabsList, TabsTrigger, TabsContent } from "@edumind/ui";
 import Link from "next/link";
+import { SessionCard } from "@/components/cases/SessionCard";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";
 
@@ -69,62 +70,7 @@ export default async function SpecialistCaseDossierPage({ params }: { params: Pr
             </Card>
           ) : (
             careerCase.counselingSessions.map((session: any) => (
-              <Card key={session.id} className="bg-[#FFFDF8] border-[#E3DED3] shadow-[0_1px_2px_rgba(31,38,34,0.05)] overflow-hidden">
-                <CardHeader className="border-b border-[#E3DED3] bg-[#F7F5F0] flex flex-row items-center justify-between pb-4 pt-5">
-                  <div>
-                    <CardTitle className="text-lg text-[#1F2622]">{session.appointment?.type?.title || "Sesiune de Consiliere"}</CardTitle>
-                    <p className="text-sm text-[#6B746F] mt-1">
-                      {new Date(session.createdAt).toLocaleDateString('ro-RO')} • Status: {session.status}
-                    </p>
-                  </div>
-                  <Button variant="outline" size="sm" className="border-[#2F6B57] text-[#2F6B57] hover:bg-[#EDF4F0]">Marchează Complet</Button>
-                </CardHeader>
-                
-                <CardContent className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Internal Notes - STRICTLY CONFIDENTIAL */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-[#B4453A]">Notițe Interne (Confidențial)</h4>
-                      <span className="bg-[#FEF2F2] border border-[#FECACA] text-[#B4453A] text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Staff Only</span>
-                    </div>
-                    {/* Form elements would wrap these in a real interactive setup */}
-                    <Textarea 
-                      placeholder="Notițe personale pentru continuitatea cazului..." 
-                      className="min-h-[160px] bg-white border-[#FECACA] focus-visible:ring-[#B4453A]/20"
-                      defaultValue={session.content?.internalNotes || ""}
-                    />
-                    <p className="text-xs text-[#6B746F]">Aceste notițe nu vor fi vizibile niciodată în portalul părintelui.</p>
-                  </div>
-
-                  {/* Parent Summary - VISIBLE TO PARENT */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-[#1F2622]">Rezumat pentru Părinte</h4>
-                      <span className="bg-[#EDF4F0] border border-[#2F6B57]/20 text-[#2F6B57] text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Public</span>
-                    </div>
-                    <Textarea 
-                      placeholder="Ce concluzii îi transmiți părintelui?" 
-                      className="min-h-[160px] bg-white border-[#2F6B57]/30 focus-visible:ring-[#2F6B57]/20"
-                      defaultValue={session.content?.parentSummary || ""}
-                    />
-                    <p className="text-xs text-[#6B746F]">Textul completat aici va apărea în aplicația părintelui.</p>
-                  </div>
-                  
-                  {/* Homework */}
-                  <div className="space-y-3 lg:col-span-2">
-                    <h4 className="font-semibold text-[#1F2622]">Acțiuni & Teme (Homework)</h4>
-                    <Textarea 
-                      placeholder="Ex: De completat testul de personalitate..." 
-                      className="bg-white min-h-[100px] border-[#E3DED3]"
-                      defaultValue={session.content?.homework || ""}
-                    />
-                  </div>
-                </CardContent>
-                <div className="bg-[#F7F5F0] p-4 border-t border-[#E3DED3] flex justify-end gap-3">
-                  <Button variant="outline" className="border-[#E3DED3] text-[#1F2622] hover:bg-[#FFFDF8]">Renunță</Button>
-                  <Button className="bg-[#2F6B57] text-white hover:bg-[#275B4A]">Salvează Notițele</Button>
-                </div>
-              </Card>
+              <SessionCard key={session.id} session={session} />
             ))
           )}
         </TabsContent>

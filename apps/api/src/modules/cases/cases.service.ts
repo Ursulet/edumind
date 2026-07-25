@@ -1,4 +1,4 @@
-﻿import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
+import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma/prisma.service";
 import { AuditService } from "../audit/audit.service";
 
@@ -17,12 +17,21 @@ export class CasesService {
   }) {
     const isAdmin = params.permissions.some(p => ["system.manage", "cases.read"].includes(p));
     const isSpecialist = params.permissions.includes("cases.read.assigned");
+    const isParent = !isAdmin && !isSpecialist;
 
-    let staffFilter = {};
-    if (isSpecialist && !isAdmin) {
+    let roleFilter = {};
+    if (isSpecialist) {
       const staff = await this.prisma.staffProfile.findUnique({ where: { userId: params.userId } });
       if (staff) {
-        staffFilter = { assignments: { some: { staffId: staff.id } } };
+        roleFilter = { assignments: { some: { staffId: staff.id } } };
+      }
+    } else if (isParent) {
+      const parent = await this.prisma.parentProfile.findUnique({ where: { userId: params.userId } });
+      if (parent) {
+        roleFilter = { child: { familyId: parent.familyId } };
+      } else {
+        // If parent profile doesn't exist, return no cases
+        return [];
       }
     }
 
@@ -31,7 +40,7 @@ export class CasesService {
         child: { family: { organizationId: params.organizationId } },
         status: params.filters?.status as any,
         departmentId: params.filters?.departmentId,
-        ...staffFilter,
+        ...roleFilter,
       },
       include: {
         child: { include: { family: { include: { parents: { include: { user: { select: { firstName: true, lastName: true, email: true } } } } } } } },
@@ -146,5 +155,33 @@ export class CasesService {
     }));
 
     return { ...careerCase, counselingSessions: sanitizedSessions };
+  }
+
+  async addRecommendation(caseId: string, productId: string, reason: string, staffUserId: string) {
+    const careerCase = await this.prisma.careerCase.findUnique({ where: { id: caseId } });
+    if (!careerCase) throw new NotFoundException("Case not found");
+
+    const staff = await this.prisma.staffProfile.findUnique({ where: { userId: staffUserId } });
+    if (!staff) throw new ForbiddenException("Staff profile not found");
+
+    // We assume productId actually points to a ProductVersion for simplicity, or we just grab the first version
+    const product = await this.prisma.catalogProduct.findUnique({ 
+      where: { id: productId },
+      include: { versions: { take: 1, orderBy: { version: "desc" } } }
+    });
+    
+    if (!product || product.versions.length === 0) {
+      throw new NotFoundException("Product or product version not found");
+    }
+
+    return this.prisma.recommendation.create({
+      data: {
+        caseId,
+        productVersionId: product.versions[0].id,
+        staffId: staff.id,
+        reason,
+        status: "RECOMMENDED"
+      }
+    });
   }
 }

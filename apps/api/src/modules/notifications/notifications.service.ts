@@ -30,6 +30,13 @@ export class NotificationsService {
     });
   }
 
+  async markAllAsRead(userId: string) {
+    return this.prisma.notification.updateMany({
+      where: { userId, readAt: null },
+      data: { readAt: new Date() },
+    });
+  }
+
   async createNotification(data: {
     userId: string;
     title: string;
@@ -59,5 +66,31 @@ export class NotificationsService {
     }
 
     return notification;
+  }
+
+  async getTemplates() {
+    // Return static mock data as a stop-gap for templates without adding a new Prisma model
+    return [
+      {
+        id: "tpl-1",
+        name: "Confirmare Plată Pachete Premium",
+        event: "PAYMENT_CONFIRMED",
+        subject: "Plata ta pentru {{product.name}} a fost confirmată!",
+        body: "Salut {{parent.firstName}},\n\nÎți mulțumim pentru achiziție. Plata de {{payment.amount}} a fost înregistrată.",
+        variables: ["parent.firstName", "product.name", "payment.amount"],
+        version: 3,
+        status: "PUBLISHED"
+      },
+      {
+        id: "tpl-2",
+        name: "Reminder Ședință",
+        event: "APPOINTMENT_REMINDER",
+        subject: "Reminder: Ședința pentru {{child.firstName}} începe curând",
+        body: "Salut,\nAi o ședință programată la {{appointment.time}} pe data de {{appointment.date}} cu consilierul {{specialist.name}}.",
+        variables: ["child.firstName", "appointment.time", "appointment.date", "specialist.name"],
+        version: 1,
+        status: "DRAFT"
+      }
+    ];
   }
 }

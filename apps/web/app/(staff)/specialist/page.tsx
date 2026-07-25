@@ -45,8 +45,10 @@ export default async function SpecialistDashboardPage() {
 
   // Fetch appointments
   let appointments: any[] = [];
-  // For the sake of the dashboard we need a way to get today's appointments. 
-  // We'll mock the schedule on the right side if no dedicated API exists, but map the cases dynamically.
+  const aptsData = await fetchWithAuth(`/api/v1/scheduling/my-appointments`, authHeaders);
+  if (Array.isArray(aptsData)) {
+    appointments = aptsData;
+  }
 
   return (
     <div className="space-y-8">
@@ -155,8 +157,9 @@ export default async function SpecialistDashboardPage() {
                             {new Date(c.createdAt).toLocaleDateString('ro-RO')}
                           </td>
                           <td className="px-4 py-4 text-right">
-                            {/* Would link to the internal staff case view */}
-                            <Button variant="outline" size="sm" className="h-8 text-xs border-[#E3DED3] text-[#1F2622]">Dosar</Button>
+                            <Button variant="outline" size="sm" asChild className="h-8 text-xs border-[#E3DED3] text-[#1F2622]">
+                              <Link href={`/applications/${c.id}`}>Dosar</Link>
+                            </Button>
                           </td>
                         </tr>
                       ))
@@ -175,22 +178,29 @@ export default async function SpecialistDashboardPage() {
           <Card className="bg-[#FFFDF8] border-[#E3DED3] shadow-[0_1px_2px_rgba(31,38,34,0.05)]">
             <CardContent className="p-5 space-y-6">
               
-              <div className="relative pl-6 border-l-2 border-[#2F6B57]">
-                <div className="absolute w-3 h-3 bg-[#2F6B57] rounded-full -left-[7px] top-1"></div>
-                <p className="text-xs font-bold text-[#2F6B57] mb-1">10:00 - 10:50</p>
-                <p className="text-sm font-medium text-[#1F2622]">Ședință Consiliere #2</p>
-                <p className="text-xs text-[#6B746F]">Matei Popescu (Online)</p>
-                <Button className="w-full mt-3 bg-[#2F6B57] text-white hover:bg-[#275B4A] h-8 text-xs">
-                  Intră în Apel Video
-                </Button>
-              </div>
-
-              <div className="relative pl-6 border-l-2 border-[#E3DED3]">
-                <div className="absolute w-3 h-3 bg-[#E3DED3] rounded-full -left-[7px] top-1"></div>
-                <p className="text-xs font-bold text-[#6B746F] mb-1">14:00 - 14:30</p>
-                <p className="text-sm font-medium text-[#1F2622]">Sesiune de Cunoaștere</p>
-                <p className="text-xs text-[#6B746F]">Ana Ionescu (Online)</p>
-              </div>
+              {appointments.length === 0 ? (
+                <p className="text-sm text-[#6B746F]">Nu ai nicio programare viitoare.</p>
+              ) : (
+                appointments.map((apt: any) => (
+                  <div key={apt.id} className="relative pl-6 border-l-2 border-[#2F6B57]">
+                    <div className="absolute w-3 h-3 bg-[#2F6B57] rounded-full -left-[7px] top-1"></div>
+                    <p className="text-xs font-bold text-[#2F6B57] mb-1">
+                      {new Date(apt.startTime).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} - {new Date(apt.endTime).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                    <p className="text-sm font-medium text-[#1F2622]">{apt.type?.title || "Ședință Consiliere"}</p>
+                    <p className="text-xs text-[#6B746F]">
+                      {apt.case?.child?.firstName} {apt.case?.child?.lastName} (Online)
+                    </p>
+                    {apt.videoMeeting && (
+                      <Button asChild className="w-full mt-3 bg-[#2F6B57] text-white hover:bg-[#275B4A] h-8 text-xs">
+                        <Link href={apt.videoMeeting.joinUrl} target="_blank">
+                          Intră în Apel Video
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                ))
+              )}
 
             </CardContent>
           </Card>

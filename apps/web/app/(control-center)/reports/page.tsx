@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { Button, Card, CardContent } from "@edumind/ui";
 import Link from "next/link";
+import { ReportPublishButton } from "@/components/reports/ReportPublishButton";
 
 export const dynamic = "force-dynamic";
 
@@ -79,9 +80,7 @@ export default async function AdminReportsPage() {
                     {report.status === "DRAFT" ? (
                       <>
                         <Button variant="outline" className="w-full sm:w-auto">Editează</Button>
-                        <Button className="bg-forest-accent text-warm-surface hover:bg-forest-hover w-full sm:w-auto">
-                          Publică la Părinte
-                        </Button>
+                        <ReportPublishButton reportId={report.id} />
                       </>
                     ) : (
                       <Button variant="outline" className="w-full sm:w-auto">

@@ -1,11 +1,18 @@
 import { ReactNode } from "react";
 import Link from "next/link";
-import { getUserFromToken } from "@/lib/auth";
+import { getUserFromToken, getHomeForRole } from "@/lib/auth";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { NotificationBell } from "@/components/notification-bell";
+import { redirect } from "next/navigation";
 
 export default async function ParentShellLayout({ children }: { children: ReactNode }) {
   const user = await getUserFromToken();
+  if (!user) redirect("/login");
+
+  // Redirect non-parent roles to their correct portal (unless they are Super Admin in God Mode)
+  if (user.role && user.role !== "PARENT" && user.role !== "SUPER_ADMIN" && user.role !== "PLATFORM_OWNER") {
+    redirect(getHomeForRole(user.role));
+  }
 
   const displayName = user
     ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email
@@ -27,19 +34,25 @@ export default async function ParentShellLayout({ children }: { children: ReactN
 
           <nav className="hidden md:flex items-center gap-1 ml-8">
             <Link
-              href="/dashboard"
+              href="/"
               className="px-3 py-1.5 rounded-md text-sm text-[#DCE8E1] hover:text-white hover:bg-[#2A332E] transition-all duration-150"
             >
-              Acasă
+              Dashboard
             </Link>
             <Link
-              href="/parcurs"
+              href="/dosar"
               className="px-3 py-1.5 rounded-md text-sm text-[#DCE8E1] hover:text-white hover:bg-[#2A332E] transition-all duration-150"
             >
-              Parcurs
+              Dosar
             </Link>
             <Link
-              href="/sedinte"
+              href="/evaluari"
+              className="px-3 py-1.5 rounded-md text-sm text-[#DCE8E1] hover:text-white hover:bg-[#2A332E] transition-all duration-150"
+            >
+              Evaluări
+            </Link>
+            <Link
+              href="/programari"
               className="px-3 py-1.5 rounded-md text-sm text-[#DCE8E1] hover:text-white hover:bg-[#2A332E] transition-all duration-150"
             >
               Ședințe
@@ -49,6 +62,12 @@ export default async function ParentShellLayout({ children }: { children: ReactN
               className="px-3 py-1.5 rounded-md text-sm text-[#DCE8E1] hover:text-white hover:bg-[#2A332E] transition-all duration-150"
             >
               Rapoarte
+            </Link>
+            <Link
+              href="/recomandari"
+              className="px-3 py-1.5 rounded-md text-sm text-[#DCE8E1] hover:text-white hover:bg-[#2A332E] transition-all duration-150"
+            >
+              Recomandări
             </Link>
             <Link
               href="/plati"

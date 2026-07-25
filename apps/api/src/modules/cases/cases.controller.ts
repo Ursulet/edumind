@@ -1,4 +1,4 @@
-﻿import { Controller, Get, Param, Query, UseGuards, Req } from "@nestjs/common";
+import { Controller, Get, Param, Query, UseGuards, Req } from "@nestjs/common";
 import { CasesService } from "./cases.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PermissionsGuard } from "../permissions/guards/permissions.guard";
@@ -47,5 +47,11 @@ export class CasesController {
   getParentView(@Param("id") id: string, @Req() req: Request) {
     const user = (req as any).user;
     return this.casesService.getCaseForParent(id, user.sub);
+  }
+
+  @Post(":id/recommendations")
+  addRecommendation(@Param("id") id: string, @Req() req: Request, @Body() body: { productId: string, reason: string }) {
+    const user = (req as any).user;
+    return this.casesService.addRecommendation(id, body.productId, body.reason, user.sub);
   }
 }

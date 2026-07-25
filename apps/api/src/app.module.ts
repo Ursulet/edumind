@@ -22,6 +22,7 @@ import { RecommendationsModule } from './modules/recommendations/recommendations
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SearchModule } from './modules/search/search.module';
 import { CorrelationIdMiddleware } from './common/middleware/correlation-id.middleware';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { CorrelationIdMiddleware } from './common/middleware/correlation-id.midd
     RecommendationsModule,
     NotificationsModule,
     SearchModule,
+    AdminModule,
   ],
   providers: [
     {

@@ -1,6 +1,7 @@
 import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Button, Card, CardContent, Badge } from "@edumind/ui";
+import { Card, CardContent, Badge } from "@edumind/ui";
+import Link from "next/link";
 
 const API = process.env.INTERNAL_API_URL || "http://api:4000";
 
@@ -88,16 +89,12 @@ export default async function ApplicationsQueuePage() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                    <Button variant="outline" className="border-[#E3DED3] text-[#1F2622] hover:bg-[#F1EEE7]">
-                      Detalii
-                    </Button>
-                    {/* In a real app this would call an API action */}
-                    <form action={`/api/actions/approve-application`} method="POST">
-                      <input type="hidden" name="id" value={app.id} />
-                      <Button type="button" className="bg-[#2F6B57] text-white hover:bg-[#275B4A]">
-                        Aprobă & Deschide Caz
-                      </Button>
-                    </form>
+                    <Link
+                      href={`/applications/${app.id}`}
+                      className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg border border-[#E3DED3] text-[#1F2622] hover:bg-[#F1EEE7] transition-colors"
+                    >
+                      Deschide Aplicație
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

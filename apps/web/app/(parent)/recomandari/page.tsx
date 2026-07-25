@@ -1,54 +1,40 @@
 export const dynamic = "force-dynamic";
-import { prisma } from "@/lib/db";
+import { getUserFromToken, getAuthHeaders } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@edumind/ui";
 
 export const metadata = {
   title: "Recomandări - Portal Părinți",
 };
 
-export default async function ParentRecommendationsPage() {
-  let careerCase: any = null;
+const API = process.env.INTERNAL_API_URL || "http://api:4000";
+
+async function fetchWithAuth(path: string, headers: Record<string, string>) {
   try {
-    careerCase = await prisma.careerCase.findFirst({
-      include: {
-        child: true,
-        recommendations: {
-          where: { status: { in: ["RECOMMENDED", "VIEWED", "ACCEPTED"] } },
-          include: { productVersion: { include: { prices: { take: 1 } } }, staff: { include: { user: true } } },
-          orderBy: { createdAt: "desc" }
-        }
-      }
+    const res = await fetch(`${API}${path}`, {
+      headers: { ...headers, "Content-Type": "application/json" },
+      cache: "no-store",
     });
-  } catch (e) {
-    // Fallback Mock Data if DB is offline
-    console.log("DB Offline - Using Mock Data for Recommendations");
-    careerCase = {
-      child: { firstName: "Matei", lastName: "Popescu" },
-      recommendations: [
-        {
-          id: "mock-1",
-          status: "RECOMMENDED",
-          reason: "Matei are o pasiune clară pentru științele exacte. Acest program de explorare STEM îl va ajuta să înțeleagă mai bine carierele posibile în inginerie și programare, prin activități practice și mentorat direcționat.",
-          createdAt: new Date().toISOString(),
-          productVersion: {
-            marketingName: "Pachet Explorator STEM",
-            prices: [{ amount: 450, currency: "RON" }]
-          },
-          staff: { user: { firstName: "Elena", lastName: "Stancu" } }
-        },
-        {
-          id: "mock-2",
-          status: "ACCEPTED",
-          reason: "Evaluarea inițială sugerează o nevoie de sprijin în managementul timpului. Acest modul scurt va debloca potențialul real al lui Matei pentru examenele viitoare.",
-          createdAt: new Date(Date.now() - 864000000).toISOString(),
-          productVersion: {
-            marketingName: "Modul Managementul Timpului",
-            prices: [{ amount: 150, currency: "RON" }]
-          },
-          staff: { user: { firstName: "Andrei", lastName: "Mirea" } }
-        }
-      ]
-    };
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+export default async function ParentRecommendationsPage() {
+  const user = await getUserFromToken();
+  if (!user) redirect("/login");
+
+  const authHeaders = await getAuthHeaders();
+
+  // Get active case
+  const casesData = await fetchWithAuth(`/api/v1/cases/mine`, authHeaders);
+  const activeCaseMeta = Array.isArray(casesData) ? casesData[0] : null;
+
+  let careerCase: any = null;
+  if (activeCaseMeta) {
+    careerCase = await fetchWithAuth(`/api/v1/cases/${activeCaseMeta.id}`, authHeaders);
   }
 
   return (

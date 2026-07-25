@@ -1,4 +1,4 @@
-﻿import { Controller, Get, Patch, Param, UseGuards, Req } from "@nestjs/common";
+import { Controller, Get, Patch, Param, UseGuards, Req } from "@nestjs/common";
 import { NotificationsService } from "./notifications.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { Request } from "express";
@@ -14,9 +14,20 @@ export class NotificationsController {
     return this.svc.getUserNotifications(user.sub);
   }
 
+  @Patch("read-all")
+  markAllAsRead(@Req() req: Request) {
+    const user = (req as any).user;
+    return this.svc.markAllAsRead(user.sub);
+  }
+
   @Patch(":id/read")
   markAsRead(@Param("id") id: string, @Req() req: Request) {
     const user = (req as any).user;
     return this.svc.markAsRead(id, user.sub);
+  }
+
+  @Get("templates")
+  getTemplates() {
+    return this.svc.getTemplates();
   }
 }
