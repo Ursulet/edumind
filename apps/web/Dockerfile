@@ -7,7 +7,7 @@ COPY packages ./packages
 COPY apps ./apps
 
 RUN npm install
-RUN npm install lightningcss-linux-x64-musl@1.32.0 --no-save
+RUN npm install lightningcss-linux-x64-musl@1.32.0 @tailwindcss/oxide-linux-x64-musl@4.3.3 --no-save
 RUN cd apps/api && npx prisma generate
 RUN npm run build --workspace=@edumind/web
 
