@@ -6,9 +6,11 @@ COPY package*.json tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
 
-RUN npm install
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN npm install --include=optional
 RUN npm install lightningcss-linux-x64-musl@1.32.0 @tailwindcss/oxide-linux-x64-musl@4.3.3 --no-save
-RUN cd apps/api && npx prisma generate
+RUN npx prisma generate --schema=apps/api/prisma/schema.prisma
 RUN npm run build --workspace=@edumind/web
 
 # ---- Runner Stage ----

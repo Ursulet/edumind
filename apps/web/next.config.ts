@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@edumind/ui"],
+  transpilePackages: ["@edumind/ui", "@edumind/types", "@edumind/validation"],
 
   async headers() {
     return [
