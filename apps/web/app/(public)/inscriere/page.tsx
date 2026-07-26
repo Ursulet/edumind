@@ -1,5 +1,7 @@
 import { RegistrationWizard } from "@/components/registration/RegistrationWizard";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Înscriere - EduCarieră",
   description: "Începe călătoria educațională a copilului tău.",

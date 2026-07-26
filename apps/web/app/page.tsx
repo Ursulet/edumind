@@ -13,6 +13,8 @@ import { SocialProof } from "@/components/marketing/SocialProof";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { FinalCta } from "@/components/marketing/FinalCta";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "EduMind | Orientare educațională & în carieră",
   description:
