@@ -13,7 +13,7 @@ export default async function AdminPaymentsPage() {
       family: { include: { parents: true } }
     },
     orderBy: { createdAt: "desc" }
-  });
+  }).catch(() => []);
 
   return (
     <div className="space-y-6">

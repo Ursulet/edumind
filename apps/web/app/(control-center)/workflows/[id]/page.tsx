@@ -14,7 +14,7 @@ export default async function WorkflowEditorPage({ params }: { params: Promise<{
         include: { steps: { orderBy: { order: "asc" } } }
       }
     }
-  });
+  }).catch(() => null);
 
   if (!template && id !== "new") return notFound();
 

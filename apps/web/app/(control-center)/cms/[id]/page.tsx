@@ -10,7 +10,7 @@ export default async function CmsPageEditor({ params }: { params: Promise<{ id: 
     page = await prisma.cmsPage.findUnique({
       where: { id },
       include: { seo: true, sections: { orderBy: { order: 'asc' } } },
-    });
+    }).catch(() => null);
     if (!page) return notFound();
   }
 

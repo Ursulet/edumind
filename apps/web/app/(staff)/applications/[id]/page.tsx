@@ -38,11 +38,16 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
 
   if (!app) return notFound();
 
-  const { prisma } = await import("@/lib/db");
-  const staffList = await prisma.staffProfile.findMany({
-    where: { user: { userRoles: { some: { organizationId: user.organizationId } } } },
-    include: { user: true }
-  });
+  let staffList: any[] = [];
+  try {
+    const { prisma } = await import("@/lib/db");
+    staffList = await prisma.staffProfile.findMany({
+      where: { user: { userRoles: { some: { organizationId: user.organizationId } } } },
+      include: { user: true }
+    }).catch(() => []);
+  } catch {
+    staffList = [];
+  }
 
   const formData = (app.data as any) ?? {};
   const parentUser = app.family?.parents?.[0]?.user;
