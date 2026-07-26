@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@edumind/ui";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
