@@ -28,7 +28,7 @@ export default async function ParentShellLayout({ children }: { children: ReactN
     {
       label: "OVERVIEW",
       items: [
-        { href: "/", icon: <Home size={18} />, text: "Acasă" },
+        { href: "/dashboard", icon: <Home size={18} />, text: "Acasă" },
         { href: "/parcurs", icon: <Map size={18} />, text: "Parcurs" },
       ]
     },

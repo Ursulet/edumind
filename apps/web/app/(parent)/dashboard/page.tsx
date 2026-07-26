@@ -13,10 +13,10 @@ export default async function ParentDashboard({ searchParams }: { searchParams: 
   const user = await getUserFromToken();
   if (!user) redirect("/login");
 
-  // Mocked state for presentation
+  // Mocked / Connected state for parent presentation
   const child = {
-    firstName: "Andrei",
-    lastName: "Popescu",
+    firstName: user.firstName || "Andrei",
+    lastName: user.lastName || "Popescu",
     grade: "Clasa a 8-a",
     program: "Program Orientare Școlară",
     specialist: "Elena Rusu (Psiholog)",
@@ -48,7 +48,7 @@ export default async function ParentDashboard({ searchParams }: { searchParams: 
   return (
     <div className="w-full py-6 md:py-8 px-4 md:px-8 max-w-6xl mx-auto">
       
-      {/* Grid container with specific mobile ordering */}
+      {/* Grid container with mobile ordering */}
       <div className="flex flex-col md:grid md:grid-cols-12 gap-6">
         
         {/* 1. CHILD CONTEXT */}
@@ -107,7 +107,7 @@ export default async function ParentDashboard({ searchParams }: { searchParams: 
             </div>
           </div>
 
-          {/* 3. NEXT ACTION (Dominant) */}
+        {/* 3. NEXT ACTION (Dominant) */}
           <div className="order-3 bg-[#1F2622] rounded-2xl p-7 text-white shadow-lg relative overflow-hidden">
              <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
              <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">

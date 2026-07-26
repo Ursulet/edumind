@@ -4,27 +4,27 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F7F5F0] pt-16 pb-24 md:pt-24 md:pb-32 lg:pt-32 lg:pb-40 border-b border-[#E3DED3]">
+    <section className="relative overflow-hidden bg-[#F7F5F0] pt-12 pb-20 md:pt-20 md:pb-28 lg:pt-24 lg:pb-32 border-b border-[#E3DED3]">
       <div className="container mx-auto px-4 max-w-[1280px]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Side: Content */}
-          <div className="max-w-2xl">
-            <span className="inline-block text-[13px] font-semibold tracking-[0.15em] text-[#2F6B57] uppercase mb-6">
+          {/* Left Side: Content (7 cols on desktop) */}
+          <div className="lg:col-span-6 xl:col-span-6 max-w-2xl">
+            <span className="inline-block text-[13px] font-semibold tracking-[0.15em] text-[#2F6B57] uppercase mb-5 bg-[#EDF4F0] px-3 py-1 rounded-full border border-[#2F6B57]/15">
               Orientare educațională & în carieră
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-[64px] font-semibold text-[#1F2622] tracking-[-0.04em] leading-[1.05] mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-[56px] font-semibold text-[#1F2622] tracking-[-0.04em] leading-[1.08] mb-6">
               Nu trebuie să știi de acum <br className="hidden md:block" />
               ce vei face toată viața.
             </h1>
-            <p className="text-xl md:text-[22px] font-medium text-[#2F6B57] leading-snug mb-6">
+            <p className="text-lg md:text-[22px] font-medium text-[#2F6B57] leading-snug mb-5">
               Trebuie să știi care este următorul pas potrivit pentru tine.
             </p>
-            <p className="text-[17px] text-[#6B746F] leading-relaxed mb-10 max-w-lg">
+            <p className="text-[16px] md:text-[17px] text-[#6B746F] leading-relaxed mb-8 max-w-lg">
               EduMind îi ajută pe elevii din clasele VIII–XII să își înțeleagă aptitudinile, interesele și opțiunile și să transforme incertitudinea într-un plan educațional clar.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-8">
               <Link href="/inscriere" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full bg-[#1F2622] hover:bg-[#2A332E] text-white px-8 h-14 text-[15px] font-semibold rounded-xl transition-all shadow-sm">
                   Începe evaluarea
@@ -48,92 +48,90 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right Side: Visual Product Composition */}
-          <div className="relative h-[450px] md:h-[600px] lg:h-[700px] flex items-center justify-center lg:justify-end mt-8 lg:mt-0">
+          {/* Right Side: Non-colliding Responsive Visual Composition (6 cols on desktop) */}
+          <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-center lg:items-end justify-center relative mt-6 lg:mt-0">
             
-            {/* Background decorative blob / gradient (subtle) */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-gradient-to-tr from-[#2F6B57]/10 to-[#DCE8E1]/40 rounded-full blur-3xl" />
-            
-            {/* Decorative Squiggly Line SVG */}
-            <svg className="absolute -bottom-10 -left-10 w-48 h-48 text-[#1F2622]/10 rotate-12 hidden md:block" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.4578 86.8778C29.6206 58.7483 67.8927 41.5204 98.7118 61.1278C127.359 79.352 135.048 119.539 116.591 146.685C95.421 177.82 50.1472 181.714 26.6579 154.218C1.52984 124.802 8.79093 75.3344 35.8116 49.332C64.9126 21.3283 118.065 24.3642 148.818 55.4312C183.181 90.1444 179.624 149.262 141.675 181.082" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-            </svg>
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] md:w-[420px] h-[280px] md:h-[420px] bg-gradient-to-tr from-[#2F6B57]/15 to-[#DCE8E1]/40 rounded-full blur-3xl -z-10" />
 
-            {/* Teenager Placeholder Image */}
-            <div className="absolute right-0 lg:right-0 bottom-0 md:bottom-10 w-[280px] md:w-[360px] h-[380px] md:h-[500px] bg-[#EDF4F0] rounded-[2rem] border border-[#E3DED3] overflow-hidden shadow-lg object-cover z-10 flex items-center justify-center">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-90" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1F2622]/40 to-transparent" />
-            </div>
+            {/* Container for Desktop vs Mobile layout */}
+            <div className="w-full max-w-[540px] relative flex flex-col lg:block">
 
-            {/* Floating EduMind Profile Card */}
-            <div className="absolute left-4 right-4 md:left-auto md:right-[40px] lg:right-[180px] top-4 w-auto md:w-[320px] bg-white/95 backdrop-blur-xl rounded-2xl border border-white/50 shadow-[0_20px_40px_-15px_rgba(31,38,34,0.1)] z-20 overflow-hidden">
-              <div className="px-6 py-4 border-b border-[#E3DED3]/50 bg-white/50">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6B746F] mb-1">Profil EduMind</p>
-                <h3 className="text-base font-bold text-[#1F2622]">ANDREI · CLASA A XI-A</h3>
+              {/* Main Photo (Parent + Teenager Student) */}
+              <div className="w-full lg:w-[380px] h-[320px] sm:h-[400px] lg:h-[480px] lg:ml-auto rounded-3xl border border-[#E3DED3] overflow-hidden shadow-xl relative z-10 bg-[#EDF4F0]">
+                <img
+                  src="/hero-parent-student.png"
+                  onError={(e) => {
+                    // Fallback to high quality verified parent-student counseling photo
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1000&auto=format&fit=crop";
+                  }}
+                  alt="Mamă și elev discutând cu un consilier educațional"
+                  className="w-full h-full object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1F2622]/30 via-transparent to-transparent" />
               </div>
-              
-              <div className="p-6 space-y-6">
-                <div>
-                  <p className="text-[12px] font-medium text-[#6B746F] mb-1">Profil principal</p>
-                  <p className="text-[15px] font-semibold text-[#2F6B57]">Analitic – Explorator</p>
-                </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-2 font-medium text-[#1F2622]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#2F6B57]" /> Analiză
-                    </span>
-                    <span className="font-semibold text-[#1F2622]">91%</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-2 font-medium text-[#1F2622]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#2F6B57]" /> Creativitate
-                    </span>
-                    <span className="font-semibold text-[#1F2622]">84%</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-2 font-medium text-[#1F2622]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#2F6B57]" /> Comunicare
-                    </span>
-                    <span className="font-semibold text-[#1F2622]">78%</span>
-                  </div>
+              {/* Floating Profile Card: Offset on Desktop, Stacked Below on Mobile */}
+              <div className="mt-4 lg:mt-0 lg:absolute lg:top-8 lg:-left-12 w-full lg:w-[300px] bg-white/95 backdrop-blur-xl rounded-2xl border border-[#E3DED3] shadow-[0_15px_35px_-10px_rgba(31,38,34,0.15)] z-20 overflow-hidden">
+                <div className="px-5 py-3.5 border-b border-[#E3DED3]/60 bg-[#FFFDF8]">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#6B746F] mb-0.5">Profil EduMind</p>
+                  <h3 className="text-sm font-bold text-[#1F2622]">ANDREI · CLASA A XI-A</h3>
                 </div>
+                
+                <div className="p-5 space-y-4">
+                  <div>
+                    <p className="text-[11px] font-semibold text-[#6B746F] mb-0.5">Profil principal</p>
+                    <p className="text-[14px] font-bold text-[#2F6B57]">Analitic – Explorator</p>
+                  </div>
 
-                <div className="pt-4 border-t border-[#E3DED3]/50 hidden md:block">
-                  <p className="text-[12px] font-medium text-[#6B746F] mb-3">Direcții de explorat</p>
                   <div className="space-y-2.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-[#1F2622]">Psihologie</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#EDF4F0] text-[#2F6B57]">92%</span>
+                    <div className="flex items-center justify-between text-xs font-medium text-[#1F2622]">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2F6B57]" /> Analiză
+                      </span>
+                      <span className="font-bold">91%</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-[#1F2622]">UX Research</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#EDF4F0] text-[#2F6B57]">88%</span>
+                    <div className="flex items-center justify-between text-xs font-medium text-[#1F2622]">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2F6B57]" /> Creativitate
+                      </span>
+                      <span className="font-bold">84%</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-[#1F2622]">Marketing</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#EDF4F0] text-[#2F6B57]">82%</span>
+                    <div className="flex items-center justify-between text-xs font-medium text-[#1F2622]">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2F6B57]" /> Comunicare
+                      </span>
+                      <span className="font-bold">78%</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-[#E3DED3]/60">
+                    <p className="text-[11px] font-semibold text-[#6B746F] mb-2">Direcții de explorat</p>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-medium text-[#1F2622]">Psihologie</span>
+                        <span className="font-bold px-2 py-0.5 rounded bg-[#EDF4F0] text-[#2F6B57]">92%</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-medium text-[#1F2622]">UX Research</span>
+                        <span className="font-bold px-2 py-0.5 rounded bg-[#EDF4F0] text-[#2F6B57]">88%</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="pt-2 hidden md:block">
-                  <Link href="/cum-functioneaza" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#2F6B57] hover:text-[#1F2622] transition-colors">
-                    Vezi profilul complet <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+              {/* Floating Status Badge: Bottom Corner */}
+              <div className="mt-3 lg:mt-0 lg:absolute lg:right-4 lg:-bottom-6 self-end bg-white shadow-lg rounded-xl p-3 flex items-center gap-3 z-30 border border-[#E3DED3]">
+                <div className="w-8 h-8 rounded-full bg-[#EDF4F0] flex items-center justify-center text-[#2F6B57] shrink-0">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#1F2622]">Evaluare completată</p>
+                  <p className="text-[11px] text-[#6B746F]">Acuratețe 82%</p>
                 </div>
               </div>
-            </div>
 
-            {/* Smaller floating element 1 */}
-            <div className="absolute right-4 lg:right-[-40px] bottom-8 md:bottom-32 bg-white shadow-xl rounded-xl p-3 flex items-center gap-3 z-30 border border-[#E3DED3]/50 animate-bounce" style={{ animationDuration: '3s' }}>
-              <div className="w-8 h-8 rounded-full bg-[#EDF4F0] flex items-center justify-center">
-                <CheckCircle2 className="w-4 h-4 text-[#2F6B57]" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#1F2622]">Evaluare completată</p>
-                <p className="text-[11px] text-[#6B746F]">Acuratețe 82%</p>
-              </div>
             </div>
 
           </div>

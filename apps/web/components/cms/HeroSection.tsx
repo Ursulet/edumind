@@ -42,11 +42,11 @@ export function HeroSection({ data }: { data: HeroSectionData }) {
         </div>
         
         <div className="relative h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden bg-sage-surface border border-border flex items-center justify-center">
-          {data.imageUrl ? (
-            <img src={data.imageUrl} alt="Hero Visual" className="object-cover w-full h-full" />
-          ) : (
-            <span className="text-muted-text">Editorial Visual Placeholder</span>
-          )}
+          <img 
+            src={data.imageUrl || "/hero-parent-student.png"} 
+            alt="Mamă și elev în consiliere" 
+            className="object-cover w-full h-full" 
+          />
         </div>
       </div>
     </section>
